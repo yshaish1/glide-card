@@ -175,6 +175,9 @@ export class GlideNav extends GlideBase<NavCardConfig> {
         cursor: pointer;
         transition: color 0.2s;
       }
+      @media (max-width: 600px) {
+        button { min-width: 52px; padding: 8px 6px; }
+      }
       button:focus-visible { outline: 2px solid var(--gc-accent); }
       button.active { color: var(--gc-accent-text); }
       button .meta { font-size: 11px; color: inherit; }

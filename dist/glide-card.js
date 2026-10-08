@@ -1820,6 +1820,9 @@ var Ft = [
         cursor: pointer;
         transition: color 0.2s;
       }
+      @media (max-width: 600px) {
+        button { min-width: 52px; padding: 8px 6px; }
+      }
       button:focus-visible { outline: 2px solid var(--gc-accent); }
       button.active { color: var(--gc-accent-text); }
       button .meta { font-size: 11px; color: inherit; }
@@ -2503,7 +2506,7 @@ var Xt = class extends z {
 customElements.define("glide-card-editor", Xt);
 //#endregion
 //#region src/glide-card.ts
-var Zt = "0.1.3", Qt = [
+var Zt = "0.1.4", Qt = [
 	"button",
 	"popup",
 	"nav",
