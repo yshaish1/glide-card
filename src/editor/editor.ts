@@ -11,6 +11,7 @@ const TYPES: { id: CardType; icon: string; label: string }[] = [
   { id: "media", icon: "mdi:play-circle-outline", label: "Media" },
   { id: "chips", icon: "mdi:label-multiple-outline", label: "Chips" },
   { id: "title", icon: "mdi:format-title", label: "Title" },
+  { id: "heading", icon: "mdi:format-header-pound", label: "Heading" },
 ];
 const ACCENTS = ["#ff9f43", "#d4ff00", "#006a60", "#4aa8ff", "#a78bfa", "#ff5c8a", "#34c759", "#ffd60a"];
 
@@ -27,7 +28,30 @@ const actions = {
 
 const ALIGN = { select: { mode: "dropdown", options: [{ value: "center", label: "Center" }, { value: "start", label: "Start" }] } };
 
+const BADGE_FIELDS = {
+  entity: { selector: { entity: {} } },
+  icon: { selector: { icon: {} } },
+  color: { selector: { ui_color: {} } },
+  attribute: { selector: { text: {} } },
+  tap_action: { selector: { ui_action: {} } },
+};
+
 const SCHEMAS: Record<CardType, unknown[]> = {
+  heading: [
+    { name: "title", required: true, selector: { text: {} } },
+    {
+      type: "grid",
+      name: "",
+      schema: [
+        { name: "subtitle", selector: { text: {} } },
+        { name: "style", selector: { select: { mode: "dropdown", options: [{ value: "title", label: "Title" }, { value: "subtitle", label: "Subtitle (smaller)" }] } } },
+        { name: "icon", selector: { icon: {} } },
+        { name: "color", selector: { ui_color: {} } },
+      ],
+    },
+    { name: "badges", selector: { object: { multiple: true, label_field: "entity", fields: BADGE_FIELDS } } },
+    { name: "tap_action", selector: { ui_action: {} } },
+  ],
   chips: [
     {
       name: "chips",
@@ -155,6 +179,7 @@ export class GlideCardEditor extends LitElement {
     if (type === "popup") Object.assign(base, { hash: "#room", title: "Room", cards: [] });
     if (type === "chips") Object.assign(base, { chips: [] });
     if (type === "title") Object.assign(base, { title: "Home" });
+    if (type === "heading") Object.assign(base, { title: "Section" });
     if (type === "nav") Object.assign(base, { items: [{ name: "Home", icon: "mdi:home", navigation_path: "#home" }] });
     this.config = {} as GlideCardConfig;
     this.update_(base);
