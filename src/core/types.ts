@@ -15,13 +15,19 @@ export interface HomeAssistant {
   callService(domain: string, service: string, data?: Record<string, unknown>): Promise<unknown>;
 }
 
-export type ActionType = "toggle" | "more-info" | "popup" | "navigate" | "call-service" | "none";
+export type ActionType =
+  | "toggle" | "more-info" | "popup" | "navigate" | "call-service" | "perform-action" | "url" | "assist" | "fire-dom-event" | "none";
 
 export interface ActionConfig {
   action: ActionType;
   navigation_path?: string; // navigate, or "#hash" to open a popup
   service?: string; // "domain.service"
+  perform_action?: string;
   data?: Record<string, unknown>;
+  target?: Record<string, unknown>;
+  /** Same as HA: true or { text } asks before running. */
+  confirmation?: boolean | { text?: string };
+  [key: string]: unknown;
 }
 
 export type CardType = "button" | "popup" | "nav" | "climate" | "media";
