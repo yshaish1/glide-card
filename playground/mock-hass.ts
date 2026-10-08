@@ -21,6 +21,12 @@ const initial: HassEntity[] = [
     media_position: 134, media_position_updated_at: now, supported_features: 0xffff,
   }),
   e("sensor.living_temp", "22", { friendly_name: "Temperature", unit_of_measurement: "°C" }),
+  e("weather.home", "clear-night", { friendly_name: "מזג אוויר", temperature: 25.7, temperature_unit: "°C" }),
+  e("sensor.sun_next_rising", "2026-10-09T03:40:00+00:00", { friendly_name: "זריחה", device_class: "timestamp" }),
+  e("sensor.sun_next_setting", "2026-10-09T15:15:00+00:00", { friendly_name: "שקיעה", device_class: "timestamp" }),
+  e("sensor.acs_on", "3", { friendly_name: "מזגנים דולקים" }),
+  e("sensor.outdoor_lights_on", "2", { friendly_name: "אורות בחוץ" }),
+  e("sensor.indoor_lights_on", "7", { friendly_name: "אורות בבית" }),
 ];
 
 type Listener = (h: HomeAssistant) => void;

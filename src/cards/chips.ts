@@ -99,7 +99,7 @@ export class GlideChips extends GlideBase<ChipsCardConfig> {
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 7px 16px 7px 12px;
+        padding-block: 7px;
         padding-inline: 12px 16px;
         border-radius: var(--gc-radius-control);
         cursor: pointer;
