@@ -8,6 +8,7 @@ import { attachGestures } from "../core/gestures";
 import { formatState } from "../core/i18n";
 import type { ActionConfig, ButtonCardConfig } from "../core/types";
 
+const STATELESS = new Set(["scene", "script", "button", "input_button"]);
 const TOGGLEABLE = new Set(["light", "switch", "fan", "input_boolean", "cover", "lock", "scene", "script", "button", "input_button", "siren", "humidifier"]);
 
 export class GlideButton extends GlideBase<ButtonCardConfig> {
@@ -91,7 +92,9 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     const value = this.dragValue ?? slider?.value;
     const on = this.dragValue !== undefined ? this.dragValue > 0 : isActive(s);
     const stateText = this.hass && this.config.entity ? formatState(this.hass, this.config.entity) : "";
-    const meta = slider && on && value !== undefined ? `${value}%` : stateText;
+    const stateless = STATELESS.has(domainOf(this.config.entity));
+    // The badge carries the state; the meta line only adds what the badge can't (e.g. brightness).
+    const meta = slider && on && value !== undefined ? `${value}%` : "";
     const fill = slider ? value ?? 0 : on ? 100 : 0;
     return html`
       <div
@@ -105,9 +108,9 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
         <div class="icon"><ha-icon .icon=${entityIcon(s, this.config.icon)}></ha-icon></div>
         <div class="text">
           <div class="name">${entityName(s, this.config.name)}</div>
-          <div class="meta">${meta}</div>
+          ${meta ? html`<div class="meta">${meta}</div>` : nothing}
         </div>
-        ${stateText ? html`<div class="badge meta">${stateText}</div>` : nothing}
+        ${stateText && !stateless ? html`<div class="badge meta">${stateText}</div>` : nothing}
       </div>
     `;
   }

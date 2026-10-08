@@ -30,7 +30,7 @@ export interface ActionConfig {
   [key: string]: unknown;
 }
 
-export type CardType = "button" | "popup" | "nav" | "climate" | "media" | "chips" | "title";
+export type CardType = "button" | "popup" | "nav" | "climate" | "media" | "chips" | "title" | "heading";
 export type ThemeMode = "auto" | "dark" | "light";
 
 export interface BaseCardConfig {
@@ -120,6 +120,18 @@ export interface TitleCardConfig extends BaseCardConfig {
   align?: "center" | "start";
 }
 
+export interface HeadingCardConfig extends BaseCardConfig {
+  card_type: "heading";
+  title: string;
+  subtitle?: string;
+  icon?: string;
+  /** Icon colour: HA colour name or CSS colour. */
+  color?: string;
+  style?: "title" | "subtitle";
+  /** Small entity badges at the end of the heading (same options as chips). */
+  badges?: ChipConfig[];
+}
+
 export type GlideCardConfig =
   | ButtonCardConfig
   | PopupCardConfig
@@ -127,4 +139,5 @@ export type GlideCardConfig =
   | ClimateCardConfig
   | MediaCardConfig
   | ChipsCardConfig
-  | TitleCardConfig;
+  | TitleCardConfig
+  | HeadingCardConfig;

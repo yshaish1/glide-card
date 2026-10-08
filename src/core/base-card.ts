@@ -29,6 +29,13 @@ export const surface = css`
     font-size: 12px;
     color: var(--gc-text-dim);
   }
+  /* Monospace + tracking reads as broken letters in Hebrew/Arabic: use the body font there. */
+  .meta:lang(he),
+  .meta:lang(ar),
+  .meta:lang(fa) {
+    font-family: var(--gc-font);
+    letter-spacing: 0;
+  }
   ha-icon {
     --mdc-icon-size: 22px;
     display: inline-flex;

@@ -25,6 +25,7 @@ const initial: HassEntity[] = [
   e("sensor.sun_next_rising", "2026-10-09T03:40:00+00:00", { friendly_name: "זריחה", device_class: "timestamp" }),
   e("sensor.sun_next_setting", "2026-10-09T15:15:00+00:00", { friendly_name: "שקיעה", device_class: "timestamp" }),
   e("sensor.acs_on", "3", { friendly_name: "מזגנים דולקים" }),
+  e("script.good_night", "off", { friendly_name: "לילה טוב", icon: "mdi:weather-night" }),
   e("sensor.outdoor_lights_on", "2", { friendly_name: "אורות בחוץ" }),
   e("sensor.indoor_lights_on", "7", { friendly_name: "אורות בבית" }),
 ];

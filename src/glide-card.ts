@@ -6,12 +6,13 @@ import "./cards/climate";
 import "./cards/media";
 import "./cards/chips";
 import "./cards/title";
+import "./cards/heading";
 import "./editor/editor";
 import type { GlideBase } from "./core/base-card";
 import type { GlideCardConfig, HomeAssistant } from "./core/types";
 
-const VERSION = "0.2.0";
-const TYPES = ["button", "popup", "nav", "climate", "media", "chips", "title"] as const;
+const VERSION = "0.3.0";
+const TYPES = ["button", "popup", "nav", "climate", "media", "chips", "title", "heading"] as const;
 
 /**
  * `custom:glide-card` - a thin host that creates the inner card for

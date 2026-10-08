@@ -60,6 +60,21 @@ card_type: title
 title: משפחת שיש
 subtitle: גם כשלא היה הרבה, היה לנו הכל
 
+# Section heading (use instead of HA's heading card)
+type: custom:glide-card
+card_type: heading
+title: תריסים
+icon: mdi:blinds
+color: purple
+subtitle: 1 פתוח          # optional
+style: title              # title | subtitle (smaller)
+badges:                   # optional mini entity badges at the end
+  - entity: sensor.living_temp
+    icon: mdi:thermometer
+tap_action:               # optional; shows a chevron
+  action: navigate
+  navigation_path: /home-glass/blinds
+
 # Info chips row (scrolls sideways when it doesn't fit)
 # weather = "condition · temp", timestamp sensors = "06:40", numbers keep their unit
 type: custom:glide-card
