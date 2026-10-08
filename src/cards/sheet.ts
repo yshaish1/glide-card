@@ -217,6 +217,7 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
         pointer-events: none;
       }
       :host([open]) { pointer-events: auto; }
+      :host([lite]) .scrim { backdrop-filter: none; -webkit-backdrop-filter: none; }
       .scrim {
         position: absolute;
         inset: 0;

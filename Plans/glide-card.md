@@ -40,25 +40,25 @@ Working name: **Glide Card** (`custom:glide-card`). Check that the name is free 
 ## Steps
 1. [x] Create `Projects/glide-card/` and copy this plan to `Plans/glide-card.md`, then confirm the name is available
 2. [x] Design: Stitch mockups for 3 directions; user chose to ship all three as switchable themes
-3. [ ] Scaffold: Vite + Lit + TS, ESLint, Vitest, a mock-hass playground with fake entities, and `hacs.json`
-4. [ ] Core:
+3. [x] Scaffold: Vite + Lit + TS, ESLint, Vitest, a mock-hass playground with fake entities, and `hacs.json`
+4. [x] Core:
    - base card class
    - theme registry + semantic token contract + glass/bubble/material themes
    - action handler (tap/hold/double-tap)
    - haptics
    - i18n (he/en) + RTL utilities
    - entity-diff render guard
-5. [ ] Button/tile card covering toggle, slider, swipe-to-dim, and state icons/colors per domain
-6. [ ] Pop-up sheet:
+5. [x] Button/tile card covering toggle, slider, swipe-to-dim, and state icons/colors per domain
+6. [x] Pop-up sheet:
    - global host
    - bottom sheet vs modal
    - drag-to-dismiss
    - hash deep links and back button
    - FLIP morph from tile to sheet
-7. [ ] Horizontal nav bar: a floating pill with room/page links and an active indicator
-8. [ ] Climate card (dial + modes) and media card (artwork, controls, volume)
-9. [ ] Visual editor for each card type with presets and live preview
-10. [ ] Performance pass: test with 50+ cards on a tablet and Lighthouse-style profiling, with a blur fallback
+7. [x] Horizontal nav bar: a floating pill with room/page links and an active indicator
+8. [x] Climate card (dial + modes) and media card (artwork, controls, volume)
+9. [x] Visual editor for each card type with presets and live preview
+10. [~] Performance pass (render guard verified: 60 cards x 200 unrelated updates = 0 renders; lite mode added; real-tablet profiling pending): test with 50+ cards on a tablet and Lighthouse-style profiling, with a blur fallback
 11. [ ] Test on real HA (copy to `/config/www`, add as a resource) across iPhone, Android, tablet and desktop
 12. [ ] Later: Bubble YAML importer, README/docs, GitHub release, and HACS submission
 
@@ -73,7 +73,13 @@ Working name: **Glide Card** (`custom:glide-card`). Check that the name is free 
 - ~~Final name~~ - confirmed "Glide Card" (no HA/HACS conflict, 2026-10-08)
 - ~~Design direction~~ - all three, as pluggable themes
 
-## Status
-- Step 1 done (2026-10-08)
-- Step 2 done - all 3 directions become themes
-- Step 3 (scaffold) in progress
+## Status (2026-10-08)
+- Steps 1-9 done. All 5 card types, 3 themes, editor, playground, 9 unit tests green, build 24 KB gzip
+- Step 10 partly done; step 11 (real HA) needs the user's HA access
+- Popup `cards` are edited as YAML inside the visual editor (no nested visual card editor yet)
+
+## To verify on real HA
+- `card-visibility-changed` / hiding of the popup placeholder in sections view
+- Event forwarding from sheet children (more-info, hass-action) to the `home-assistant` root
+- `object` selector with `fields` for nav items (needs a recent HA)
+- Haptics in the iOS/Android companion apps; back gesture closing the sheet

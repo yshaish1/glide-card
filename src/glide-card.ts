@@ -4,6 +4,7 @@ import "./cards/popup";
 import "./cards/nav";
 import "./cards/climate";
 import "./cards/media";
+import "./editor/editor";
 import type { GlideBase } from "./core/base-card";
 import type { GlideCardConfig, HomeAssistant } from "./core/types";
 

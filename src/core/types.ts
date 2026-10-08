@@ -33,6 +33,8 @@ export interface BaseCardConfig {
   theme?: string;
   mode?: ThemeMode;
   accent?: string;
+  /** Drop blur/glow effects for slow wall tablets. Default: auto-detect. */
+  lite?: boolean;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   double_tap_action?: ActionConfig;

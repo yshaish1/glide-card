@@ -46,6 +46,22 @@ export const surface = css`
 `;
 
 /**
+ * Lite mode (no backdrop blur): per-card `lite`, else a per-device override
+ * (`localStorage["glide-card-lite"] = "1" | "0"`), else auto on low-memory devices.
+ */
+export function isLite(configLite?: boolean): boolean {
+  if (configLite !== undefined) return configLite;
+  try {
+    const v = localStorage.getItem("glide-card-lite");
+    if (v === "1" || v === "0") return v === "1";
+  } catch {
+    /* storage blocked */
+  }
+  const mem = (navigator as { deviceMemory?: number }).deviceMemory;
+  return mem !== undefined && mem <= 2;
+}
+
+/**
  * Base for all Glide cards:
  * - applies the active theme as an adopted stylesheet (cached per theme/mode/part)
  * - re-renders on `hass` changes only when a watched entity actually changed
@@ -91,11 +107,12 @@ export abstract class GlideBase<C extends BaseCardConfig = BaseCardConfig> exten
     if (!this.config) return;
     const id = resolveThemeId(this.config.theme, this);
     const dark = resolveDark(this.config.mode, this.hass?.themes?.darkMode);
-    const key = `${id}|${dark}|${this.config.accent ?? ""}`;
+    const key = `${id}|${dark}|${this.config.accent ?? ""}|${this.config.lite}`;
     if (key === this.themeKey) return;
     this.themeKey = key;
     this.theme = getTheme(id);
     this.toggleAttribute("dark", dark);
+    this.toggleAttribute("lite", isLite(this.config.lite));
     this.dataset.theme = id;
     if (this.config.accent) this.style.setProperty("--gc-accent", this.config.accent);
     else this.style.removeProperty("--gc-accent");
