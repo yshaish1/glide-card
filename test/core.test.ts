@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { sliderFor, toggleEntity, entityIcon } from "../src/core/entity";
+import { cssColor, sliderFor, toggleEntity, entityIcon } from "../src/core/entity";
 import { springEasing } from "../src/core/spring";
 import { getTheme, listThemes, registerTheme, themeCss } from "../src/themes";
 import type { HassEntity, HomeAssistant } from "../src/core/types";
@@ -75,5 +75,14 @@ describe("theme registry", () => {
     expect(css).toContain("--gc-gap:12px"); // from shared base
     expect(css).toContain(".x{}");
     expect(themeCss(getTheme("test"), false, "media")).not.toContain(".x{}");
+  });
+});
+
+describe("cssColor", () => {
+  it("maps HA colour names to frontend variables and passes CSS colours through", () => {
+    expect(cssColor("light-blue")).toBe("var(--light-blue-color)");
+    expect(cssColor("#ff0000")).toBe("#ff0000");
+    expect(cssColor("dimgray")).toBe("dimgray");
+    expect(cssColor(undefined)).toBeUndefined();
   });
 });

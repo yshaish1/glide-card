@@ -2,7 +2,7 @@ import { css, html, nothing, type PropertyValues } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
 import { runAction } from "../core/actions";
 import { GlideBase, surface } from "../core/base-card";
-import { domainColor, domainOf, entityIcon, entityName, isActive, isUnavailable, sliderFor } from "../core/entity";
+import { cssColor, domainColor, domainOf, entityIcon, entityName, isActive, isUnavailable, sliderFor } from "../core/entity";
 import { haptic } from "../core/fire";
 import { attachGestures } from "../core/gestures";
 import { formatState } from "../core/i18n";
@@ -96,7 +96,7 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     return html`
       <div
         class="surface ${this.layout} ${on ? "on" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
-        style=${styleMap({ "--domain": domainColor(s), "--fill": `${fill}%` })}
+        style=${styleMap({ "--domain": cssColor(this.config.color) ?? domainColor(s), "--fill": `${fill}%` })}
         role="button"
         tabindex="0"
         aria-label=${entityName(s, this.config.name)}

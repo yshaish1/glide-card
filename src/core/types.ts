@@ -47,6 +47,8 @@ export interface ButtonCardConfig extends BaseCardConfig {
   icon?: string;
   layout?: "tile" | "pill";
   slider?: boolean;
+  /** Overrides the domain colour: an HA colour name (`cyan`, `light-blue`, ...) or any CSS colour. */
+  color?: string;
 }
 
 export interface PopupCardConfig extends BaseCardConfig {

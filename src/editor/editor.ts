@@ -34,6 +34,7 @@ const SCHEMAS: Record<CardType, unknown[]> = {
         { name: "icon", selector: { icon: {} }, context: { icon_entity: "entity" } },
         { name: "layout", selector: { select: { mode: "dropdown", options: [{ value: "tile", label: "Tile" }, { value: "pill", label: "Pill row" }] } } },
         { name: "slider", default: true, selector: { boolean: {} } },
+        { name: "color", selector: { ui_color: {} } },
       ],
     },
     actions,
@@ -81,6 +82,7 @@ const LABELS: Record<string, string> = {
   hash: "Hash (e.g. #living-room)",
   slider: "Swipe to adjust (brightness / position)",
   layout: "Layout (empty = theme default)",
+  color: "Colour (empty = by entity type)",
   items: "Nav items (path or #popup-hash)",
   entity: "Entity",
 };

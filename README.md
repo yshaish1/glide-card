@@ -69,6 +69,7 @@ entity: media_player.sonos
 | `theme` | `glass` (default), `bubble`, `material`, or any registered theme |
 | `mode` | `auto` (follows HA), `dark`, `light` |
 | `accent` | any CSS color; overrides the theme accent |
+| `color` | buttons only: an HA color name (`cyan`, `light-blue`, `amber`...) or any CSS color; replaces the per-domain color |
 | `lite` | `true` turns off blur for slow tablets. When unset, it's detected automatically. Per device: `localStorage["glide-card-lite"]="1"` |
 | `tap_action` / `hold_action` / `double_tap_action` | standard HA actions, plus `navigate` to a `#hash` to open a pop-up |
 
