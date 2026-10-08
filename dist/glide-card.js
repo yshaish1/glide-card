@@ -1711,29 +1711,42 @@ var Ft = [
 		return t.startsWith("#") ? decodeURIComponent(location.hash) === t : !location.hash && (location.pathname === t || location.pathname === t.replace(/\/$/, ""));
 	}
 	updated() {
-		let e = this.renderRoot.querySelector("button.active"), t = this.renderRoot.querySelector(".indicator");
-		if (t) {
-			if (!e) return void (t.style.opacity = "0");
-			t.style.opacity = "1", t.style.width = `${e.offsetWidth}px`, t.style.transform = `translateX(${e.offsetLeft}px)`;
-		}
+		let e = this.renderRoot.querySelector(".scroller"), t = this.renderRoot.querySelector(".indicator");
+		if (!e || !t) return;
+		e.classList.toggle("overflow", e.scrollWidth > e.clientWidth + 1);
+		let n = e.querySelector("button.active");
+		if (!n) return void (t.style.opacity = "0");
+		let r = e.getBoundingClientRect(), i = n.getBoundingClientRect(), a = location.pathname + location.hash;
+		this.centred !== a && (e.scrollBy({
+			left: i.left + i.width / 2 - (r.left + r.width / 2),
+			behavior: this.centred ? "smooth" : "instant"
+		}), this.centred = a, r = e.getBoundingClientRect(), i = n.getBoundingClientRect()), t.style.opacity = "1", t.style.width = `${i.width}px`, t.style.transform = `translateX(${i.left - r.left + e.scrollLeft}px)`;
 	}
-	render() {
+	item(e) {
+		let t = this.isCurrent(e);
 		return j`
-      <nav class="surface ${this.editMode ? "inline" : "floating"}">
-        <div class="indicator"></div>
-        ${this.config.items.map((e) => j`
-            <button
-              class=${this.isCurrent(e) ? "active" : ""}
-              aria-current=${this.isCurrent(e) ? "page" : "false"}
-              @click=${(t) => {
+      <button
+        class=${t ? "active" : ""}
+        aria-current=${t ? "page" : "false"}
+        @click=${(t) => {
 			W("selection"), st(e.navigation_path, t.currentTarget);
 		}}
-            >
-              <ha-icon .icon=${e.icon}></ha-icon>
-              <span class="meta">${e.name}</span>
-              ${e.entity && V(this.stateOf(e.entity)) ? j`<i class="dot"></i>` : N}
-            </button>
-          `)}
+      >
+        <ha-icon .icon=${e.icon}></ha-icon>
+        <span class="meta">${e.name}</span>
+        ${e.entity && V(this.stateOf(e.entity)) ? j`<i class="dot"></i>` : N}
+      </button>
+    `;
+	}
+	render() {
+		let e = this.config.items.filter((e) => e.pinned);
+		return j`
+      <nav class="surface ${this.editMode ? "inline" : "floating"}">
+        <div class="scroller">
+          <div class="indicator"></div>
+          ${this.config.items.filter((e) => !e.pinned).map((e) => this.item(e))}
+        </div>
+        ${e.length ? j`<div class="pinned">${e.map((e) => this.item(e))}</div>` : N}
       </nav>
     `;
 	}
@@ -1741,7 +1754,6 @@ var Ft = [
 		this.styles = [K, v`
       nav {
         display: flex;
-        gap: 4px;
         padding: 6px;
         border-radius: var(--gc-radius-control);
         background: var(--gc-sheet-bg);
@@ -1755,10 +1767,35 @@ var Ft = [
         width: max-content;
         max-width: calc(100vw - 24px);
       }
+      .scroller {
+        position: relative;
+        display: flex;
+        gap: 4px;
+        min-width: 0;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+        overscroll-behavior-x: contain;
+      }
+      .scroller::-webkit-scrollbar { display: none; }
+      .scroller.overflow {
+        mask-image: linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 18px), transparent);
+      }
+      .pinned {
+        display: flex;
+        gap: 4px;
+        flex: none;
+        margin-inline-start: 4px;
+        padding-inline-start: 4px;
+        border-inline-start: 1px solid var(--gc-border);
+      }
+      .pinned button.active {
+        background: color-mix(in srgb, var(--gc-accent) 22%, transparent);
+      }
       .indicator {
         position: absolute;
-        top: 6px;
-        bottom: 6px;
+        top: 0;
+        bottom: 0;
         left: 0;
         border-radius: var(--gc-radius-control);
         background: color-mix(in srgb, var(--gc-accent) 22%, transparent);
@@ -1774,6 +1811,8 @@ var Ft = [
         flex-direction: column;
         align-items: center;
         gap: 2px;
+        flex: none;
+        scroll-snap-align: center;
         min-width: 64px;
         padding: 8px 14px;
         border-radius: var(--gc-radius-control);
@@ -2281,7 +2320,8 @@ var Gt = [
 					required: !0,
 					selector: { text: {} }
 				},
-				entity: { selector: { entity: {} } }
+				entity: { selector: { entity: {} } },
+				pinned: { selector: { boolean: {} } }
 			}
 		} }
 	}],
@@ -2463,7 +2503,7 @@ var Xt = class extends z {
 customElements.define("glide-card-editor", Xt);
 //#endregion
 //#region src/glide-card.ts
-var Zt = "0.1.2", Qt = [
+var Zt = "0.1.3", Qt = [
 	"button",
 	"popup",
 	"nav",
