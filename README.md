@@ -51,6 +51,8 @@ card_type: nav
 items:
   - { name: Home, icon: mdi:home, navigation_path: /dashboard-home/0 }
   - { name: Kitchen, icon: mdi:silverware-fork-knife, navigation_path: "#kitchen", entity: light.kitchen }
+  - { name: More, icon: mdi:dots-grid, navigation_path: "#more", pinned: true }   # stays at the end
+# Items that don't fit scroll sideways and the current page is centred.
 
 # Climate (drag the dial) and media
 type: custom:glide-card

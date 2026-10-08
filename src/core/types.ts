@@ -71,6 +71,8 @@ export interface NavItem {
   icon: string;
   navigation_path: string;
   entity?: string; // shows an "active" dot when on
+  /** Kept at the end of the bar, outside the scrolling list (e.g. a "more" pop-up). */
+  pinned?: boolean;
 }
 
 export interface NavCardConfig extends BaseCardConfig {

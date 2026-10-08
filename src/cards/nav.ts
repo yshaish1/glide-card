@@ -7,7 +7,10 @@ import type { NavCardConfig, NavItem } from "../core/types";
 
 const ROUTE_EVENTS = ["popstate", "location-changed", "glide-hash"];
 
-/** Floating pill navigation bar with a sliding active indicator. */
+/**
+ * Floating pill navigation bar with a sliding active indicator.
+ * Items that don't fit scroll sideways (the active one is centred); `pinned` items stay at the end.
+ */
 export class GlideNav extends GlideBase<NavCardConfig> {
   protected readonly cardType = "nav" as const;
   private onRoute = () => this.requestUpdate();
@@ -45,37 +48,58 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     return !location.hash && (location.pathname === p || location.pathname === p.replace(/\/$/, ""));
   }
 
+  private centred?: string;
+
   protected updated() {
-    // Slide the indicator under the active item.
-    const active = this.renderRoot.querySelector<HTMLElement>("button.active");
+    const scroller = this.renderRoot.querySelector<HTMLElement>(".scroller");
     const ind = this.renderRoot.querySelector<HTMLElement>(".indicator");
-    if (!ind) return;
+    if (!scroller || !ind) return;
+    scroller.classList.toggle("overflow", scroller.scrollWidth > scroller.clientWidth + 1);
+    const active = scroller.querySelector<HTMLElement>("button.active");
     if (!active) return void (ind.style.opacity = "0");
+    // Centre the active item once per route, so state updates don't undo the user's own scrolling.
+    // Rect deltas work the same in LTR and RTL (where scrollLeft is negative).
+    let s = scroller.getBoundingClientRect(), a = active.getBoundingClientRect();
+    const route = location.pathname + location.hash;
+    if (this.centred !== route) {
+      scroller.scrollBy({ left: a.left + a.width / 2 - (s.left + s.width / 2), behavior: this.centred ? "smooth" : "instant" });
+      this.centred = route;
+      s = scroller.getBoundingClientRect();
+      a = active.getBoundingClientRect();
+    }
+    // Slide the indicator under it, in the scroller's content coordinates.
     ind.style.opacity = "1";
-    ind.style.width = `${active.offsetWidth}px`;
-    ind.style.transform = `translateX(${active.offsetLeft}px)`;
+    ind.style.width = `${a.width}px`;
+    ind.style.transform = `translateX(${a.left - s.left + scroller.scrollLeft}px)`;
+  }
+
+  private item(item: NavItem) {
+    const current = this.isCurrent(item);
+    return html`
+      <button
+        class=${current ? "active" : ""}
+        aria-current=${current ? "page" : "false"}
+        @click=${(e: Event) => {
+          haptic("selection");
+          navigate(item.navigation_path, e.currentTarget as Element);
+        }}
+      >
+        <ha-icon .icon=${item.icon}></ha-icon>
+        <span class="meta">${item.name}</span>
+        ${item.entity && isActive(this.stateOf(item.entity)) ? html`<i class="dot"></i>` : nothing}
+      </button>
+    `;
   }
 
   protected render() {
+    const pinned = this.config.items.filter((i) => i.pinned);
     return html`
       <nav class="surface ${this.editMode ? "inline" : "floating"}">
-        <div class="indicator"></div>
-        ${this.config.items.map(
-          (item) => html`
-            <button
-              class=${this.isCurrent(item) ? "active" : ""}
-              aria-current=${this.isCurrent(item) ? "page" : "false"}
-              @click=${(e: Event) => {
-                haptic("selection");
-                navigate(item.navigation_path, e.currentTarget as Element);
-              }}
-            >
-              <ha-icon .icon=${item.icon}></ha-icon>
-              <span class="meta">${item.name}</span>
-              ${item.entity && isActive(this.stateOf(item.entity)) ? html`<i class="dot"></i>` : nothing}
-            </button>
-          `,
-        )}
+        <div class="scroller">
+          <div class="indicator"></div>
+          ${this.config.items.filter((i) => !i.pinned).map((i) => this.item(i))}
+        </div>
+        ${pinned.length ? html`<div class="pinned">${pinned.map((i) => this.item(i))}</div>` : nothing}
       </nav>
     `;
   }
@@ -85,7 +109,6 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     css`
       nav {
         display: flex;
-        gap: 4px;
         padding: 6px;
         border-radius: var(--gc-radius-control);
         background: var(--gc-sheet-bg);
@@ -99,10 +122,35 @@ export class GlideNav extends GlideBase<NavCardConfig> {
         width: max-content;
         max-width: calc(100vw - 24px);
       }
+      .scroller {
+        position: relative;
+        display: flex;
+        gap: 4px;
+        min-width: 0;
+        overflow-x: auto;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+        overscroll-behavior-x: contain;
+      }
+      .scroller::-webkit-scrollbar { display: none; }
+      .scroller.overflow {
+        mask-image: linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 18px), transparent);
+      }
+      .pinned {
+        display: flex;
+        gap: 4px;
+        flex: none;
+        margin-inline-start: 4px;
+        padding-inline-start: 4px;
+        border-inline-start: 1px solid var(--gc-border);
+      }
+      .pinned button.active {
+        background: color-mix(in srgb, var(--gc-accent) 22%, transparent);
+      }
       .indicator {
         position: absolute;
-        top: 6px;
-        bottom: 6px;
+        top: 0;
+        bottom: 0;
         left: 0;
         border-radius: var(--gc-radius-control);
         background: color-mix(in srgb, var(--gc-accent) 22%, transparent);
@@ -118,6 +166,8 @@ export class GlideNav extends GlideBase<NavCardConfig> {
         flex-direction: column;
         align-items: center;
         gap: 2px;
+        flex: none;
+        scroll-snap-align: center;
         min-width: 64px;
         padding: 8px 14px;
         border-radius: var(--gc-radius-control);

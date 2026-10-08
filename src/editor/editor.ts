@@ -63,6 +63,7 @@ const SCHEMAS: Record<CardType, unknown[]> = {
             icon: { required: true, selector: { icon: {} } },
             navigation_path: { required: true, selector: { text: {} } },
             entity: { selector: { entity: {} } },
+            pinned: { selector: { boolean: {} } },
           },
         },
       },
