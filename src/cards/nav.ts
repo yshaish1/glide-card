@@ -67,10 +67,17 @@ export class GlideNav extends GlideBase<NavCardConfig> {
       s = scroller.getBoundingClientRect();
       a = active.getBoundingClientRect();
     }
-    // Slide the indicator under it, in the scroller's content coordinates.
+    // Slide the indicator under it, in the scroller's content coordinates. The first placement
+    // (page load, or coming back from a pop-up) jumps there instead of sliding in from the edge.
+    const jump = ind.style.opacity !== "1";
+    if (jump) ind.style.transition = "none";
     ind.style.opacity = "1";
     ind.style.width = `${a.width}px`;
     ind.style.transform = `translateX(${a.left - s.left + scroller.scrollLeft}px)`;
+    if (jump) {
+      void ind.offsetWidth; // commit the jump before transitions come back
+      ind.style.transition = "";
+    }
   }
 
   private item(item: NavItem) {
