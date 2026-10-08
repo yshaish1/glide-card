@@ -9,6 +9,8 @@ const TYPES: { id: CardType; icon: string; label: string }[] = [
   { id: "nav", icon: "mdi:dock-bottom", label: "Nav bar" },
   { id: "climate", icon: "mdi:thermostat", label: "Climate" },
   { id: "media", icon: "mdi:play-circle-outline", label: "Media" },
+  { id: "chips", icon: "mdi:label-multiple-outline", label: "Chips" },
+  { id: "title", icon: "mdi:format-title", label: "Title" },
 ];
 const ACCENTS = ["#ff9f43", "#d4ff00", "#006a60", "#4aa8ff", "#a78bfa", "#ff5c8a", "#34c759", "#ffd60a"];
 
@@ -23,7 +25,34 @@ const actions = {
   ],
 };
 
+const ALIGN = { select: { mode: "dropdown", options: [{ value: "center", label: "Center" }, { value: "start", label: "Start" }] } };
+
 const SCHEMAS: Record<CardType, unknown[]> = {
+  chips: [
+    {
+      name: "chips",
+      selector: {
+        object: {
+          multiple: true,
+          label_field: "name",
+          fields: {
+            entity: { selector: { entity: {} } },
+            name: { selector: { text: {} } },
+            icon: { selector: { icon: {} } },
+            color: { selector: { ui_color: {} } },
+            attribute: { selector: { text: {} } },
+            tap_action: { selector: { ui_action: {} } },
+          },
+        },
+      },
+    },
+    { name: "align", selector: ALIGN },
+  ],
+  title: [
+    { name: "title", selector: { text: {} } },
+    { name: "subtitle", selector: { text: {} } },
+    { type: "grid", name: "", schema: [{ name: "icon", selector: { icon: {} } }, { name: "align", selector: ALIGN }] },
+  ],
   button: [
     { name: "entity", required: true, selector: { entity: {} } },
     {
@@ -124,6 +153,8 @@ export class GlideCardEditor extends LitElement {
     const { type: t, theme, mode, accent } = this.config;
     const base: Record<string, unknown> = { type: t, card_type: type, theme, mode, accent };
     if (type === "popup") Object.assign(base, { hash: "#room", title: "Room", cards: [] });
+    if (type === "chips") Object.assign(base, { chips: [] });
+    if (type === "title") Object.assign(base, { title: "Home" });
     if (type === "nav") Object.assign(base, { items: [{ name: "Home", icon: "mdi:home", navigation_path: "#home" }] });
     this.config = {} as GlideCardConfig;
     this.update_(base);
@@ -212,7 +243,7 @@ export class GlideCardEditor extends LitElement {
     .section { margin-bottom: 16px; }
     .label { font-weight: 500; margin-bottom: 8px; color: var(--primary-text-color); }
     button { font: inherit; cursor: pointer; color: var(--primary-text-color); }
-    .types { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+    .types { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 6px; }
     .types button, .theme {
       display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px;
       border-radius: 12px; border: 1px solid var(--divider-color); background: var(--card-background-color); font-size: 12px;

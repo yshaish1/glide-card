@@ -5,6 +5,18 @@ import { listThemes } from "../src/themes";
 
 type Cfg = Record<string, any>;
 const cards: Cfg[] = [
+  { card_type: "title", title: "משפחת שיש", subtitle: "גם כשלא היה הרבה, היה לנו הכל" },
+  {
+    card_type: "chips",
+    chips: [
+      { entity: "weather.home", icon: "mdi:weather-night", color: "blue" },
+      { entity: "sensor.sun_next_rising", icon: "mdi:weather-sunset-up", color: "amber" },
+      { entity: "sensor.sun_next_setting", icon: "mdi:weather-sunset-down", color: "deep-orange" },
+      { entity: "sensor.acs_on", icon: "mdi:air-conditioner", color: "light-green", tap_action: { action: "navigate", navigation_path: "/climate" } },
+      { entity: "sensor.outdoor_lights_on", icon: "mdi:outdoor-lamp", color: "teal" },
+      { entity: "sensor.indoor_lights_on", icon: "mdi:lamps", color: "orange" },
+    ],
+  },
   { card_type: "button", entity: "light.ceiling" },
   { card_type: "button", entity: "light.floor_lamp" },
   { card_type: "button", entity: "cover.blinds" },
@@ -63,7 +75,8 @@ function build() {
     el.hass = getHass();
     const g = el.getGridOptions();
     el.style.setProperty("--cols", g.columns);
-    el.style.setProperty("--rows", g.rows);
+    if (typeof g.rows === "number") el.style.setProperty("--rows", g.rows);
+    else el.style.gridRow = "auto";
     grid.appendChild(el);
     els.push(el);
   }

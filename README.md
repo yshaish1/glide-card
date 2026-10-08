@@ -54,6 +54,29 @@ items:
   - { name: More, icon: mdi:dots-grid, navigation_path: "#more", pinned: true }   # stays at the end
 # Items that don't fit scroll sideways and the current page is centred.
 
+# Page title + subtitle
+type: custom:glide-card
+card_type: title
+title: משפחת שיש
+subtitle: גם כשלא היה הרבה, היה לנו הכל
+
+# Info chips row (scrolls sideways when it doesn't fit)
+# weather = "condition · temp", timestamp sensors = "06:40", numbers keep their unit
+type: custom:glide-card
+card_type: chips
+chips:
+  - entity: weather.home
+  - entity: sensor.sun_next_rising
+    icon: mdi:weather-sunset-up
+    color: amber
+  - entity: sensor.mspr_mzgnym_dvlqym
+    name: מזגנים דולקים
+    icon: mdi:air-conditioner
+    color: light-green
+    tap_action:
+      action: navigate
+      navigation_path: /home-glass/climate
+
 # Climate (drag the dial) and media
 type: custom:glide-card
 card_type: climate

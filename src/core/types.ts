@@ -30,7 +30,7 @@ export interface ActionConfig {
   [key: string]: unknown;
 }
 
-export type CardType = "button" | "popup" | "nav" | "climate" | "media";
+export type CardType = "button" | "popup" | "nav" | "climate" | "media" | "chips" | "title";
 export type ThemeMode = "auto" | "dark" | "light";
 
 export interface BaseCardConfig {
@@ -92,9 +92,39 @@ export interface MediaCardConfig extends BaseCardConfig {
   name?: string;
 }
 
+export interface ChipConfig {
+  entity?: string;
+  name?: string; // "" hides the label
+  icon?: string;
+  /** HA colour name (`light-green`, `amber`...) or any CSS colour for the icon. */
+  color?: string;
+  /** Show this attribute instead of the state. */
+  attribute?: string;
+  /** Static text instead of the entity value. */
+  value?: string;
+  tap_action?: ActionConfig;
+  hold_action?: ActionConfig;
+}
+
+export interface ChipsCardConfig extends BaseCardConfig {
+  card_type: "chips";
+  chips: ChipConfig[];
+  align?: "center" | "start";
+}
+
+export interface TitleCardConfig extends BaseCardConfig {
+  card_type: "title";
+  title?: string;
+  subtitle?: string;
+  icon?: string;
+  align?: "center" | "start";
+}
+
 export type GlideCardConfig =
   | ButtonCardConfig
   | PopupCardConfig
   | NavCardConfig
   | ClimateCardConfig
-  | MediaCardConfig;
+  | MediaCardConfig
+  | ChipsCardConfig
+  | TitleCardConfig;
