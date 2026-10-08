@@ -31,6 +31,14 @@ export const domainColor = (s?: HassEntity) =>
     domainOf(s?.entity_id)
   ] ?? "var(--gc-accent)";
 
+const HA_COLORS = new Set([
+  "primary", "accent", "red", "pink", "purple", "deep-purple", "indigo", "blue", "light-blue", "cyan", "teal", "green",
+  "light-green", "lime", "yellow", "amber", "orange", "deep-orange", "brown", "grey", "blue-grey", "black", "white", "disabled",
+]);
+
+/** HA colour names map to the frontend's `--<name>-color` variables; anything else is used as a CSS colour. */
+export const cssColor = (c?: string) => (c ? (HA_COLORS.has(c) ? `var(--${c}-color)` : c) : undefined);
+
 /** Slider support per domain: current value (0-100) and how to set it. */
 export interface SliderSpec {
   value: number;
