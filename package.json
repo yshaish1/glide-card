@@ -1,0 +1,23 @@
+{
+  "name": "glide-card",
+  "version": "0.1.0",
+  "description": "Beautiful, themeable Home Assistant cards with real pop-up sheets",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite --open playground/",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "@mdi/js": "^7.4.47",
+    "happy-dom": "^20.14.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3"
+  }
+}

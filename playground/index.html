@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Glide Card Playground</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; min-height: 100vh; font-family: Inter, system-ui, sans-serif; color: #eee;
+        background: #0f0e13; transition: background .4s;
+      }
+      body[data-bg="glass-dark"] { background: radial-gradient(120% 80% at 10% 0%, #5a3518 0%, transparent 55%), radial-gradient(90% 70% at 100% 40%, #2b2246 0%, transparent 60%), #121016; }
+      body[data-bg="glass-light"] { background: radial-gradient(120% 80% at 10% 0%, #ffd9b0 0%, transparent 55%), radial-gradient(90% 70% at 100% 40%, #d9d4ff 0%, transparent 60%), #f4f1ee; color: #222; }
+      body[data-bg="bubble-dark"] { background: #0a0a0c; }
+      body[data-bg="bubble-light"] { background: #ececef; color: #222; }
+      body[data-bg="material-dark"] { background: #0f1513; }
+      body[data-bg="material-light"] { background: linear-gradient(#e6f4ef, #f4faf7); color: #222; }
+      .bar {
+        position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 16px;
+        background: rgba(20,20,24,.85); backdrop-filter: blur(12px); color: #eee; font-size: 13px; align-items: center;
+      }
+      .bar label { display: flex; gap: 6px; align-items: center; }
+      .bar select, .bar button { font: inherit; background: #2a2a30; color: #eee; border: 1px solid #444; border-radius: 8px; padding: 4px 8px; }
+      .stage { margin: 24px auto 140px; padding: 0 16px; transition: max-width .3s; }
+      .stage[data-w="phone"] { max-width: 420px; }
+      .stage[data-w="tablet"] { max-width: 860px; }
+      .stage[data-w="desktop"] { max-width: 1200px; }
+      h1 { font-size: 32px; margin: 8px 0 16px; }
+      /* Mimics HA sections view: 12 columns, 56px rows, 8px gap */
+      .grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: 56px; gap: 8px; }
+      .grid > * { grid-column: span var(--cols, 6); grid-row: span var(--rows, 2); min-width: 0; }
+    </style>
+  </head>
+  <body data-bg="glass-dark">
+    <div class="bar">
+      <strong>Glide Card</strong>
+      <label>Theme <select id="theme"></select></label>
+      <label>Mode <select id="mode"><option value="dark">Dark</option><option value="light">Light</option></select></label>
+      <label>Language <select id="lang"><option value="en">English (LTR)</option><option value="he">עברית (RTL)</option></select></label>
+      <label>Width <select id="width"><option value="phone">Phone</option><option value="tablet">Tablet</option><option value="desktop">Desktop</option></select></label>
+    </div>
+    <div class="stage" data-w="phone">
+      <h1 id="title">Living Room</h1>
+      <div class="grid" id="grid"></div>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
