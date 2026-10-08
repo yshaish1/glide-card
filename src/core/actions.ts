@@ -35,10 +35,8 @@ export function runAction(host: HTMLElement, hass: HomeAssistant, action: Action
     case "navigate":
       if (action.navigation_path) navigate(action.navigation_path, host);
       return;
-    case "call-service": {
-      const [domain, service] = (action.service ?? "").split(".");
-      if (domain && service) hass.callService(domain, service, action.data);
-      return;
-    }
+    default:
+      // Service calls, url, assist...: HA's own handler covers target, confirmation and perform-action.
+      fire(host, "hass-action", { config: { entity: entityId, tap_action: action }, action: "tap" });
   }
 }

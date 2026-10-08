@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
+import { runAction } from "../src/core/actions";
 import { cssColor, sliderFor, toggleEntity, entityIcon } from "../src/core/entity";
 import { springEasing } from "../src/core/spring";
 import { getTheme, listThemes, registerTheme, themeCss } from "../src/themes";
@@ -84,5 +85,16 @@ describe("cssColor", () => {
     expect(cssColor("#ff0000")).toBe("#ff0000");
     expect(cssColor("dimgray")).toBe("dimgray");
     expect(cssColor(undefined)).toBeUndefined();
+  });
+});
+
+describe("runAction", () => {
+  it("hands service calls to HA's action handler so target and confirmation work", () => {
+    const host = document.createElement("div");
+    const seen: any[] = [];
+    host.addEventListener("hass-action", (e) => seen.push((e as CustomEvent).detail));
+    const action = { action: "call-service", service: "light.turn_off", target: { entity_id: ["light.a"] }, confirmation: { text: "?" } } as const;
+    runAction(host, mockHass(), action, undefined);
+    expect(seen).toEqual([{ config: { entity: undefined, tap_action: action }, action: "tap" }]);
   });
 });
