@@ -2187,7 +2187,7 @@ var sn = [
 	duration: 450
 }, un, dn = 1e3, fn = 12, pn = (e) => !!e && e.width > 0 && e.height > 0, mn = class extends q {
 	constructor(...e) {
-		super(...e), this.cardType = "nav", this.onRoute = () => this.requestUpdate(), this.stale = !1;
+		super(...e), this.cardType = "nav", this.onRoute = () => this.requestUpdate(), this.stale = !1, this.touched = !1;
 	}
 	setConfig(e) {
 		if (!Array.isArray(e.items) || !e.items.length) throw Error("Nav needs an `items` list");
@@ -2197,12 +2197,10 @@ var sn = [
 		return this.config.items.map((e) => e.entity);
 	}
 	connectedCallback() {
-		super.connectedCallback();
-		let e = this.scroller();
-		e && this.resizer?.observe(e), sn.forEach((e) => window.addEventListener(e, this.onRoute)), this.rendered !== void 0 && this.rendered !== cn() && (this.stale = !0, this.requestUpdate());
+		super.connectedCallback(), this.observe(), sn.forEach((e) => window.addEventListener(e, this.onRoute)), this.rendered !== void 0 && this.rendered !== cn() && (this.stale = !0, this.requestUpdate());
 	}
 	disconnectedCallback() {
-		super.disconnectedCallback(), this.resizer?.disconnect(), sn.forEach((e) => window.removeEventListener(e, this.onRoute));
+		super.disconnectedCallback(), this.resizer?.disconnect(), clearTimeout(this.settle), sn.forEach((e) => window.removeEventListener(e, this.onRoute));
 	}
 	getGridOptions() {
 		return {
@@ -2227,6 +2225,12 @@ var sn = [
 		let t = e.classList.contains("overflow") ? 24 : 0;
 		e.classList.toggle("overflow", e.scrollWidth - t > e.clientWidth + 1);
 	}
+	inView(e) {
+		let t = e.querySelector("button.active");
+		if (!t || !e.classList.contains("overflow")) return !0;
+		let n = e.getBoundingClientRect(), r = t.getBoundingClientRect();
+		return r.left >= n.left + fn - 2 && r.right <= n.right - fn + 2;
+	}
 	reveal(e) {
 		let t = this.scroller();
 		if (!t || t.clientWidth <= 0) return;
@@ -2236,16 +2240,29 @@ var sn = [
 			let r = t.getBoundingClientRect(), i = n.getBoundingClientRect();
 			t.scrollBy({
 				left: i.left + i.width / 2 - (r.left + r.width / 2),
-				behavior: e ? "smooth" : "instant"
+				behavior: e ? "smooth" : "auto"
 			});
 		}
-		this.centred = cn();
+		this.centred = cn(), this.touched = !1, clearTimeout(this.settle), e && (this.settle = window.setTimeout(() => this.recheck(), 600));
+	}
+	recheck() {
+		let e = this.scroller();
+		e && (this.markOverflow(e), (this.centred !== cn() || !this.touched && !this.inView(e)) && this.reveal(!1));
+	}
+	observe() {
+		let e = this.scroller();
+		e && this.resizer && (this.resizer.observe(e), e.querySelectorAll("button").forEach((e) => this.resizer.observe(e)));
 	}
 	firstUpdated() {
 		let e = this.scroller();
-		e && typeof ResizeObserver < "u" && (this.resizer = new ResizeObserver(() => {
-			this.centred === cn() ? this.markOverflow(e) : this.reveal(!1);
-		}), this.resizer.observe(e));
+		if (!e) return;
+		let t = () => this.touched = !0;
+		for (let n of [
+			"touchstart",
+			"pointerdown",
+			"wheel"
+		]) e.addEventListener(n, t, { passive: !0 });
+		typeof ResizeObserver < "u" && (this.resizer = new ResizeObserver(() => this.recheck()), this.observe());
 	}
 	willUpdate(e) {
 		super.willUpdate(e), this.from = this.stale ? void 0 : this.indRect();
@@ -2267,7 +2284,7 @@ var sn = [
 		}, {
 			transform: "none",
 			width: "100%"
-		}], ln), this.centred !== e && this.reveal(!!this.centred || !!s);
+		}], ln), this.observe(), this.centred !== e && this.reveal(!!this.centred || !!s);
 	}
 	item(e) {
 		let t = this.isCurrent(e);
@@ -3597,7 +3614,7 @@ var Hn = class extends R {
 customElements.define("glide-card-editor", Hn);
 //#endregion
 //#region src/glide-card.ts
-var Un = "0.9.1", Wn = [
+var Un = "0.9.2", Wn = [
 	"button",
 	"popup",
 	"nav",
