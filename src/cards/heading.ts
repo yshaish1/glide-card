@@ -122,10 +122,15 @@ export class GlideHeading extends GlideBase<HeadingCardConfig> {
       .chev {
         --mdc-icon-size: 20px;
         color: var(--gc-text-dim);
-        align-self: center;
-        margin-bottom: -6px;
+        /* Same 30px line box as the title, bottom-aligned with it, so the chevron sits on the text's middle */
+        display: flex;
+        align-items: center;
+        height: 30px;
+        align-self: flex-end;
+        flex: none;
         margin-inline-start: -6px;
       }
+      .small .chev { height: 24px; --mdc-icon-size: 18px; }
       .chev:dir(rtl) { transform: scaleX(-1); }
       /* Divider fading out after the title */
       .line {
