@@ -75,14 +75,41 @@ async function callService(domain: string, service: string, data: Record<string,
   }
 }
 
+// Tiny stand-in for HA's render_template: only {{ states('id') }} and {{ state_attr('id','attr') }}.
+type TplSub = { cb: (msg: { result?: unknown; error?: string }) => void; template: string };
+const tplSubs = new Set<TplSub>();
+const renderTpl = (t: string) =>
+  t.replace(/\{\{\s*(.*?)\s*\}\}/g, (_, expr: string) => {
+    let m = expr.match(/^states\(['"]([^'"]+)['"]\)$/);
+    if (m) return states[m[1]]?.state ?? "unknown";
+    m = expr.match(/^state_attr\(['"]([^'"]+)['"],\s*['"]([^'"]+)['"]\)$/);
+    if (m) return String(states[m[1]]?.attributes[m[2]] ?? "None");
+    throw new Error(`mock can't render: ${expr}`);
+  });
+const sendTpl = (sub: TplSub) => {
+  try { sub.cb({ result: renderTpl(sub.template) }); } catch (e) { sub.cb({ error: String(e) }); }
+};
+const connection = {
+  async subscribeMessage<T>(cb: (msg: T) => void, msg: Record<string, unknown>) {
+    const sub: TplSub = { cb: cb as TplSub["cb"], template: String(msg.template) };
+    tplSubs.add(sub);
+    setTimeout(() => sendTpl(sub), 50);
+    return () => tplSubs.delete(sub);
+  },
+};
+
 export function getHass(): HomeAssistant {
-  return { states, language, locale: { language }, themes: { darkMode }, callService };
+  return { states, language, locale: { language }, themes: { darkMode }, callService, connection, user: { name: "Yossi" } };
 }
 
 function emit() {
   const h = getHass();
   listeners.forEach((l) => l(h));
+  tplSubs.forEach(sendTpl);
 }
+
+/** Lets the playground change a sensor to watch templates update. */
+export const setState = (id: string, state: string) => patch(id, state);
 
 export const subscribe = (l: Listener) => (listeners.add(l), l(getHass()));
 export const setLanguage = (l: string) => ((language = l), emit());

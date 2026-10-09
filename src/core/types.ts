@@ -12,6 +12,11 @@ export interface HomeAssistant {
   language: string;
   locale?: { language: string };
   themes?: { darkMode?: boolean };
+  user?: { name: string };
+  /** HA websocket connection; used for server-rendered templates. */
+  connection?: {
+    subscribeMessage<T>(callback: (msg: T) => void, message: Record<string, unknown>): Promise<() => unknown>;
+  };
   callService(domain: string, service: string, data?: Record<string, unknown>): Promise<unknown>;
 }
 
@@ -57,6 +62,11 @@ export interface ButtonCardConfig extends BaseCardConfig {
   slider?: boolean;
   /** Overrides the domain colour: an HA colour name (`cyan`, `light-blue`, ...) or any CSS colour. */
   color?: string;
+  /** Line under the name, replacing the automatic brightness/position text. */
+  secondary?: string;
+  /** Text for the corner badge, replacing the state. */
+  badge?: string;
+  // name, icon, color, secondary and badge also accept HA templates ({{ ... }}).
 }
 
 export interface PopupCardConfig extends BaseCardConfig {

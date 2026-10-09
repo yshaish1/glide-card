@@ -21,6 +21,13 @@ const cards: Cfg[] = [
   { card_type: "heading", title: "סלון פינת אוכל", icon: "mdi:sofa", badges: [{ entity: "sensor.living_temp", icon: "mdi:thermometer", color: "orange" }, { entity: "sensor.indoor_lights_on", icon: "mdi:lightbulb-group", color: "amber" }] },
   { card_type: "button", entity: "light.ceiling" },
   { card_type: "button", entity: "light.floor_lamp" },
+  // Summary button driven by templates, like a Mushroom template card ("X of Y on").
+  {
+    card_type: "button", name: "אורות", icon: "mdi:lightbulb-group",
+    secondary: "{{ states('sensor.indoor_lights_on') }} of 12 on",
+    badge: "{{ states('sensor.outdoor_lights_on') }} בחוץ",
+    color: "amber",
+  },
   { card_type: "button", entity: "cover.blinds" },
   { card_type: "button", entity: "fan.ceiling" },
   { card_type: "button", entity: "script.good_night" },

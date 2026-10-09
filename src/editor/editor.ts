@@ -1,6 +1,7 @@
 import { LitElement, css, html, nothing } from "lit";
 import { fire } from "../core/fire";
 import { TAP_EFFECTS } from "../core/tap-fx";
+import { isTemplate } from "../core/templates";
 import type { CardType, GlideCardConfig, HomeAssistant } from "../core/types";
 import { listThemes } from "../themes";
 
@@ -33,6 +34,27 @@ const TAP_FIELD = {
   name: "tap_animation",
   selector: { select: { mode: "dropdown", options: Object.entries(TAP_EFFECTS).map(([value, label]) => ({ value, label })) } },
 };
+
+// Button text, icon and colour can be HA templates (rendered live, like Mushroom's template card).
+const TEMPLATE_FIELDS = ["name", "secondary", "badge", "icon", "color"] as const;
+const templates = {
+  type: "expandable",
+  title: "Templates",
+  icon: "mdi:code-braces",
+  schema: TEMPLATE_FIELDS.map((name) => ({ name, selector: { template: {} } })),
+};
+
+/** Per-config schema: a main-grid picker is hidden while its value is a template, so it's edited in Templates only. */
+function schemaFor(c: GlideCardConfig): unknown[] {
+  let schema = SCHEMAS[c.card_type];
+  if (c.card_type === "button") {
+    const cfg = c as unknown as Record<string, unknown>;
+    const hide = (f: { name?: string }) => !(f.name && ["name", "icon", "color"].includes(f.name) && isTemplate(cfg[f.name]));
+    schema = schema.map((f: any) => (f.type === "grid" ? { ...f, schema: f.schema.filter(hide) } : f));
+    schema = [...schema.slice(0, -1), templates, schema[schema.length - 1]]; // before Interactions
+  }
+  return TAP_TYPES.has(c.card_type) ? [...schema, TAP_FIELD] : schema;
+}
 
 const ALIGN = { select: { mode: "dropdown", options: [{ value: "center", label: "Center" }, { value: "start", label: "Start" }] } };
 
@@ -148,6 +170,8 @@ const LABELS: Record<string, string> = {
   items: "Nav items (path or #popup-hash)",
   entity: "Entity",
   tap_animation: "Tap animation (empty = dashboard default)",
+  secondary: "Secondary line, e.g. {{ states.light | selectattr('state','eq','on') | list | count }} of 7 on",
+  badge: "Badge text (empty = entity state)",
 };
 
 /** Loads HA's lazy form components (ha-form etc.) by asking a built-in card for its editor. */
@@ -248,7 +272,7 @@ export class GlideCardEditor extends LitElement {
         ? html`<ha-form
             .hass=${this.hass}
             .data=${c}
-            .schema=${TAP_TYPES.has(c.card_type) ? [...SCHEMAS[c.card_type], TAP_FIELD] : SCHEMAS[c.card_type]}
+            .schema=${schemaFor(c)}
             .computeLabel=${(s: { name: string }) => LABELS[s.name]}
             @value-changed=${(e: CustomEvent) => {
               e.stopPropagation();

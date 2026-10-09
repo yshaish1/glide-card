@@ -6,16 +6,31 @@ import { cssColor, domainColor, domainOf, entityIcon, entityName, isActive, isUn
 import { haptic } from "../core/fire";
 import { attachGestures } from "../core/gestures";
 import { formatState } from "../core/i18n";
+import { TemplateController } from "../core/templates";
 import type { ActionConfig, ButtonCardConfig } from "../core/types";
+
+/** A rendered icon template only counts when it looks like an icon ("mdi:..."), e.g. not "unknown". */
+const iconOrUndefined = (v?: string) => (v && /^[\w-]+:[\w-]+$/.test(v.trim()) ? v.trim() : undefined);
 
 const STATELESS = new Set(["scene", "script", "button", "input_button"]);
 const TOGGLEABLE = new Set(["light", "switch", "fan", "input_boolean", "cover", "lock", "scene", "script", "button", "input_button", "siren", "humidifier"]);
 
 export class GlideButton extends GlideBase<ButtonCardConfig> {
-  static properties = { ...GlideBase.properties, dragValue: { state: true } };
+  static properties = { ...GlideBase.properties, dragValue: { state: true }, templateRev: { state: true } };
   protected readonly cardType = "button" as const;
   dragValue?: number;
+  /** Bumped per template result, so the update isn't dropped by the hass-only update filter. */
+  templateRev = 0;
   private detach?: () => void;
+  private tpl = new TemplateController(
+    this,
+    () => {
+      const c = this.config ?? {};
+      return { name: c.name, secondary: c.secondary, badge: c.badge, icon: c.icon, color: c.color };
+    },
+    () => ({ hass: this.hass, config: this.config as unknown as Record<string, unknown>, entity: this.config?.entity }),
+    () => this.templateRev++,
+  );
 
   get layout() {
     return this.config.layout ?? this.theme.defaults?.buttonLayout ?? "tile";
@@ -108,28 +123,33 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     const cover = this.isCover;
     // Covers stay neutral like the mockup; the fill alone shows how open they are.
     const on = !cover && (this.dragValue !== undefined ? this.dragValue > 0 : isActive(s));
-    const stateText = this.hass && this.config.entity ? formatState(this.hass, this.config.entity) : "";
+    const stateText = this.hass && this.config.entity && s ? formatState(this.hass, this.config.entity) : "";
     const stateless = STATELESS.has(domainOf(this.config.entity));
+    const name = entityName(s, this.tpl.get("name") || undefined);
     // The badge carries the state; the meta line only adds what the badge can't (e.g. brightness).
     // Covers flip it: the badge shows the position and the meta line spells it out ("40% Open").
-    const badge = cover ? `${value}%` : stateText;
-    const meta = cover ? `${value}% ${stateText}` : slider && on && value !== undefined ? `${value}%` : "";
+    // A `badge` / `secondary` (text or template) replaces either.
+    const customBadge = this.config.badge !== undefined ? this.tpl.get("badge") ?? "" : undefined;
+    const badge = customBadge ?? (stateless ? "" : cover ? `${value}%` : stateText);
+    const meta = this.config.secondary !== undefined
+      ? this.tpl.get("secondary") ?? ""
+      : cover ? `${value}% ${stateText}` : slider && on && value !== undefined ? `${value}%` : "";
     const fill = slider ? value ?? 0 : on ? 100 : 0;
     return html`
       <div
         class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
-        style=${styleMap({ "--domain": cssColor(this.config.color) ?? domainColor(s), "--fill": `${fill}%` })}
+        style=${styleMap({ "--domain": cssColor(this.tpl.get("color")?.trim()) ?? domainColor(s), "--fill": `${fill}%` })}
         role="button"
         tabindex="0"
-        aria-label=${entityName(s, this.config.name)}
+        aria-label=${name}
       >
         <div class="fill ${this.dragValue !== undefined ? "dragging" : ""}"></div>
-        <div class="icon"><ha-icon .icon=${entityIcon(s, this.config.icon)}></ha-icon></div>
+        <div class="icon"><ha-icon .icon=${entityIcon(s, iconOrUndefined(this.tpl.get("icon")))}></ha-icon></div>
         <div class="text">
-          <div class="name">${entityName(s, this.config.name)}</div>
+          <div class="name">${name}</div>
           ${meta ? html`<div class="meta">${meta}</div>` : nothing}
         </div>
-        ${badge && !stateless ? html`<div class="badge meta">${badge}</div>` : nothing}
+        ${badge ? html`<div class="badge meta">${badge}</div>` : nothing}
       </div>
     `;
   }
@@ -196,6 +216,10 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
         color: var(--gc-icon-on, var(--domain));
       }
       .text { position: relative; min-width: 0; }
+      /* Each line orders its words by its own language ("7 of 12 on" stays readable on a Hebrew dashboard) but keeps the card's alignment. */
+      .text > *, .badge { unicode-bidi: plaintext; }
+      .text > *:dir(rtl) { text-align: right; }
+      .text > *:dir(ltr) { text-align: left; }
       .name {
         font-size: 16px;
         font-weight: 600;

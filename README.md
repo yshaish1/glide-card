@@ -102,6 +102,27 @@ card_type: media
 entity: media_player.sonos
 ```
 
+### Templates (buttons)
+
+A button's `name`, `secondary` (the line under the name), `badge` (the corner pill), `icon` and `color` accept Home Assistant templates, like a Mushroom template card. Home Assistant renders them and updates them live. On/off still follows `entity`. A button with no `entity` works as a summary tile.
+
+```yaml
+type: custom:glide-card
+card_type: button
+name: Lights
+icon: mdi:lightbulb-group
+secondary: >-
+  {% set lights = area_entities('living_room') | select('match', 'light.') | list %}
+  {{ lights | select('is_state', 'on') | list | count }} of {{ lights | count }} on
+badge: "{{ states('sensor.outdoor_lights_on') }} outside"
+color: "{{ 'amber' if is_state('light.living_room', 'on') else 'grey' }}"
+tap_action:
+  action: navigate
+  navigation_path: "#lights"
+```
+
+`secondary` replaces the automatic brightness/position text, and `badge` replaces the state. All of these also take plain text. In the visual editor, they're under **Templates**.
+
 ### Shared options
 
 | Option | Values |
