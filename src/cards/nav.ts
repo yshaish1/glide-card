@@ -19,6 +19,10 @@ const SLIDE = CSS.supports?.("animation-timing-function", "linear(0, 1)")
 let handoff: { rect: DOMRect; scroll: number; at: number } | undefined;
 const HANDOFF_MS = 1000;
 
+/** The bar's own scroll animation; native smooth scrolling is unreliable on iOS with scroll-snap. */
+const GLIDE_MS = 450;
+const easeOut = (p: number) => 1 - (1 - p) ** 3;
+
 /** Edge padding while the bar scrolls, so a clamped end item clears the fade mask. */
 const EDGE = 12;
 
@@ -46,8 +50,8 @@ export class GlideNav extends GlideBase<NavCardConfig> {
   private resizer?: ResizeObserver;
   /** The user touched the bar since the last reveal: leave their scrolling alone. */
   private touched = false;
-  /** A smooth reveal is in flight; resizes retarget it smoothly instead of jumping. */
-  private sliding?: number;
+  /** Frame of the scroll animation in flight; resizes retarget it instead of jumping. */
+  private glide?: number;
   /** The route changed before the bar was laid out: the slide (scroll + indicator) runs once it is. */
   private pending?: { scroll?: number; rect?: DOMRect };
 
@@ -73,8 +77,8 @@ export class GlideNav extends GlideBase<NavCardConfig> {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.resizer?.disconnect();
-    clearTimeout(this.sliding);
-    this.sliding = undefined;
+    const scroller = this.scroller();
+    if (scroller) this.stopGlide(scroller);
     ROUTE_EVENTS.forEach((e) => window.removeEventListener(e, this.onRoute));
   }
 
@@ -131,29 +135,46 @@ export class GlideNav extends GlideBase<NavCardConfig> {
       smooth = true;
     }
     smooth &&= !reducedMotion();
-    const active = scroller.querySelector<HTMLElement>("button.active");
-    if (active) {
-      const s = scroller.getBoundingClientRect(), a = active.getBoundingClientRect();
-      // "auto", not "instant": older iOS Safari rejects the newer value
-      scroller.scrollBy({ left: a.left + a.width / 2 - (s.left + s.width / 2), behavior: smooth ? "smooth" : "auto" });
-    }
     this.centred = route();
     this.touched = false;
-    // A smooth scroll can be cut short (layout shifts, snapping): check where it ended up
-    clearTimeout(this.sliding);
-    this.sliding = smooth
-      ? window.setTimeout(() => {
-          this.sliding = undefined;
-          this.recheck();
-        }, 600)
-      : undefined;
+    this.stopGlide(scroller);
+    const active = scroller.querySelector<HTMLElement>("button.active");
+    if (!active) return;
+    const s = scroller.getBoundingClientRect(), a = active.getBoundingClientRect();
+    const start = scroller.scrollLeft;
+    scroller.scrollLeft = start + a.left + a.width / 2 - (s.left + s.width / 2);
+    const end = scroller.scrollLeft; // read back: the browser clamps it to the scroll range
+    if (!smooth || Math.abs(end - start) < 1) return;
+
+    // Animated by hand, frame by frame. Snapping is off meanwhile so it can't pull the bar elsewhere.
+    scroller.scrollLeft = start;
+    scroller.style.scrollSnapType = "none";
+    const t0 = performance.now();
+    const step = (t: number) => {
+      if (this.touched) return this.stopGlide(scroller);
+      const p = Math.min(1, (t - t0) / GLIDE_MS);
+      scroller.scrollLeft = start + (end - start) * easeOut(p);
+      if (p < 1) this.glide = requestAnimationFrame(step);
+      else {
+        this.stopGlide(scroller);
+        this.recheck(); // layout may have moved the target meanwhile
+      }
+    };
+    this.glide = requestAnimationFrame(step);
+  }
+
+  private stopGlide(scroller: HTMLElement) {
+    if (this.glide !== undefined) cancelAnimationFrame(this.glide);
+    this.glide = undefined;
+    scroller.style.scrollSnapType = "";
   }
 
   private recheck() {
     const scroller = this.scroller();
     if (!scroller) return;
     this.markOverflow(scroller);
-    if (this.centred !== route() || (!this.touched && !this.inView(scroller))) this.reveal(this.sliding !== undefined);
+    if (this.centred !== route()) this.reveal(false);
+    else if (!this.touched && (this.glide !== undefined || !this.inView(scroller))) this.reveal(true);
   }
 
   /** FLIP the indicator from where it was (`from`, viewport coords) to where it is now. */

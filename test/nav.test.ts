@@ -23,6 +23,30 @@ const go = (path: string) => {
   window.dispatchEvent(new CustomEvent("location-changed"));
 };
 
+/** A fake laid-out bar: rects follow scrollLeft, which the "browser" clamps to the scroll range. */
+const fakeBar = (nav: any, opts: { width: number; content: number; activeAt: number }) => {
+  const scroller = nav.shadowRoot.querySelector(".scroller");
+  const bar = { ...opts, scroll: 0, writes: 0 };
+  Object.defineProperty(scroller, "clientWidth", { configurable: true, get: () => bar.width });
+  Object.defineProperty(scroller, "scrollWidth", { configurable: true, get: () => bar.content });
+  Object.defineProperty(scroller, "scrollLeft", {
+    configurable: true,
+    get: () => bar.scroll,
+    set: (v: number) => {
+      bar.scroll = Math.max(0, Math.min(v, bar.content - bar.width));
+      bar.writes++;
+    },
+  });
+  scroller.getBoundingClientRect = () => ({ left: 0, right: bar.width, width: bar.width, height: 50 }) as DOMRect;
+  nav.shadowRoot.querySelector("button.active").getBoundingClientRect = () =>
+    ({ left: bar.activeAt - bar.scroll, right: bar.activeAt + 60 - bar.scroll, width: 60, height: 40 }) as DOMRect;
+  return { bar, scroller };
+};
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+let observed: (() => void) | undefined;
+const stubResize = () =>
+  vi.stubGlobal("ResizeObserver", class { constructor(cb: () => void) { observed = cb; } observe() {} disconnect() {} });
+
 describe("nav", () => {
   it("one indicator, inside the active button", async () => {
     go("/d/kitchen");
@@ -55,85 +79,68 @@ describe("nav", () => {
 
   it("reveals the active item once the bar is laid out, then leaves the user's scrolling alone", async () => {
     // HA renders a view's nav before laying it out: no width on the first update
-    let observed: (() => void) | undefined;
-    vi.stubGlobal("ResizeObserver", class { constructor(cb: () => void) { observed = cb; } observe() {} disconnect() {} });
+    stubResize();
     go("/d/office");
     const nav = await mount(document.body);
-    const scroller = nav.shadowRoot.querySelector(".scroller");
-    const scrollBy = vi.fn();
-    scroller.scrollBy = scrollBy;
-    expect(scrollBy).not.toHaveBeenCalled();
+    const { bar } = fakeBar(nav, { width: 0, content: 500, activeAt: 300 });
+    expect(bar.writes).toBe(0);
 
-    let width = 0;
-    Object.defineProperty(scroller, "clientWidth", { get: () => width });
-    scroller.getBoundingClientRect = () => ({ left: 0, width: 200 }) as DOMRect;
-    nav.shadowRoot.querySelector("button.active").getBoundingClientRect = () => ({ left: 300, width: 60 }) as DOMRect;
-    width = 200;
-    observed!();
-    expect(scrollBy).toHaveBeenCalledOnce();
-    expect(scrollBy.mock.calls[0][0]).toEqual({ left: 230, behavior: "auto" });
+    bar.width = 200;
+    observed!(); // laid out, no tap to carry on from (page load): straight to centre
+    expect(bar.scroll).toBe(230);
 
+    const writes = bar.writes;
     nav.hass = { ...hass }; // a state update
     await nav.updateComplete;
     observed!();
-    expect(scrollBy).toHaveBeenCalledOnce();
+    expect(bar.writes).toBe(writes);
     nav.remove();
     vi.unstubAllGlobals();
   });
 
-  it("reveals again when the bar settles narrower and leaves the item cut off, unless the user scrolled", async () => {
-    let observed: (() => void) | undefined;
-    vi.stubGlobal("ResizeObserver", class { constructor(cb: () => void) { observed = cb; } observe() {} disconnect() {} });
+  it("glides again when the bar settles narrower and cuts the item off, unless the user scrolled", async () => {
+    stubResize();
     go("/d/office");
     const nav = await mount(document.body);
-    const scroller = nav.shadowRoot.querySelector(".scroller");
-    const scrollBy = vi.fn();
-    scroller.scrollBy = scrollBy;
-    Object.defineProperty(scroller, "clientWidth", { get: () => 200 });
-    Object.defineProperty(scroller, "scrollWidth", { get: () => 400 });
-    let right = 300;
-    scroller.getBoundingClientRect = () => ({ left: 0, right, width: right }) as DOMRect;
-    const active = nav.shadowRoot.querySelector("button.active");
-    active.getBoundingClientRect = () => ({ left: 220, right: 280, width: 60 }) as DOMRect;
-    observed!(); // laid out: first reveal
-    expect(scrollBy).toHaveBeenCalledTimes(1);
-
-    observed!(); // nothing changed, item still in view
-    expect(scrollBy).toHaveBeenCalledTimes(1);
-
-    right = 200; // the bar settled narrower: the item now sticks out
+    const { bar, scroller } = fakeBar(nav, { width: 200, content: 500, activeAt: 300 });
     observed!();
-    expect(scrollBy).toHaveBeenCalledTimes(2);
+    expect(bar.scroll).toBe(230);
+
+    bar.width = 120; // the item now sticks out past the end
+    observed!();
+    expect(bar.scroll).toBe(230); // animated, not a jump
+    expect(scroller.style.scrollSnapType).toBe("none");
+    await wait(600);
+    expect(bar.scroll).toBe(270); // centred in the narrower bar
+    expect(scroller.style.scrollSnapType).toBe("");
 
     scroller.dispatchEvent(new Event("touchstart")); // the user scrolls it away themselves
+    const writes = bar.writes;
+    bar.width = 100;
     observed!();
-    expect(scrollBy).toHaveBeenCalledTimes(2);
+    expect(bar.writes).toBe(writes);
     nav.remove();
     vi.unstubAllGlobals();
   });
 
-  it("a view's nav laid out after the tap still slides: from the tapped bar's scroll, smoothly", async () => {
-    let observed: (() => void) | undefined;
-    vi.stubGlobal("ResizeObserver", class { constructor(cb: () => void) { observed = cb; } observe() {} disconnect() {} });
+  it("a view's nav laid out after the tap glides from the tapped bar's scroll to the item", async () => {
+    stubResize();
     go("/d/main");
     const old = await mount(document.body);
     old.shadowRoot.querySelector(".ind").getBoundingClientRect = () => ({ left: 10, width: 60, height: 40 }) as DOMRect;
-    old.shadowRoot.querySelector(".scroller").scrollLeft = 0;
     old.shadowRoot.querySelectorAll("button")[3].click(); // tap "office": hands off, then navigates
     old.remove();
 
     const nav = await mount(document.body); // the next view's nav: no width yet
-    const scroller = nav.shadowRoot.querySelector(".scroller");
-    const scrollBy = vi.fn();
-    scroller.scrollBy = scrollBy;
-    expect(scrollBy).not.toHaveBeenCalled();
-
-    Object.defineProperty(scroller, "clientWidth", { get: () => 200 });
-    scroller.getBoundingClientRect = () => ({ left: 0, right: 200, width: 200 }) as DOMRect;
-    nav.shadowRoot.querySelector("button.active").getBoundingClientRect = () => ({ left: 300, right: 360, width: 60 }) as DOMRect;
+    const { bar } = fakeBar(nav, { width: 0, content: 500, activeAt: 300 });
+    bar.width = 200;
     observed!();
-    expect(scrollBy).toHaveBeenCalledOnce();
-    expect(scrollBy.mock.calls[0][0].behavior).toBe("smooth");
+    expect(bar.scroll).toBe(0); // starts where the tapped bar was
+    await wait(200);
+    expect(bar.scroll).toBeGreaterThan(0); // mid-glide
+    expect(bar.scroll).toBeLessThan(230);
+    await wait(400);
+    expect(bar.scroll).toBe(230);
     nav.remove();
     vi.unstubAllGlobals();
   });
