@@ -1,6 +1,6 @@
 {
   "name": "glide-card",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Beautiful, themeable Home Assistant cards with real pop-up sheets",
   "type": "module",
   "license": "MIT",

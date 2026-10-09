@@ -15,6 +15,10 @@ const initial: HassEntity[] = [
     friendly_name: "Climate Control", temperature: 21.5, current_temperature: 22, min_temp: 7, max_temp: 30,
     target_temp_step: 0.5, hvac_modes: ["heat", "cool", "heat_cool", "off"], hvac_action: "heating",
   }),
+  e("climate.ac", "cool", {
+    friendly_name: "טמפרטורה", temperature: 25, current_temperature: 25.8, min_temp: 16, max_temp: 30,
+    target_temp_step: 0.5, hvac_modes: ["off", "heat", "cool", "dry", "heat_cool", "fan_only"], hvac_action: "idle",
+  }),
   e("media_player.sonos", "playing", {
     friendly_name: "Sonos Era 300", media_title: "Solaris", media_artist: "Ólafur Arnalds", app_name: "AirPlay",
     entity_picture: "https://picsum.photos/seed/solaris/300", volume_level: 0.45, media_duration: 248,

@@ -42,5 +42,9 @@ export const glass: GlideTheme = {
       "--gc-scrim": "rgba(0,0,0,.2)",
     },
   },
+  styles: {
+    // Glass keeps a soft glow under the dial's value arc.
+    climate: `.value{filter:drop-shadow(0 0 6px color-mix(in srgb,var(--mode) 45%,transparent))}`,
+  },
   defaults: { buttonLayout: "tile" },
 };
