@@ -8,8 +8,8 @@ export let popupOrigin: DOMRect | undefined;
 export function openPopup(hash: string, from?: Element) {
   popupOrigin = from?.getBoundingClientRect();
   const target = hash.startsWith("#") ? hash : `#${hash}`;
-  if (location.hash === target) return;
-  history.pushState({ glidePopup: true }, "", target);
+  // Already on that hash (e.g. left behind by a closed view): re-sync so the sheet still opens.
+  if (location.hash !== target) history.pushState({ glidePopup: true }, "", target);
   window.dispatchEvent(new CustomEvent("glide-hash"));
 }
 

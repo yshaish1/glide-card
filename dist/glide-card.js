@@ -897,7 +897,7 @@ var U = (e = "light") => H(window, "haptic", e), ot;
 function st(e, t) {
 	ot = t?.getBoundingClientRect();
 	let n = e.startsWith("#") ? e : `#${e}`;
-	location.hash !== n && (history.pushState({ glidePopup: !0 }, "", n), window.dispatchEvent(new CustomEvent("glide-hash")));
+	location.hash !== n && history.pushState({ glidePopup: !0 }, "", n), window.dispatchEvent(new CustomEvent("glide-hash"));
 }
 function ct(e, t) {
 	if (e.startsWith("#")) return st(e, t);
@@ -1397,7 +1397,7 @@ var Ct = () => matchMedia("(prefers-reduced-motion: reduce)").matches, wt = "(mi
 		};
 	}
 	constructor() {
-		super(), this.cardType = "popup", this.open = !1, this.children_ = [], this.built = !1, this.forward = (e) => {
+		super(), this.cardType = "popup", this.open = !1, this.children_ = [], this.built = !1, this.locked = !1, this.forward = (e) => {
 			let t = document.querySelector("home-assistant");
 			if (!t || e.__glideForwarded) return;
 			e.stopPropagation();
@@ -1410,6 +1410,12 @@ var Ct = () => matchMedia("(prefers-reduced-motion: reduce)").matches, wt = "(mi
 		};
 		for (let e of Dt) this.addEventListener(e, this.forward);
 		this.addEventListener("keydown", (e) => e.key === "Escape" && this.requestClose());
+	}
+	disconnectedCallback() {
+		super.disconnectedCallback(), this.lock(!1);
+	}
+	lock(e) {
+		this.locked === e || e && !this.isConnected || (this.locked = e, jt(e));
 	}
 	setHass(e) {
 		this.hass = e;
@@ -1433,7 +1439,7 @@ var Ct = () => matchMedia("(prefers-reduced-motion: reduce)").matches, wt = "(mi
 		this.open && (U("light"), history.state?.glidePopup ? history.back() : (history.replaceState(history.state, "", location.pathname + location.search), window.dispatchEvent(new CustomEvent("glide-hash"))));
 	}
 	updated(e) {
-		super.updated(e), e.has("open") && (e.get("open") !== void 0 || this.open) && (this.open ? (this.build(), this.origin = ot, jt(!0), this.animateOpen()) : (jt(!1), this.animateClose()));
+		super.updated(e), e.has("open") && (e.get("open") !== void 0 || this.open) && (this.open ? (this.build(), this.origin = ot, this.lock(!0), this.animateOpen()) : (this.lock(!1), this.animateClose()));
 	}
 	get panel() {
 		return this.renderRoot.querySelector(".panel");
@@ -1658,20 +1664,27 @@ var Ct = () => matchMedia("(prefers-reduced-motion: reduce)").matches, wt = "(mi
 };
 customElements.define("glide-sheet", Mt);
 var Y = /* @__PURE__ */ new Map(), Nt, Pt = (e) => e.startsWith("#") ? e : `#${e}`;
-function Ft(e) {
-	let t = Pt(e.hash), n = Y.get(t);
-	n || (n = document.createElement("glide-sheet"), document.body.appendChild(n), Y.set(t, n)), n.setConfig(e), Nt && n.setHass(Nt), Rt();
+function Ft(e, t) {
+	let n = Pt(e.hash), r = Y.get(n);
+	if (!r) {
+		let e = document.createElement("glide-sheet");
+		document.body.appendChild(e), Y.set(n, r = {
+			el: e,
+			owners: /* @__PURE__ */ new Set()
+		});
+	}
+	r.owners.add(t), r.el.setConfig(e), Nt && r.el.setHass(Nt), Rt();
 }
-function It(e) {
-	let t = Y.get(Pt(e));
-	t && (t.remove(), Y.delete(Pt(e)));
+function It(e, t) {
+	let n = Y.get(Pt(e));
+	n && n.owners.delete(t) && !n.owners.size && (n.el.remove(), Y.delete(Pt(e)));
 }
 function Lt(e) {
-	Nt = e, Y.forEach((t) => t.setHass(e));
+	Nt = e, Y.forEach(({ el: t }) => t.setHass(e));
 }
 function Rt() {
 	let e = decodeURIComponent(location.hash);
-	Y.forEach((t, n) => t.open = n === e);
+	Y.forEach(({ el: t }, n) => t.open = n === e);
 }
 for (let e of [
 	"popstate",
@@ -1688,18 +1701,18 @@ var zt = class extends K {
 	setConfig(e) {
 		if (!e.hash) throw Error("Pop-up needs a `hash`, e.g. #living-room");
 		if (!Array.isArray(e.cards)) throw Error("Pop-up needs a `cards` list");
-		super.setConfig(e), this.isConnected && Ft(e);
+		super.setConfig(e), this.isConnected && Ft(e, this);
 	}
 	shouldUpdate(e) {
 		return e.has("hass") && this.hass && Lt(this.hass), e.has("editMode") || e.has("config") || super.shouldUpdate(e);
 	}
 	connectedCallback() {
-		super.connectedCallback(), this.config && Ft(this.config);
+		super.connectedCallback(), this.config && Ft(this.config, this);
 	}
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		let e = this.config?.hash;
-		setTimeout(() => !this.isConnected && e && It(e), 1e3);
+		setTimeout(() => !this.isConnected && e && It(e, this), 1e3);
 	}
 	updated(e) {
 		if (super.updated(e), e.has("editMode")) {
@@ -3064,7 +3077,7 @@ var gn = class extends L {
 customElements.define("glide-card-editor", gn);
 //#endregion
 //#region src/glide-card.ts
-var _n = "0.6.0", vn = [
+var _n = "0.6.1", vn = [
 	"button",
 	"popup",
 	"nav",

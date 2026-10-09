@@ -31,6 +31,8 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
   private children_: HTMLElement[] = [];
   private built = false;
   private origin?: DOMRect;
+  /** Whether this sheet holds a scroll lock, so it's taken and released exactly once. */
+  private locked = false;
 
   constructor() {
     super();
@@ -46,6 +48,17 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
     (copy as any).__glideForwarded = true;
     root.dispatchEvent(copy);
   };
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.lock(false); // removed while open: don't leave the page unscrollable
+  }
+
+  private lock(on: boolean) {
+    if (this.locked === on || (on && !this.isConnected)) return; // updates still run after removal
+    this.locked = on;
+    lockScroll(on);
+  }
 
   setHass(hass: HomeAssistant) {
     this.hass = hass;
@@ -86,10 +99,10 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
     if (this.open) {
       this.build();
       this.origin = popupOrigin;
-      lockScroll(true);
+      this.lock(true);
       this.animateOpen();
     } else {
-      lockScroll(false);
+      this.lock(false);
       this.animateClose();
     }
   }
@@ -309,39 +322,41 @@ customElements.define("glide-sheet", GlideSheet);
 
 // ---- Registry: hash -> sheet, kept in sync with the URL ----
 
-const sheets = new Map<string, GlideSheet>();
+/** Each view has its own copy of a popup card, so a sheet lives while any of them is registered. */
+const sheets = new Map<string, { el: GlideSheet; owners: Set<object> }>();
 let currentHass: HomeAssistant | undefined;
 
 const norm = (hash: string) => (hash.startsWith("#") ? hash : `#${hash}`);
 
-export function registerPopup(config: PopupCardConfig) {
+export function registerPopup(config: PopupCardConfig, owner: object) {
   const hash = norm(config.hash);
-  let el = sheets.get(hash);
-  if (!el) {
-    el = document.createElement("glide-sheet") as GlideSheet;
+  let entry = sheets.get(hash);
+  if (!entry) {
+    const el = document.createElement("glide-sheet") as GlideSheet;
     document.body.appendChild(el);
-    sheets.set(hash, el);
+    sheets.set(hash, (entry = { el, owners: new Set() }));
   }
-  el.setConfig(config);
-  if (currentHass) el.setHass(currentHass);
+  entry.owners.add(owner);
+  entry.el.setConfig(config);
+  if (currentHass) entry.el.setHass(currentHass);
   syncSheets();
 }
 
-export function unregisterPopup(hash: string) {
-  const el = sheets.get(norm(hash));
-  if (!el) return;
-  el.remove();
+export function unregisterPopup(hash: string, owner: object) {
+  const entry = sheets.get(norm(hash));
+  if (!entry || !entry.owners.delete(owner) || entry.owners.size) return;
+  entry.el.remove();
   sheets.delete(norm(hash));
 }
 
 export function setSheetsHass(hass: HomeAssistant) {
   currentHass = hass;
-  sheets.forEach((el) => el.setHass(hass));
+  sheets.forEach(({ el }) => el.setHass(hass));
 }
 
 export function syncSheets() {
   const h = decodeURIComponent(location.hash);
-  sheets.forEach((el, hash) => (el.open = hash === h));
+  sheets.forEach(({ el }, hash) => (el.open = hash === h));
 }
 
 for (const ev of ["popstate", "hashchange", "glide-hash", "location-changed"]) window.addEventListener(ev, syncSheets);
