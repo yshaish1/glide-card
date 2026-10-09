@@ -70,3 +70,11 @@ v0.9.2 works, but when the new view's bar was laid out after its first render, t
 - [x] Resizes during a smooth scroll retarget it smoothly instead of jumping; reduced motion stays instant
 - [x] Test: tap → next view's nav laid out late → smooth scroll. 45 tests pass, build ok
 - [ ] Confirm on the phone
+
+## Round 4: own scroll animation (after v0.9.3 phone recording)
+Seen: the pill slid, but the bar then sat still ~0.5s and jumped to centre in one frame. iOS ignored the native smooth `scrollBy` (scroll-snap, fresh layout), and the 600ms fallback scrolled instantly.
+- [x] Hand-rolled glide: `scrollLeft` per animation frame, ease-out, 450ms, snapping paused while it runs
+- [x] A touch cancels it; resizes mid-glide retarget it; a recheck when it ends; reduced motion and page load stay instant
+- [x] Removed the native smooth scroll and the 600ms fallback
+- [x] Tests on a fake bar whose rects follow scrollLeft: page load centres instantly; a narrower bar glides (no jump) and restores snapping; tap → late layout glides from the old scroll. 45 pass, build ok
+- [ ] Confirm on the phone
