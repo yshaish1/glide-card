@@ -68,6 +68,21 @@ export function isLite(configLite?: boolean): boolean {
   return mem !== undefined && mem <= 2;
 }
 
+const GLOW_AT = ["100% 100%", "0% 100%", "100% 0%", "15% 0%", "85% 110%", "0% 30%"];
+
+/**
+ * A stable per-card seed (same on every device) that themes can paint with:
+ * `--gc-tint` picks one of the theme's `--gc-tint-1..5` swatches and
+ * `--gc-glow-at` a corner for its glow. Themes without those tokens ignore it.
+ */
+export function seedOf(config: object): { tint: number; glowAt: string } {
+  const c = config as { entity?: string; name?: string; title?: string };
+  const key = c.entity ?? c.name ?? c.title ?? JSON.stringify(config);
+  let h = 0x811c9dc5; // FNV-1a
+  for (let i = 0; i < key.length; i++) h = Math.imul(h ^ key.charCodeAt(i), 0x01000193) >>> 0;
+  return { tint: (h % 5) + 1, glowAt: GLOW_AT[(h >>> 8) % GLOW_AT.length] };
+}
+
 /**
  * Base for all Glide cards:
  * - applies the active theme as an adopted stylesheet (cached per theme/mode/part)
@@ -94,6 +109,9 @@ export abstract class GlideBase<C extends BaseCardConfig = BaseCardConfig> exten
 
   setConfig(config: C) {
     this.config = config;
+    const seed = seedOf(config);
+    this.style.setProperty("--gc-tint", `var(--gc-tint-${seed.tint})`);
+    this.style.setProperty("--gc-glow-at", seed.glowAt);
     this.theme = getTheme(config.theme); // early guess so layout getters work before first render
   }
 

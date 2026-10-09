@@ -98,3 +98,13 @@ describe("runAction", () => {
     expect(seen).toEqual([{ config: { entity: undefined, tap_action: action }, action: "tap" }]);
   });
 });
+
+describe("seedOf", () => {
+  it("is stable per card and spreads tints across cards", async () => {
+    const { seedOf } = await import("../src/core/base-card");
+    expect(seedOf({ entity: "light.a" })).toEqual(seedOf({ entity: "light.a", name: "x" }));
+    const ids = ["light.stairs", "light.upper_stairs", "light.hall_up", "fan.ceiling", "cover.blinds"];
+    expect(new Set(ids.map((entity) => seedOf({ entity }).tint)).size).toBeGreaterThanOrEqual(3);
+    for (const entity of ids) expect(seedOf({ entity }).tint).toBeGreaterThanOrEqual(1);
+  });
+});

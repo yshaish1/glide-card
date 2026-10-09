@@ -139,7 +139,7 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       }
       .surface:active { transform: scale(0.97); }
       .surface:focus-visible { outline: 2px solid var(--gc-accent); outline-offset: 2px; }
-      .surface.on { background: var(--gc-surface-on); }
+      .surface.on { background-color: var(--gc-surface-on); }
       .surface.unavailable { opacity: 0.5; }
       .fill {
         position: absolute;
