@@ -1,4 +1,5 @@
 import "./themes";
+import { ensureFonts } from "./core/fonts";
 import "./cards/button";
 import "./cards/popup";
 import "./cards/nav";
@@ -11,7 +12,7 @@ import "./editor/editor";
 import type { GlideBase } from "./core/base-card";
 import type { GlideCardConfig, HomeAssistant } from "./core/types";
 
-const VERSION = "0.6.3";
+const VERSION = "0.6.4";
 const TYPES = ["button", "popup", "nav", "climate", "media", "chips", "title", "heading"] as const;
 
 /**
@@ -69,6 +70,8 @@ class GlideCard extends HTMLElement {
     return document.createElement("glide-card-editor");
   }
 }
+
+ensureFonts();
 
 if (!customElements.get("glide-card")) {
   customElements.define("glide-card", GlideCard);

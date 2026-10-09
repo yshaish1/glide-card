@@ -1,3 +1,4 @@
+import { withHebrew } from "../core/fonts";
 import type { CardType, ThemeMode } from "../core/types";
 import type { GlideTheme, TokenMap } from "./types";
 
@@ -44,6 +45,9 @@ const block = (tokens: TokenMap) =>
 
 export function themeCss(theme: GlideTheme, dark: boolean, part: CardType): string {
   const tokens = { ...BASE, ...theme.tokens.base, ...(dark ? theme.tokens.dark : theme.tokens.light) };
+  for (const key of ["--gc-font", "--gc-font-meta"] as const) {
+    if (!tokens[key].startsWith("var(")) tokens[key] = withHebrew(tokens[key]);
+  }
   return `:host{${block(tokens)}}${theme.styles?.all ?? ""}${theme.styles?.[part] ?? ""}`;
 }
 

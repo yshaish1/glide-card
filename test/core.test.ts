@@ -77,6 +77,12 @@ describe("theme registry", () => {
     expect(css).toContain(".x{}");
     expect(themeCss(getTheme("test"), false, "media")).not.toContain(".x{}");
   });
+  it("puts the Hebrew face first in the font stacks", () => {
+    const css = themeCss(getTheme("glass"), true, "button");
+    expect(css).toContain(`--gc-font:"Glide Hebrew", -apple-system`);
+    expect(css).toContain(`--gc-font-meta:"Glide Hebrew", ui-monospace`);
+    expect(themeCss(getTheme("material"), true, "button")).toContain("--gc-font-meta:var(--gc-font);");
+  });
 });
 
 describe("cssColor", () => {
