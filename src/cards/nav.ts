@@ -19,6 +19,9 @@ const SLIDE = CSS.supports?.("animation-timing-function", "linear(0, 1)")
 let handoff: { rect: DOMRect; scroll: number; at: number } | undefined;
 const HANDOFF_MS = 1000;
 
+/** Edge padding while the bar scrolls, so a clamped end item clears the fade mask. */
+const EDGE = 12;
+
 const usable = (r?: DOMRect): r is DOMRect => !!r && r.width > 0 && r.height > 0;
 
 /**
@@ -36,6 +39,8 @@ export class GlideNav extends GlideBase<NavCardConfig> {
   private stale = false;
   private from?: DOMRect;
   private centred?: string;
+  /** Re-reveals once the bar gets a size: HA often renders a view's nav before laying it out. */
+  private resizer?: ResizeObserver;
 
   setConfig(config: NavCardConfig) {
     if (!Array.isArray(config.items) || !config.items.length) throw new Error("Nav needs an `items` list");
@@ -48,6 +53,8 @@ export class GlideNav extends GlideBase<NavCardConfig> {
 
   connectedCallback() {
     super.connectedCallback();
+    const scroller = this.scroller();
+    if (scroller) this.resizer?.observe(scroller);
     ROUTE_EVENTS.forEach((e) => window.addEventListener(e, this.onRoute));
     if (this.rendered !== undefined && this.rendered !== route()) {
       this.stale = true; // its own indicator is on an old item: don't slide from there
@@ -57,6 +64,7 @@ export class GlideNav extends GlideBase<NavCardConfig> {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.resizer?.disconnect();
     ROUTE_EVENTS.forEach((e) => window.removeEventListener(e, this.onRoute));
   }
 
@@ -78,6 +86,43 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     return this.renderRoot.querySelector(".ind")?.getBoundingClientRect();
   }
 
+  private scroller() {
+    return this.renderRoot.querySelector<HTMLElement>(".scroller") ?? undefined;
+  }
+
+  /** Overflow measured without the edge padding that `.overflow` adds, so the class can't flip-flop. */
+  private markOverflow(scroller: HTMLElement) {
+    const pad = scroller.classList.contains("overflow") ? 2 * EDGE : 0;
+    scroller.classList.toggle("overflow", scroller.scrollWidth - pad > scroller.clientWidth + 1);
+  }
+
+  /**
+   * Centre the active item. Near either end the browser clamps the scroll, so it lands fully in view
+   * at that end instead. Rect deltas work the same in LTR and RTL (where scrollLeft is negative).
+   * Done once per route, so state updates don't undo the user's own scrolling.
+   */
+  private reveal(smooth: boolean) {
+    const scroller = this.scroller();
+    if (!scroller || scroller.clientWidth <= 0) return; // not laid out yet: the ResizeObserver retries
+    this.markOverflow(scroller);
+    const active = scroller.querySelector<HTMLElement>("button.active");
+    if (active) {
+      const s = scroller.getBoundingClientRect(), a = active.getBoundingClientRect();
+      scroller.scrollBy({ left: a.left + a.width / 2 - (s.left + s.width / 2), behavior: smooth ? "smooth" : "instant" });
+    }
+    this.centred = route();
+  }
+
+  protected firstUpdated() {
+    const scroller = this.scroller();
+    if (!scroller || typeof ResizeObserver === "undefined") return;
+    this.resizer = new ResizeObserver(() => {
+      if (this.centred !== route()) this.reveal(false);
+      else this.markOverflow(scroller);
+    });
+    this.resizer.observe(scroller);
+  }
+
   protected willUpdate(changed: PropertyValues<this>) {
     super.willUpdate(changed);
     // Includes any in-flight animation, so quick taps retarget from where the indicator is now.
@@ -90,9 +135,9 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     const moved = !first && this.rendered !== now;
     this.rendered = now;
     this.stale = false;
-    const scroller = this.renderRoot.querySelector<HTMLElement>(".scroller");
+    const scroller = this.scroller();
     if (!scroller) return;
-    scroller.classList.toggle("overflow", scroller.scrollWidth > scroller.clientWidth + 1);
+    this.markOverflow(scroller);
     const ind = this.renderRoot.querySelector<HTMLElement>(".ind");
     if (!ind) return;
 
@@ -115,15 +160,7 @@ export class GlideNav extends GlideBase<NavCardConfig> {
       );
     }
 
-    // Centre the active item once per route, so state updates don't undo the user's own scrolling.
-    // Rect deltas work the same in LTR and RTL (where scrollLeft is negative).
-    const active = scroller.querySelector<HTMLElement>("button.active");
-    if (active && this.centred !== now && scroller.clientWidth > 0) {
-      const s = scroller.getBoundingClientRect(), a = active.getBoundingClientRect();
-      const behavior = this.centred || inherit ? "smooth" : "instant";
-      scroller.scrollBy({ left: a.left + a.width / 2 - (s.left + s.width / 2), behavior });
-      this.centred = now;
-    }
+    if (this.centred !== now) this.reveal(!!this.centred || !!inherit);
   }
 
   private item(item: NavItem) {
@@ -189,6 +226,7 @@ export class GlideNav extends GlideBase<NavCardConfig> {
       }
       .scroller::-webkit-scrollbar { display: none; }
       .scroller.overflow {
+        padding-inline: ${EDGE}px;
         mask-image: linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 18px), transparent);
       }
       .pinned {
