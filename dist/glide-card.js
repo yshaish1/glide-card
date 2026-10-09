@@ -80,8 +80,8 @@ var e = {
 			"--gc-text-dim": "rgba(235,235,245,.55)",
 			"--gc-accent": "#ff9f43",
 			"--gc-on-accent": "#1c1206",
-			"--gc-surface": "rgba(255,255,255,.06)",
-			"--gc-surface-on": "rgba(255,255,255,.1)",
+			"--gc-surface": "rgba(28,26,34,.7)",
+			"--gc-surface-on": "rgba(46,44,54,.74)",
 			"--gc-border": "rgba(255,255,255,.12)",
 			"--gc-highlight": "rgba(255,255,255,.08)",
 			"--gc-shadow": "0 10px 30px rgba(0,0,0,.35)",
@@ -3450,7 +3450,7 @@ var Pn = class extends I {
 customElements.define("glide-card-editor", Pn);
 //#endregion
 //#region src/glide-card.ts
-var Fn = "0.7.0", In = [
+var Fn = "0.7.1", In = [
 	"button",
 	"popup",
 	"nav",

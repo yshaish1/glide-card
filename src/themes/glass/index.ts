@@ -26,8 +26,9 @@ export const glass: GlideTheme = {
       "--gc-text-dim": "rgba(235,235,245,.55)",
       "--gc-accent": "#ff9f43",
       "--gc-on-accent": "#1c1206",
-      "--gc-surface": "rgba(255,255,255,.06)",
-      "--gc-surface-on": "rgba(255,255,255,.1)",
+      // Smoky dark glass rather than a white veil, so dark cards stay readable on a light dashboard too.
+      "--gc-surface": "rgba(28,26,34,.7)",
+      "--gc-surface-on": "rgba(46,44,54,.74)",
       "--gc-border": "rgba(255,255,255,.12)",
       "--gc-highlight": "rgba(255,255,255,.08)",
       "--gc-shadow": "0 10px 30px rgba(0,0,0,.35)",
