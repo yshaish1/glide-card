@@ -64,7 +64,12 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
     if (this.pending !== undefined && !this.timer && this.s?.attributes.temperature === this.pending) this.pending = undefined;
   }
 
+  private get off() {
+    return this.s?.state === "off";
+  }
+
   private setTarget(v: number) {
+    if (this.off) return; // the dial is locked while off; turn on from the mode row
     const { min, max, step } = this.range;
     const next = Math.min(max, Math.max(min, Math.round(v / step) * step));
     if (next === this.target) return;
@@ -83,7 +88,7 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
 
   private onDial(e: PointerEvent) {
     const svgEl = e.currentTarget as SVGSVGElement;
-    if (this.target === undefined) return;
+    if (this.target === undefined || this.off) return;
     svgEl.setPointerCapture(e.pointerId);
     const update = (ev: PointerEvent) => {
       const r = svgEl.getBoundingClientRect();
@@ -120,6 +125,9 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
     const end = START + pct * SWEEP;
     const [sx, sy] = polar(START);
     const [kx, ky] = polar(end);
+    const cur = Number(a.current_temperature);
+    const hasCur = a.current_temperature != null && Number.isFinite(cur);
+    const [cx, cy] = polar(START + Math.min(1, Math.max(0, (cur - min) / (max - min))) * SWEEP);
     const action: string | undefined = a.hvac_action;
     const digits = step < 1 ? 1 : 0;
     const temp = target !== undefined ? deg(target.toFixed(digits)) : "";
@@ -143,8 +151,9 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
 
         <div class="dial">
           <div class="ring">
-            <svg viewBox="0 0 200 200" @pointerdown=${(e: PointerEvent) => this.onDial(e)} role="slider"
-              aria-valuemin=${min} aria-valuemax=${max} aria-valuenow=${target ?? ""} aria-label=${t(this.hass, "target")}>
+            <svg class=${off ? "off" : ""} viewBox="0 0 200 200" @pointerdown=${(e: PointerEvent) => this.onDial(e)} role="slider"
+              aria-valuemin=${min} aria-valuemax=${max} aria-valuenow=${target ?? ""}
+              aria-valuetext=${[target !== undefined ? `${target.toFixed(digits)}°` : "", hasCur ? `${t(this.hass, "current")} ${cur.toFixed(digits)}°` : ""].filter(Boolean).join(", ")} aria-label=${t(this.hass, "target")} aria-disabled=${off ? "true" : "false"}>
               ${svg`
                 <defs>
                   <linearGradient id="arc" gradientUnits="userSpaceOnUse" x1=${sx} y1=${sy} x2=${kx} y2=${ky}>
@@ -153,22 +162,22 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
                   </linearGradient>
                 </defs>
                 <path class="track" d=${arc(START, START + SWEEP)} />`}
-              ${target !== undefined && !off
-                ? svg`<path class="value" d=${arc(START, Math.max(START + 0.5, end))} /><circle class="knob" cx=${kx} cy=${ky} r="9" />`
-                : nothing}
+              ${target !== undefined ? svg`<path class="value" d=${arc(START, Math.max(START + 0.5, end))} />` : nothing}
+              ${hasCur ? svg`<circle class="room" cx=${cx} cy=${cy} r="4" />` : nothing}
+              ${target !== undefined ? svg`<circle class="knob" cx=${kx} cy=${ky} r="9" />` : nothing}
             </svg>
             <div class="readout">
-              <div class="target">${target !== undefined ? target.toFixed(digits) : "--"}<sup>°</sup></div>
-              <div class="meta label">${t(this.hass, "target")}</div>
+              <div class="target ${off ? "dim" : ""}">${target !== undefined ? target.toFixed(digits) : "--"}<sup>°</sup></div>
+              <div class="meta label">${t(this.hass, off ? "off" : "target")}</div>
               ${a.current_temperature !== undefined ? html`<div class="meta current">${t(this.hass, "current")} ${deg(typeof a.current_temperature === "number" ? a.current_temperature.toFixed(digits) : a.current_temperature)}</div>` : nothing}
             </div>
           </div>
         </div>
 
         <div class="steppers">
-          <button class="round" aria-label="-" @click=${() => target !== undefined && this.setTarget(target - step)}><ha-icon icon="mdi:minus" .icon=${"mdi:minus"}></ha-icon></button>
-          <span class="meta">${t(this.hass, "step")}: ${deg(step)}</span>
-          <button class="round" aria-label="+" @click=${() => target !== undefined && this.setTarget(target + step)}><ha-icon icon="mdi:plus" .icon=${"mdi:plus"}></ha-icon></button>
+          <button class="round" aria-label="-" ?disabled=${off} @click=${() => target !== undefined && this.setTarget(target - step)}><ha-icon icon="mdi:minus" .icon=${"mdi:minus"}></ha-icon></button>
+          <span class="meta">${off ? "" : html`${t(this.hass, "step")}: ${deg(step)}`}</span>
+          <button class="round" aria-label="+" ?disabled=${off} @click=${() => target !== undefined && this.setTarget(target + step)}><ha-icon icon="mdi:plus" .icon=${"mdi:plus"}></ha-icon></button>
         </div>
 
         <div class="modes">
@@ -223,7 +232,15 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
       svg { display: block; width: 100%; height: 100%; touch-action: none; cursor: pointer; overflow: visible; }
       .track { fill: none; stroke: var(--line); stroke-width: 14; stroke-linecap: round; }
       .value { fill: none; stroke: url(#arc); stroke-width: 14; stroke-linecap: round; }
+      /* Room temperature: a small dot under the knob, outlined so it reads on the track and the arc */
+      .room { fill: var(--gc-text); stroke: var(--gc-sheet-bg, #000); stroke-width: 2; pointer-events: none; transition: cx 0.4s, cy 0.4s; }
+      svg.off .room { fill: var(--gc-text-dim); }
       .knob { fill: #fff; stroke: var(--mode); stroke-width: 4; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2)); }
+      /* Off: the target stays visible but muted, and the dial ignores input */
+      svg.off { cursor: default; }
+      svg.off .value { opacity: 0.6; }
+      svg.off .knob { fill: color-mix(in srgb, #fff 75%, var(--gc-text-dim)); }
+      .target.dim { opacity: 0.45; }
       .readout { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; pointer-events: none; }
       .target { font-size: 54px; font-weight: 750; line-height: 1; letter-spacing: -0.03em; }
       .target sup { font-size: 20px; font-weight: 700; color: var(--mode); vertical-align: 0.9em; margin-inline-start: 2px; }
@@ -237,6 +254,7 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
         transition: transform 0.15s, background 0.2s, color 0.2s;
       }
       button:active { transform: scale(0.94); }
+      button:disabled { opacity: 0.35; cursor: default; transform: none; }
       button:focus-visible { outline: 2px solid var(--gc-accent); }
       .round { width: 52px; height: 52px; border-radius: 50%; }
       .modes {
