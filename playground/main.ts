@@ -27,6 +27,7 @@ const cards: Cfg[] = [
   { card_type: "button", entity: "switch.coffee", tap_action: { action: "popup", navigation_path: "#kitchen" } },
   { card_type: "button", entity: "light.ceiling", name: "Pill layout", layout: "pill" },
   { card_type: "climate", entity: "climate.living" },
+  { card_type: "climate", entity: "climate.ac" },
   { card_type: "media", entity: "media_player.sonos" },
   {
     card_type: "popup", hash: "#kitchen", title: "Kitchen", icon: "mdi:silverware-fork-knife",

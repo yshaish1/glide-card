@@ -2,7 +2,7 @@ import type { HomeAssistant } from "./types";
 
 const en = {
   on: "On", off: "Off", open: "Open", closed: "Closed", unavailable: "Unavailable",
-  heating: "Heating to", cooling: "Cooling to", idle: "Idle", target: "Target", current: "Current",
+  heating: "Heating to", cooling: "Cooling to", idle: "Idle", target: "Target temp", current: "Current", active: "Active", step: "Step",
   heat: "Heat", cool: "Cool", heat_cool: "Auto", auto: "Auto", dry: "Dry", fan_only: "Fan",
   nothing_playing: "Nothing playing", popup_placeholder: "Pop-up", close: "Close",
 };
@@ -10,7 +10,7 @@ type Key = keyof typeof en;
 
 const he: Record<Key, string> = {
   on: "פועל", off: "כבוי", open: "פתוח", closed: "סגור", unavailable: "לא זמין",
-  heating: "מחמם ל-", cooling: "מקרר ל-", idle: "במנוחה", target: "יעד", current: "נוכחי",
+  heating: "מחמם ל־", cooling: "מקרר ל־", idle: "במנוחה", target: "יעד", current: "נוכחי", active: "פעיל", step: "צעד",
   heat: "חימום", cool: "קירור", heat_cool: "אוטו", auto: "אוטו", dry: "ייבוש", fan_only: "מאוורר",
   nothing_playing: "לא מתנגן כלום", popup_placeholder: "חלון קופץ", close: "סגירה",
 };
