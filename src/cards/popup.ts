@@ -17,7 +17,7 @@ export class GlidePopup extends GlideBase<PopupCardConfig> {
     if (!config.hash) throw new Error("Pop-up needs a `hash`, e.g. #living-room");
     if (!Array.isArray(config.cards)) throw new Error("Pop-up needs a `cards` list");
     super.setConfig(config);
-    if (this.isConnected) registerPopup(config);
+    if (this.isConnected) registerPopup(config, this);
   }
 
   protected shouldUpdate(changed: PropertyValues<this>) {
@@ -27,14 +27,14 @@ export class GlidePopup extends GlideBase<PopupCardConfig> {
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.config) registerPopup(this.config);
+    if (this.config) registerPopup(this.config, this);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     const hash = this.config?.hash;
-    // HA re-parents cards while rebuilding views; only drop the sheet if we stay detached.
-    setTimeout(() => !this.isConnected && hash && unregisterPopup(hash), 1000);
+    // HA re-parents cards while rebuilding views; only let go of the sheet if we stay detached.
+    setTimeout(() => !this.isConnected && hash && unregisterPopup(hash, this), 1000);
   }
 
   protected updated(changed: PropertyValues<this>) {
