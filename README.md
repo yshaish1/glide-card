@@ -133,7 +133,7 @@ tap_action:
 | `color` | buttons only: an HA color name (`cyan`, `light-blue`, `amber`...) or any CSS color; replaces the per-domain color |
 | `lite` | `true` turns off blur for slow tablets. When unset, it's detected automatically. Per device: `localStorage["glide-card-lite"]="1"` |
 | `tap_action` / `hold_action` / `double_tap_action` | standard HA actions, plus `navigate` to a `#hash` to open a pop-up |
-| `tap_animation` | animation on tap (buttons, chips, heading badges, nav bar; a pop-up passes it to its cards): `shine` (default), `press`, `spring`, `ripple`, `glow`, `jelly`, `tilt`, `icon-pop`, `ring`, `deep-press`, `bloom`, `breathe`, `sparks`, `icon-flip`, `border-trace`, `nudge`, `badge-pop`, `none`. Turned off when the device asks for reduced motion |
+| `tap_animation` | animation on tap (buttons, chips, heading badges, nav bar; a pop-up passes it to its cards): `shine` (default), `random` (a different effect each tap, only ones the widget can show, never the same twice in a row), `press`, `spring`, `ripple`, `glow`, `jelly`, `tilt`, `icon-pop`, `ring`, `deep-press`, `bloom`, `breathe`, `sparks`, `icon-flip`, `border-trace`, `nudge`, `badge-pop`, `none`. Turned off when the device asks for reduced motion |
 
 **Dashboard-wide theme:** add `glide-theme: bubble` to your HA theme YAML. A card's own `theme` still wins.
 

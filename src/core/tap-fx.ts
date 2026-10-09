@@ -3,6 +3,7 @@ import { reducedMotion } from "./spring";
 /** Tap animations a card can pick; ids are what `tap_animation` and `glide-tap-animation` take. */
 export const TAP_EFFECTS = {
   shine: "Glass shine",
+  random: "Random (different each tap)",
   press: "Press (shrink only)",
   spring: "Spring squish",
   ripple: "Ripple",
@@ -46,6 +47,23 @@ export interface TapContext {
 
 const EASE = "cubic-bezier(.2,.8,.2,1)";
 const SPRING = "cubic-bezier(.2,.9,.3,1.25)";
+const lastRandom = new WeakMap<Element, TapEffect>();
+
+/**
+ * A random effect for `el` that it can actually show: never press/none, icon effects only with an icon,
+ * badge-pop only with a badge, and never the same one twice in a row on the same element.
+ */
+export function pickRandomEffect(el: Element, ctx: Pick<TapContext, "icon" | "badge">): TapEffect {
+  const prev = lastRandom.get(el);
+  const pool = (Object.keys(TAP_EFFECTS) as TapEffect[]).filter((e) =>
+    e !== "random" && e !== "press" && e !== "none" && e !== prev &&
+    (ctx.icon || (e !== "icon-pop" && e !== "icon-flip")) &&
+    (ctx.badge || e !== "badge-pop"));
+  const pick = pool[Math.floor(Math.random() * pool.length)] ?? DEFAULT_TAP_EFFECT;
+  lastRandom.set(el, pick);
+  return pick;
+}
+
 const running = new WeakMap<Element, { anims: Animation[]; layer?: HTMLElement }>();
 
 const tint = (color: string, pct: number) => `color-mix(in srgb, ${color} ${pct}%, transparent)`;
@@ -53,6 +71,7 @@ const tint = (color: string, pct: number) => `color-mix(in srgb, ${color} ${pct}
 /** Plays `effect` on `el`. Restarting cancels a running effect; nothing plays under reduced motion. */
 export function playTap(el: HTMLElement, effect: TapEffect, ctx: TapContext): void {
   if (effect === "none" || effect === "press" || reducedMotion()) return;
+  if (effect === "random") effect = pickRandomEffect(el, ctx);
   stop(el);
   const w = el.offsetWidth || el.getBoundingClientRect().width;
   const h = el.offsetHeight || el.getBoundingClientRect().height;

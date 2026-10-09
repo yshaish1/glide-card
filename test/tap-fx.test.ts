@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { playTap, resolveTapEffect } from "../src/core/tap-fx";
+import { pickRandomEffect, playTap, resolveTapEffect } from "../src/core/tap-fx";
 
 const motion = (reduce: boolean) =>
   vi.stubGlobal("matchMedia", (q: string) => ({ matches: reduce && q.includes("reduce"), media: q, addEventListener() {}, removeEventListener() {} }));
@@ -72,5 +72,36 @@ describe("playTap", () => {
     for (const fx of ["shine", "spring", "ripple", "glow", "jelly", "tilt", "icon-pop", "ring", "deep-press", "bloom", "breathe", "sparks", "icon-flip", "border-trace", "nudge", "badge-pop"] as const) {
       expect(() => playTap(el, fx, { color: "red", icon, badge: icon })).not.toThrow();
     }
+  });
+});
+
+describe("random tap effect", () => {
+  it("resolves from config and the HA theme variable", () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    expect(resolveTapEffect("random", host)).toBe("random");
+    host.style.setProperty("--glide-tap-animation", "random");
+    expect(resolveTapEffect(undefined, host)).toBe("random");
+  });
+
+  it("picks only effects the element can show, never twice in a row", () => {
+    const el = document.createElement("div");
+    let prev: string | undefined;
+    for (let i = 0; i < 60; i++) {
+      const e = pickRandomEffect(el, {});
+      expect(["random", "press", "none", "icon-pop", "icon-flip", "badge-pop"]).not.toContain(e);
+      expect(e).not.toBe(prev);
+      prev = e;
+    }
+    const icon = document.createElement("span"), badge = document.createElement("span");
+    const seen = new Set(Array.from({ length: 300 }, () => pickRandomEffect(el, { icon, badge })));
+    expect(seen.has("icon-pop") && seen.has("badge-pop")).toBe(true);
+  });
+
+  it("playTap with random runs an effect", () => {
+    motion(false);
+    const { el, animate } = card();
+    playTap(el, "random", { color: "red" });
+    expect(animate).toHaveBeenCalled();
   });
 });
