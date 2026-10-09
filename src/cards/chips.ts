@@ -2,6 +2,7 @@ import { css, html, nothing, type PropertyValues } from "lit";
 import { runAction } from "../core/actions";
 import { GlideBase, surface } from "../core/base-card";
 import { cssColor, domainColor, entityIcon, entityName } from "../core/entity";
+import { conditionEntities, conditionsMet } from "../core/conditions";
 import { compactValue } from "../core/format";
 import { attachGestures } from "../core/gestures";
 import type { ChipConfig, ChipsCardConfig } from "../core/types";
@@ -10,6 +11,9 @@ import type { ChipConfig, ChipsCardConfig } from "../core/types";
 export class GlideChips extends GlideBase<ChipsCardConfig> {
   protected readonly cardType = "chips" as const;
   private detachers: (() => void)[] = [];
+  /** Indexes of the chips whose `visibility` passes; gestures are rebound when it changes. */
+  private shown: number[] = [];
+  private boundKey = "";
 
   setConfig(config: ChipsCardConfig) {
     if (!Array.isArray(config.chips)) throw new Error("Chips card needs a `chips` list");
@@ -17,7 +21,7 @@ export class GlideChips extends GlideBase<ChipsCardConfig> {
   }
 
   protected watched() {
-    return this.config.chips.map((c) => c.entity);
+    return this.config.chips.flatMap((c) => [c.entity, ...conditionEntities(c.visibility)]);
   }
 
   getGridOptions() {
@@ -28,9 +32,14 @@ export class GlideChips extends GlideBase<ChipsCardConfig> {
     return 1;
   }
 
+  protected willUpdate(changed: PropertyValues<this>) {
+    super.willUpdate(changed);
+    this.shown = this.config.chips.flatMap((c, i) => (conditionsMet(this.hass, c.visibility) ? [i] : []));
+  }
+
   protected updated(changed: PropertyValues<this>) {
     super.updated(changed);
-    if (changed.has("config")) this.bind();
+    if (changed.has("config") || this.shown.join() !== this.boundKey) this.bind();
   }
 
   connectedCallback() {
@@ -46,12 +55,14 @@ export class GlideChips extends GlideBase<ChipsCardConfig> {
   private unbind() {
     this.detachers.forEach((d) => d());
     this.detachers = [];
+    this.boundKey = "";
   }
 
   private bind() {
     this.unbind();
+    this.boundKey = this.shown.join();
     this.renderRoot.querySelectorAll<HTMLElement>(".chip").forEach((el, i) => {
-      const chip = this.config.chips[i];
+      const chip = this.config.chips[this.shown[i]];
       const act = (kind: "tap" | "hold") => {
         const action = chip[`${kind}_action`] ?? { action: "more-info" as const };
         if (this.hass) runAction(el, this.hass, action, chip.entity);
@@ -77,7 +88,7 @@ export class GlideChips extends GlideBase<ChipsCardConfig> {
   }
 
   protected render() {
-    return html`<div class="row ${this.config.align === "start" ? "start" : ""}">${this.config.chips.map((c) => this.renderChip(c))}</div>`;
+    return html`<div class="row ${this.config.align === "start" ? "start" : ""}">${this.shown.map((i) => this.renderChip(this.config.chips[i]))}</div>`;
   }
 
   static styles = [

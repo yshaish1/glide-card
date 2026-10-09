@@ -123,6 +123,24 @@ tap_action:
 
 `secondary` replaces the automatic brightness/position text, and `badge` replaces the state. All of these also take plain text. In the visual editor, they're under **Templates**.
 
+### Chip visibility
+
+A chip shows only while its `visibility` conditions all pass. The format is the same as Home Assistant's card visibility: `state` (`state` / `state_not`, one value or a list), `numeric_state` (`above` / `below`), `and`, `or`. The chip row updates live and hidden chips leave no gap.
+
+```yaml
+type: custom:glide-card
+card_type: chips
+chips:
+  - entity: sensor.jewish_calendar_upcoming_shabbat_candle_lighting
+    name: כניסת שבת
+    icon: mdi:candle
+    color: amber
+    visibility:
+      - condition: state
+        entity: sensor.shabbat_phase
+        state: candle_lighting
+```
+
 ### Shared options
 
 | Option | Values |

@@ -2817,36 +2817,58 @@ var Sn = {
 };
 customElements.define("glide-media", wn);
 //#endregion
+//#region src/core/conditions.ts
+var Tn = (e) => (Array.isArray(e) ? e : [e]).map(String);
+function En(e, t) {
+	switch (t.condition) {
+		case "state": {
+			let n = e.states[t.entity]?.state ?? "unavailable";
+			return !(t.state !== void 0 && !Tn(t.state).includes(n) || t.state_not !== void 0 && Tn(t.state_not).includes(n));
+		}
+		case "numeric_state": {
+			let n = Number(e.states[t.entity]?.state);
+			return !(Number.isNaN(n) || t.above !== void 0 && !(n > t.above) || t.below !== void 0 && !(n < t.below));
+		}
+		case "and": return t.conditions.every((t) => En(e, t));
+		case "or": return t.conditions.some((t) => En(e, t));
+		default: return !0;
+	}
+}
+var Dn = (e, t) => !t?.length || !!e && t.every((t) => En(e, t));
+function On(e) {
+	return (e ?? []).flatMap((e) => e.condition === "and" || e.condition === "or" ? On(e.conditions) : [e.entity]);
+}
+//#endregion
 //#region src/core/format.ts
-var Tn = (e) => e.locale?.language ?? e.language ?? "en", En = (e) => e.attributes.device_class === "timestamp" || /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(e.state), Dn = (e, t = "en") => new Intl.DateTimeFormat(t, {
+var kn = (e) => e.locale?.language ?? e.language ?? "en", An = (e) => e.attributes.device_class === "timestamp" || /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(e.state), jn = (e, t = "en") => new Intl.DateTimeFormat(t, {
 	hour: "2-digit",
 	minute: "2-digit",
 	hourCycle: "h23"
 }).format(new Date(e));
-function On(e, t, n) {
+function Mn(e, t, n) {
 	let r = e;
 	if (n) {
 		let i = t.attributes[n];
-		return i === void 0 ? "" : typeof i == "string" && /^\d{4}-\d{2}-\d{2}T/.test(i) ? Dn(i, Tn(e)) : r.formatEntityAttributeValue?.(t, n) ?? String(i);
+		return i === void 0 ? "" : typeof i == "string" && /^\d{4}-\d{2}-\d{2}T/.test(i) ? jn(i, kn(e)) : r.formatEntityAttributeValue?.(t, n) ?? String(i);
 	}
 	if (R(t.entity_id) === "weather") {
 		let n = t.attributes.temperature, r = It(e, t.entity_id);
 		return n === void 0 ? r : `${r} · ${n} ${t.attributes.temperature_unit ?? "°C"}`;
 	}
-	return En(t) && !Number.isNaN(Date.parse(t.state)) ? Dn(t.state, Tn(e)) : It(e, t.entity_id);
+	return An(t) && !Number.isNaN(Date.parse(t.state)) ? jn(t.state, kn(e)) : It(e, t.entity_id);
 }
 //#endregion
 //#region src/cards/chips.ts
-var kn = class extends J {
+var Nn = class extends J {
 	constructor(...e) {
-		super(...e), this.cardType = "chips", this.detachers = [];
+		super(...e), this.cardType = "chips", this.detachers = [], this.shown = [], this.boundKey = "";
 	}
 	setConfig(e) {
 		if (!Array.isArray(e.chips)) throw Error("Chips card needs a `chips` list");
 		super.setConfig(e);
 	}
 	watched() {
-		return this.config.chips.map((e) => e.entity);
+		return this.config.chips.flatMap((e) => [e.entity, ...On(e.visibility)]);
 	}
 	getGridOptions() {
 		return {
@@ -2857,8 +2879,11 @@ var kn = class extends J {
 	getCardSize() {
 		return 1;
 	}
+	willUpdate(e) {
+		super.willUpdate(e), this.shown = this.config.chips.flatMap((e, t) => Dn(this.hass, e.visibility) ? [t] : []);
+	}
 	updated(e) {
-		super.updated(e), e.has("config") && this.bind();
+		super.updated(e), (e.has("config") || this.shown.join() !== this.boundKey) && this.bind();
 	}
 	connectedCallback() {
 		super.connectedCallback(), this.hasUpdated && !this.detachers.length && this.bind();
@@ -2867,11 +2892,11 @@ var kn = class extends J {
 		super.disconnectedCallback(), this.unbind();
 	}
 	unbind() {
-		this.detachers.forEach((e) => e()), this.detachers = [];
+		this.detachers.forEach((e) => e()), this.detachers = [], this.boundKey = "";
 	}
 	bind() {
-		this.unbind(), this.renderRoot.querySelectorAll(".chip").forEach((e, t) => {
-			let n = this.config.chips[t], r = (t) => {
+		this.unbind(), this.boundKey = this.shown.join(), this.renderRoot.querySelectorAll(".chip").forEach((e, t) => {
+			let n = this.config.chips[this.shown[t]], r = (t) => {
 				let r = n[`${t}_action`] ?? { action: "more-info" };
 				this.hass && H(e, this.hass, r, n.entity);
 			};
@@ -2884,7 +2909,7 @@ var kn = class extends J {
 		});
 	}
 	renderChip(e) {
-		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? On(this.hass, t, e.attribute) : "");
+		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? Mn(this.hass, t, e.attribute) : "");
 		return j`
       <div class="chip surface" role="button" tabindex="0" style="--chip:${z(e.color) ?? (t ? ct(t) : "var(--gc-accent)")}">
         <ha-icon .icon=${ot(t, e.icon)}></ha-icon>
@@ -2896,7 +2921,7 @@ var kn = class extends J {
     `;
 	}
 	render() {
-		return j`<div class="row ${this.config.align === "start" ? "start" : ""}">${this.config.chips.map((e) => this.renderChip(e))}</div>`;
+		return j`<div class="row ${this.config.align === "start" ? "start" : ""}">${this.shown.map((e) => this.renderChip(this.config.chips[e]))}</div>`;
 	}
 	static {
 		this.styles = [q, S`
@@ -2935,10 +2960,10 @@ var kn = class extends J {
     `];
 	}
 };
-customElements.define("glide-chips", kn);
+customElements.define("glide-chips", Nn);
 //#endregion
 //#region src/cards/title.ts
-var An = class extends J {
+var Pn = class extends J {
 	constructor(...e) {
 		super(...e), this.cardType = "title";
 	}
@@ -2981,13 +3006,13 @@ var An = class extends J {
   `;
 	}
 };
-customElements.define("glide-title", An);
+customElements.define("glide-title", Pn);
 //#endregion
 //#region src/cards/heading.ts
-var jn = (e) => e instanceof MouseEvent && e.detail ? {
+var Fn = (e) => e instanceof MouseEvent && e.detail ? {
 	x: e.clientX,
 	y: e.clientY
-} : void 0, Mn = class extends J {
+} : void 0, In = class extends J {
 	constructor(...e) {
 		super(...e), this.cardType = "heading";
 	}
@@ -3009,10 +3034,10 @@ var jn = (e) => e instanceof MouseEvent && e.detail ? {
 	}
 	tap(e) {
 		let t = this.config.tap_action, n = e.currentTarget;
-		this.playTapFx(n, jn(e), { icon: n.querySelector(".icon") }), t && this.hass && H(e.currentTarget, this.hass, t);
+		this.playTapFx(n, Fn(e), { icon: n.querySelector(".icon") }), t && this.hass && H(e.currentTarget, this.hass, t);
 	}
 	badge(e) {
-		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? On(this.hass, t, e.attribute) : "");
+		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? Mn(this.hass, t, e.attribute) : "");
 		return j`
       <button
         class="badge surface"
@@ -3020,7 +3045,7 @@ var jn = (e) => e instanceof MouseEvent && e.detail ? {
         @click=${(t) => {
 			t.stopPropagation();
 			let n = t.currentTarget;
-			this.playTapFx(n, jn(t), { icon: n.querySelector("ha-icon") }), this.hass && H(t.currentTarget, this.hass, e.tap_action ?? { action: "more-info" }, e.entity);
+			this.playTapFx(n, Fn(t), { icon: n.querySelector("ha-icon") }), this.hass && H(t.currentTarget, this.hass, e.tap_action ?? { action: "more-info" }, e.entity);
 		}}
       >
         ${e.icon || t ? j`<ha-icon .icon=${ot(t, e.icon)}></ha-icon>` : P}
@@ -3133,10 +3158,10 @@ var jn = (e) => e instanceof MouseEvent && e.detail ? {
     `];
 	}
 };
-customElements.define("glide-heading", Mn);
+customElements.define("glide-heading", In);
 //#endregion
 //#region src/editor/editor.ts
-var Nn = [
+var Ln = [
 	{
 		id: "button",
 		icon: "mdi:gesture-tap-button",
@@ -3177,7 +3202,7 @@ var Nn = [
 		icon: "mdi:format-header-pound",
 		label: "Heading"
 	}
-], Pn = [
+], Rn = [
 	"#ff9f43",
 	"#d4ff00",
 	"#006a60",
@@ -3186,7 +3211,7 @@ var Nn = [
 	"#ff5c8a",
 	"#34c759",
 	"#ffd60a"
-], Fn = {
+], zn = {
 	type: "expandable",
 	title: "Interactions",
 	icon: "mdi:gesture-tap",
@@ -3204,13 +3229,13 @@ var Nn = [
 			selector: { ui_action: {} }
 		}
 	]
-}, In = /* @__PURE__ */ new Set([
+}, Bn = /* @__PURE__ */ new Set([
 	"button",
 	"chips",
 	"heading",
 	"nav",
 	"popup"
-]), Ln = {
+]), Vn = {
 	name: "tap_animation",
 	selector: { select: {
 		mode: "dropdown",
@@ -3219,7 +3244,7 @@ var Nn = [
 			label: t
 		}))
 	} }
-}, Rn = {
+}, Hn = {
 	type: "expandable",
 	title: "Templates",
 	icon: "mdi:code-braces",
@@ -3234,8 +3259,8 @@ var Nn = [
 		selector: { template: {} }
 	}))
 };
-function zn(e) {
-	let t = Vn[e.card_type];
+function Un(e) {
+	let t = Gn[e.card_type];
 	if (e.card_type === "button") {
 		let n = e, r = (e) => !(e.name && [
 			"name",
@@ -3247,13 +3272,13 @@ function zn(e) {
 			schema: e.schema.filter(r)
 		} : e), t = [
 			...t.slice(0, -1),
-			Rn,
+			Hn,
 			t[t.length - 1]
 		];
 	}
-	return In.has(e.card_type) ? [...t, Ln] : t;
+	return Bn.has(e.card_type) ? [...t, Vn] : t;
 }
-var Bn = { select: {
+var Wn = { select: {
 	mode: "dropdown",
 	options: [{
 		value: "center",
@@ -3262,7 +3287,7 @@ var Bn = { select: {
 		value: "start",
 		label: "Start"
 	}]
-} }, Vn = {
+} }, Gn = {
 	heading: [
 		{
 			name: "title",
@@ -3335,7 +3360,7 @@ var Bn = { select: {
 		} }
 	}, {
 		name: "align",
-		selector: Bn
+		selector: Wn
 	}],
 	title: [
 		{
@@ -3354,7 +3379,7 @@ var Bn = { select: {
 				selector: { icon: {} }
 			}, {
 				name: "align",
-				selector: Bn
+				selector: Wn
 			}]
 		}
 	],
@@ -3401,7 +3426,7 @@ var Bn = { select: {
 				}
 			]
 		},
-		Fn
+		zn
 	],
 	popup: [
 		{
@@ -3464,7 +3489,7 @@ var Bn = { select: {
 		name: "name",
 		selector: { text: {} }
 	}]
-}, Hn = {
+}, Kn = {
 	hash: "Hash (e.g. #living-room)",
 	slider: "Swipe to adjust (brightness / position)",
 	layout: "Layout (empty = theme default)",
@@ -3475,13 +3500,13 @@ var Bn = { select: {
 	secondary: "Secondary line, e.g. {{ states.light | selectattr('state','eq','on') | list | count }} of 7 on",
 	badge: "Badge text (empty = entity state)"
 };
-async function Un() {
+async function qn() {
 	customElements.get("ha-form") || await (await (await window.loadCardHelpers?.())?.createCardElement({
 		type: "entities",
 		entities: []
 	}))?.constructor?.getConfigElement?.();
 }
-var Wn = class extends L {
+var Jn = class extends L {
 	constructor(...e) {
 		super(...e), this.ready = !1;
 	}
@@ -3499,7 +3524,7 @@ var Wn = class extends L {
 		};
 	}
 	connectedCallback() {
-		super.connectedCallback(), Un().finally(() => this.ready = !0);
+		super.connectedCallback(), qn().finally(() => this.ready = !0);
 	}
 	update_(e) {
 		let t = {
@@ -3536,7 +3561,7 @@ var Wn = class extends L {
       <div class="section">
         <div class="label">Card type</div>
         <div class="types">
-          ${Nn.map((t) => j`<button class=${e.card_type === t.id ? "sel" : ""} @click=${() => this.setType(t.id)}>
+          ${Ln.map((t) => j`<button class=${e.card_type === t.id ? "sel" : ""} @click=${() => this.setType(t.id)}>
               <ha-icon .icon=${t.icon}></ha-icon><span>${t.label}</span>
             </button>`)}
         </div>
@@ -3566,7 +3591,7 @@ var Wn = class extends L {
           </div>
           <div class="accents">
             <button class="dot none ${e.accent ? "" : "sel"}" title="Theme accent" @click=${() => this.update_({ accent: void 0 })}></button>
-            ${Pn.map((t) => j`<button class="dot ${e.accent === t ? "sel" : ""}" style="background:${t}" title=${t} @click=${() => this.update_({ accent: t })}></button>`)}
+            ${Rn.map((t) => j`<button class="dot ${e.accent === t ? "sel" : ""}" style="background:${t}" title=${t} @click=${() => this.update_({ accent: t })}></button>`)}
             <label class="dot custom" title="Custom color">
               <input type="color" .value=${e.accent ?? "#ff9f43"} @input=${(e) => this.update_({ accent: e.target.value })} />
             </label>
@@ -3577,8 +3602,8 @@ var Wn = class extends L {
       ${this.ready ? j`<ha-form
             .hass=${this.hass}
             .data=${e}
-            .schema=${zn(e)}
-            .computeLabel=${(e) => Hn[e.name]}
+            .schema=${Un(e)}
+            .computeLabel=${(e) => Kn[e.name]}
             @value-changed=${(e) => {
 			e.stopPropagation(), this.update_(e.detail.value);
 		}}
@@ -3627,10 +3652,10 @@ var Wn = class extends L {
   `;
 	}
 };
-customElements.define("glide-card-editor", Wn);
+customElements.define("glide-card-editor", Jn);
 //#endregion
 //#region src/glide-card.ts
-var Gn = "0.9.4", Kn = [
+var Yn = "0.10.0", Xn = [
 	"button",
 	"popup",
 	"nav",
@@ -3639,13 +3664,13 @@ var Gn = "0.9.4", Kn = [
 	"chips",
 	"title",
 	"heading"
-], qn = class extends HTMLElement {
+], Zn = class extends HTMLElement {
 	constructor(...e) {
 		super(...e), this._editMode = !1;
 	}
 	setConfig(e) {
 		let t = e?.card_type ?? "button";
-		if (!Kn.includes(t)) throw Error(`Unknown card_type "${t}". Use one of: ${Kn.join(", ")}`);
+		if (!Xn.includes(t)) throw Error(`Unknown card_type "${t}". Use one of: ${Xn.join(", ")}`);
 		let n = `glide-${t}`;
 		if (!customElements.get(n)) throw Error(`card_type "${t}" is not available in this build`);
 		this.inner?.localName !== n && (this.inner?.remove(), this.inner = document.createElement(n), this.appendChild(this.inner)), this.inner.setConfig({
@@ -3681,11 +3706,11 @@ var Gn = "0.9.4", Kn = [
 		return document.createElement("glide-card-editor");
 	}
 };
-o(), customElements.get("glide-card") || (customElements.define("glide-card", qn), window.customCards = window.customCards ?? [], window.customCards.push({
+o(), customElements.get("glide-card") || (customElements.define("glide-card", Zn), window.customCards = window.customCards ?? [], window.customCards.push({
 	type: "glide-card",
 	name: "Glide Card",
 	description: "Themeable buttons, pop-up sheets, nav bar, climate and media cards",
 	preview: !0,
 	documentationURL: "https://github.com/yshaish1/glide-card"
-}), console.info(`%c GLIDE-CARD %c ${Gn} `, "background:#ff9f43;color:#1c1206;border-radius:4px 0 0 4px", "background:#222;color:#fff;border-radius:0 4px 4px 0"));
+}), console.info(`%c GLIDE-CARD %c ${Yn} `, "background:#ff9f43;color:#1c1206;border-radius:4px 0 0 4px", "background:#222;color:#fff;border-radius:0 4px 4px 0"));
 //#endregion

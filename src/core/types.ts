@@ -1,4 +1,6 @@
 // Minimal slice of Home Assistant's frontend types that Glide Card relies on.
+import type { Condition } from "./conditions";
+
 export interface HassEntity {
   entity_id: string;
   state: string;
@@ -116,6 +118,8 @@ export interface ChipConfig {
   value?: string;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
+  /** Show the chip only while every condition passes (HA card `visibility` format). */
+  visibility?: Condition[];
 }
 
 export interface ChipsCardConfig extends BaseCardConfig {
