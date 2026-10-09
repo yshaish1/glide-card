@@ -1,6 +1,7 @@
 import { LitElement, css, type CSSResultOrNative, type PropertyValues } from "lit";
 import { resolveDark, resolveThemeId, themeSheet, getTheme } from "../themes";
 import type { GlideTheme } from "../themes";
+import { playTap, resolveTapEffect } from "./tap-fx";
 import type { BaseCardConfig, CardType, HomeAssistant } from "./types";
 
 /** Shared look every card type builds on; values come only from theme tokens. */
@@ -35,6 +36,10 @@ export const surface = css`
   .meta:lang(fa) {
     font-family: var(--gc-font);
     letter-spacing: 0;
+  }
+  /* "none" also drops the press shrink each card sets on :active. */
+  :host([tap-fx="none"]) *:active {
+    transform: none !important;
   }
   ha-icon {
     --mdc-icon-size: 22px;
@@ -132,13 +137,14 @@ export abstract class GlideBase<C extends BaseCardConfig = BaseCardConfig> exten
     if (!this.config) return;
     const id = resolveThemeId(this.config.theme, this);
     const dark = resolveDark(this.config.mode, this.hass?.themes?.darkMode);
-    const key = `${id}|${dark}|${this.config.accent ?? ""}|${this.config.lite}`;
+    const key = `${id}|${dark}|${this.config.accent ?? ""}|${this.config.lite}|${this.config.tap_animation ?? ""}`;
     if (key === this.themeKey) return;
     this.themeKey = key;
     this.theme = getTheme(id);
     this.toggleAttribute("dark", dark);
     this.toggleAttribute("lite", isLite(this.config.lite));
     this.dataset.theme = id;
+    this.setAttribute("tap-fx", resolveTapEffect(this.config.tap_animation, this));
     if (this.config.accent) this.style.setProperty("--gc-accent", this.config.accent);
     else this.style.removeProperty("--gc-accent");
     const base = (this.constructor as typeof LitElement).elementStyles.map((s: CSSResultOrNative) =>
@@ -146,6 +152,18 @@ export abstract class GlideBase<C extends BaseCardConfig = BaseCardConfig> exten
     );
     // Theme last so its per-card `styles` can override the card's defaults.
     (this.renderRoot as ShadowRoot).adoptedStyleSheets = [...base, themeSheet(id, dark, this.cardType)];
+  }
+
+  /**
+   * Plays the card's tap animation on `el`. `point` is in client coordinates (centre if absent);
+   * the colour comes from the element's --domain / --chip / --c, else the accent.
+   */
+  protected playTapFx(el: HTMLElement, point?: { x: number; y: number }, parts: { icon?: Element | null; badge?: Element | null } = {}) {
+    const effect = resolveTapEffect(this.config.tap_animation, this);
+    const box = el.getBoundingClientRect();
+    const cs = getComputedStyle(el);
+    const color = ["--domain", "--chip", "--c", "--gc-accent"].map((v) => cs.getPropertyValue(v).trim()).find(Boolean) ?? "#ff9f43";
+    playTap(el, effect, { x: point && point.x - box.left, y: point && point.y - box.top, color, ...parts });
   }
 
   protected stateOf(id?: string) {

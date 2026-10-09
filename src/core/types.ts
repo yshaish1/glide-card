@@ -41,6 +41,8 @@ export interface BaseCardConfig {
   accent?: string;
   /** Drop blur/glow effects for slow wall tablets. Default: auto-detect. */
   lite?: boolean;
+  /** Animation played on tap (see TAP_EFFECTS). Default: HA theme variable `glide-tap-animation`, else "shine". */
+  tap_animation?: string;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   double_tap_action?: ActionConfig;

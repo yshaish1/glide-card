@@ -5,6 +5,9 @@ import { cssColor, domainColor, entityIcon } from "../core/entity";
 import { compactValue } from "../core/format";
 import type { ChipConfig, HeadingCardConfig } from "../core/types";
 
+/** Click position, or none for keyboard clicks (detail 0) so the effect starts from the centre. */
+const pointOf = (e: Event) => (e instanceof MouseEvent && e.detail ? { x: e.clientX, y: e.clientY } : undefined);
+
 /** Section heading: title with a fading divider, optional icon, subtitle, mini badges and a link chevron. */
 export class GlideHeading extends GlideBase<HeadingCardConfig> {
   protected readonly cardType = "heading" as const;
@@ -28,6 +31,8 @@ export class GlideHeading extends GlideBase<HeadingCardConfig> {
 
   private tap(e: Event) {
     const action = this.config.tap_action;
+    const el = e.currentTarget as HTMLElement;
+    this.playTapFx(el, pointOf(e), { icon: el.querySelector(".icon") });
     if (action && this.hass) runAction(e.currentTarget as HTMLElement, this.hass, action);
   }
 
@@ -41,6 +46,8 @@ export class GlideHeading extends GlideBase<HeadingCardConfig> {
         style="--c:${color}"
         @click=${(e: Event) => {
           e.stopPropagation();
+          const el = e.currentTarget as HTMLElement;
+          this.playTapFx(el, pointOf(e), { icon: el.querySelector("ha-icon") });
           if (this.hass) runAction(e.currentTarget as HTMLElement, this.hass, b.tap_action ?? { action: "more-info" }, b.entity);
         }}
       >

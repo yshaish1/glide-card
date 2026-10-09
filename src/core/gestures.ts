@@ -1,7 +1,8 @@
 export interface GestureHandlers {
-  tap?(): void;
+  /** `point` is where the press started (client coordinates); absent for keyboard taps. */
+  tap?(point?: { x: number; y: number }): void;
   hold?(): void;
-  doubleTap?(): void;
+  doubleTap?(point?: { x: number; y: number }): void;
   /** Enable drag-to-adjust; value is relative to `dragStart()` in 0-100. */
   dragStart?(): number;
   /** Drag direction, read per gesture. "x" (default) is RTL aware; "y" raises the value when moving up. */
@@ -70,9 +71,10 @@ export function attachGestures(el: HTMLElement, h: GestureHandlers): () => void 
     if (state === "drag") h.dragEnd?.(value);
     else if (state === "down") {
       if (h.doubleTap) {
-        if (tapTimer) { clearTimeout(tapTimer); tapTimer = 0; h.doubleTap(); }
-        else tapTimer = window.setTimeout(() => { tapTimer = 0; h.tap?.(); }, DOUBLE_MS);
-      } else h.tap?.();
+        const point = { x: x0, y: y0 };
+        if (tapTimer) { clearTimeout(tapTimer); tapTimer = 0; h.doubleTap(point); }
+        else tapTimer = window.setTimeout(() => { tapTimer = 0; h.tap?.(point); }, DOUBLE_MS);
+      } else h.tap?.({ x: x0, y: y0 });
     }
     state = "idle";
   };

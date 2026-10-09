@@ -71,8 +71,10 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
     const helpers = await (window as any).loadCardHelpers?.();
     if (!helpers) return;
     this.children_ = (this.config.cards ?? []).map((cfg) => {
-      // Glide children inherit the popup's theme unless they set their own.
-      const conf = cfg.type === "custom:glide-card" && !cfg.theme && this.config.theme ? { ...cfg, theme: this.config.theme } : cfg;
+      // Glide children inherit the popup's theme and tap animation unless they set their own.
+      const conf = cfg.type === "custom:glide-card"
+        ? { ...cfg, theme: cfg.theme ?? this.config.theme, tap_animation: cfg.tap_animation ?? this.config.tap_animation }
+        : cfg;
       const el = helpers.createCardElement(conf) as HTMLElement & Record<string, any>;
       if (this.hass) el.hass = this.hass;
       const g = el.getGridOptions?.() ?? {};

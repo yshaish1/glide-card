@@ -1,5 +1,6 @@
 import { LitElement, css, html, nothing } from "lit";
 import { fire } from "../core/fire";
+import { TAP_EFFECTS } from "../core/tap-fx";
 import type { CardType, GlideCardConfig, HomeAssistant } from "../core/types";
 import { listThemes } from "../themes";
 
@@ -24,6 +25,13 @@ const actions = {
     { name: "hold_action", selector: { ui_action: {} } },
     { name: "double_tap_action", selector: { ui_action: {} } },
   ],
+};
+
+// Card types with tappable parts; a pop-up passes its choice on to the Glide cards inside it.
+const TAP_TYPES = new Set<CardType>(["button", "chips", "heading", "nav", "popup"]);
+const TAP_FIELD = {
+  name: "tap_animation",
+  selector: { select: { mode: "dropdown", options: Object.entries(TAP_EFFECTS).map(([value, label]) => ({ value, label })) } },
 };
 
 const ALIGN = { select: { mode: "dropdown", options: [{ value: "center", label: "Center" }, { value: "start", label: "Start" }] } };
@@ -139,6 +147,7 @@ const LABELS: Record<string, string> = {
   color: "Colour (empty = by entity type)",
   items: "Nav items (path or #popup-hash)",
   entity: "Entity",
+  tap_animation: "Tap animation (empty = dashboard default)",
 };
 
 /** Loads HA's lazy form components (ha-form etc.) by asking a built-in card for its editor. */
@@ -174,8 +183,8 @@ export class GlideCardEditor extends LitElement {
   private setType(type: CardType) {
     if (type === this.config.card_type) return;
     // Keep only the shared style fields when switching type.
-    const { type: t, theme, mode, accent } = this.config;
-    const base: Record<string, unknown> = { type: t, card_type: type, theme, mode, accent };
+    const { type: t, theme, mode, accent, tap_animation } = this.config;
+    const base: Record<string, unknown> = { type: t, card_type: type, theme, mode, accent, tap_animation };
     if (type === "popup") Object.assign(base, { hash: "#room", title: "Room", cards: [] });
     if (type === "chips") Object.assign(base, { chips: [] });
     if (type === "title") Object.assign(base, { title: "Home" });
@@ -239,7 +248,7 @@ export class GlideCardEditor extends LitElement {
         ? html`<ha-form
             .hass=${this.hass}
             .data=${c}
-            .schema=${SCHEMAS[c.card_type]}
+            .schema=${TAP_TYPES.has(c.card_type) ? [...SCHEMAS[c.card_type], TAP_FIELD] : SCHEMAS[c.card_type]}
             .computeLabel=${(s: { name: string }) => LABELS[s.name]}
             @value-changed=${(e: CustomEvent) => {
               e.stopPropagation();

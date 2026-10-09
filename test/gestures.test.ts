@@ -51,4 +51,11 @@ describe("attachGestures", () => {
     ev(el, "pointermove", 100, 60, "touch"); ev(el, "pointerup", 100, 60, "touch");
     expect(dragEnd).toHaveBeenCalledWith(60);
   });
+
+  it("tap receives the press point", () => {
+    const el = box(), tap = vi.fn();
+    attachGestures(el, { tap });
+    ev(el, "pointerdown", 30, 40); ev(el, "pointerup", 31, 41);
+    expect(tap).toHaveBeenCalledWith({ x: 30, y: 40 });
+  });
 });
