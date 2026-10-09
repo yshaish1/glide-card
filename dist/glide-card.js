@@ -1269,7 +1269,7 @@ var Ct = /* @__PURE__ */ new Set([
 	}
 	static {
 		this.styles = [q, S`
-      :host { height: 100%; }
+      :host { height: 100%; container-type: inline-size; }
       .surface {
         height: 100%;
         cursor: pointer;
@@ -1331,9 +1331,6 @@ var Ct = /* @__PURE__ */ new Set([
       .name {
         font-size: 16px;
         font-weight: 600;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
       .on .meta { color: var(--gc-icon-on, var(--domain)); }
       .badge {
@@ -1356,7 +1353,24 @@ var Ct = /* @__PURE__ */ new Set([
       }
       .tile .icon { grid-area: icon; }
       .tile .badge { grid-area: badge; align-self: start; }
-      .tile .text { grid-area: text; align-self: end; }
+      .tile .text { grid-area: text; align-self: end; min-height: 0; }
+      /* Long names wrap to two lines instead of hiding behind an ellipsis. */
+      .tile .name {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        overflow: hidden;
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+        text-wrap: balance;
+      }
+      /* Narrow tiles give back a little room so two lines plus the meta line fit in 2 rows. */
+      @container (max-width: 260px) {
+        .tile { padding: 12px; }
+        .tile .icon { width: 38px; height: 38px; }
+        .tile .name { font-size: 14px; }
+      }
 
       /* Pill: one row */
       .pill {
@@ -1369,7 +1383,7 @@ var Ct = /* @__PURE__ */ new Set([
         border-radius: var(--gc-radius-control);
       }
       .pill .text { flex: 1; }
-      .pill .name { font-size: 15px; }
+      .pill .name { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     `];
 	}
 };
@@ -3105,7 +3119,7 @@ var xn = class extends z {
 customElements.define("glide-card-editor", xn);
 //#endregion
 //#region src/glide-card.ts
-var Sn = "0.6.4", Cn = [
+var Sn = "0.6.5", Cn = [
 	"button",
 	"popup",
 	"nav",
