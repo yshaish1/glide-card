@@ -12,6 +12,19 @@ afterEach(() => {
 });
 
 describe("popup sheet registry", () => {
+  it("mounts inside <home-assistant>'s shadow root so HA's context reaches the cards", () => {
+    const ha = document.createElement("home-assistant");
+    const root = ha.attachShadow({ mode: "open" });
+    document.body.append(ha);
+    const owner = {};
+    registerPopup(config, owner);
+    expect(root.querySelector("glide-sheet")).not.toBeNull();
+    expect(sheet()).toBeNull(); // not in the light DOM
+    unregisterPopup("#more", owner);
+    expect(root.querySelector("glide-sheet")).toBeNull();
+    ha.remove();
+  });
+
   it("keeps the sheet while another view's popup card still owns it", () => {
     const view1 = {}, view2 = {};
     registerPopup(config, view1);

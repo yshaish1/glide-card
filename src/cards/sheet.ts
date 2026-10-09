@@ -330,12 +330,19 @@ let currentHass: HomeAssistant | undefined;
 
 const norm = (hash: string) => (hash.startsWith("#") ? hash : `#${hash}`);
 
+/**
+ * Sheets live in <home-assistant>'s shadow root, not document.body: HA hands entity state to
+ * card features (tile fan modes, presets...) through Lit context, and a context request from
+ * outside <home-assistant> never reaches a provider, so those features rendered empty.
+ */
+const sheetHost = (): ParentNode => document.querySelector("home-assistant")?.shadowRoot ?? document.body;
+
 export function registerPopup(config: PopupCardConfig, owner: object) {
   const hash = norm(config.hash);
   let entry = sheets.get(hash);
   if (!entry) {
     const el = document.createElement("glide-sheet") as GlideSheet;
-    document.body.appendChild(el);
+    sheetHost().appendChild(el);
     sheets.set(hash, (entry = { el, owners: new Set() }));
   }
   entry.owners.add(owner);
