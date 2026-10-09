@@ -134,6 +134,8 @@ export class GlideNav extends GlideBase<NavCardConfig> {
         aria-current=${current ? "page" : "false"}
         @click=${(e: Event) => {
           haptic("selection");
+          const btn = e.currentTarget as HTMLElement;
+          this.playTapFx(btn, e instanceof MouseEvent && e.detail ? { x: e.clientX, y: e.clientY } : undefined, { icon: btn.querySelector("ha-icon") });
           const rect = this.indRect();
           const scroll = this.renderRoot.querySelector(".scroller")?.scrollLeft ?? 0;
           handoff = usable(rect) ? { rect, scroll, at: performance.now() } : undefined;

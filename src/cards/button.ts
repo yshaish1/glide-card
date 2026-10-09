@@ -52,9 +52,17 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     this.detach = attachGestures(el, {
       axis: () => (this.isCover ? "y" : "x"),
       arm: () => haptic("selection"),
-      tap: () => this.hass && runAction(this, this.hass, this.action("tap"), this.config.entity),
+      tap: (p) => {
+        this.playTapFx(el, p, { icon: el.querySelector(".icon"), badge: el.querySelector(".badge") });
+        if (this.hass) runAction(this, this.hass, this.action("tap"), this.config.entity);
+      },
       hold: () => this.hass && runAction(this, this.hass, this.action("hold"), this.config.entity),
-      doubleTap: this.config.double_tap_action ? () => this.hass && runAction(this, this.hass, this.action("double_tap"), this.config.entity) : undefined,
+      doubleTap: this.config.double_tap_action
+        ? (p) => {
+            this.playTapFx(el, p, { icon: el.querySelector(".icon"), badge: el.querySelector(".badge") });
+            if (this.hass) runAction(this, this.hass, this.action("double_tap"), this.config.entity);
+          }
+        : undefined,
       dragStart: () => {
         const spec = this.slider;
         lastStep = -1;

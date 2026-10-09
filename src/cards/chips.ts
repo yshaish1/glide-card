@@ -56,7 +56,8 @@ export class GlideChips extends GlideBase<ChipsCardConfig> {
         const action = chip[`${kind}_action`] ?? { action: "more-info" as const };
         if (this.hass) runAction(el, this.hass, action, chip.entity);
       };
-      this.detachers.push(attachGestures(el, { tap: () => act("tap"), hold: () => act("hold") }));
+      const tap = (p?: { x: number; y: number }) => { this.playTapFx(el, p, { icon: el.querySelector("ha-icon") }); act("tap"); };
+      this.detachers.push(attachGestures(el, { tap, hold: () => act("hold") }));
     });
   }
 

@@ -2,6 +2,7 @@ import "./ha-icon";
 import "../src/glide-card";
 import { getHass, setDark, setLanguage, subscribe } from "./mock-hass";
 import { listThemes } from "../src/themes";
+import { TAP_EFFECTS } from "../src/core/tap-fx";
 
 type Cfg = Record<string, any>;
 const cards: Cfg[] = [
@@ -106,5 +107,13 @@ themeSel.onchange = () => ((state.theme = themeSel.value), build());
 };
 (document.getElementById("width") as HTMLSelectElement).onchange = (e) =>
   ((document.querySelector(".stage") as HTMLElement).dataset.w = (e.target as HTMLSelectElement).value);
+
+// Dashboard-wide tap animation, the way an HA theme sets `glide-tap-animation`.
+const tapSel = document.getElementById("tap") as HTMLSelectElement;
+tapSel.innerHTML = Object.entries(TAP_EFFECTS).map(([v, l]) => `<option value="${v}">${l}</option>`).join("");
+tapSel.onchange = () => {
+  document.documentElement.style.setProperty("--glide-tap-animation", tapSel.value);
+  build();
+};
 
 build();
