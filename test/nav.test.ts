@@ -71,12 +71,43 @@ describe("nav", () => {
     width = 200;
     observed!();
     expect(scrollBy).toHaveBeenCalledOnce();
-    expect(scrollBy.mock.calls[0][0]).toEqual({ left: 230, behavior: "instant" });
+    expect(scrollBy.mock.calls[0][0]).toEqual({ left: 230, behavior: "auto" });
 
     nav.hass = { ...hass }; // a state update
     await nav.updateComplete;
     observed!();
     expect(scrollBy).toHaveBeenCalledOnce();
+    nav.remove();
+    vi.unstubAllGlobals();
+  });
+
+  it("reveals again when the bar settles narrower and leaves the item cut off, unless the user scrolled", async () => {
+    let observed: (() => void) | undefined;
+    vi.stubGlobal("ResizeObserver", class { constructor(cb: () => void) { observed = cb; } observe() {} disconnect() {} });
+    go("/d/office");
+    const nav = await mount(document.body);
+    const scroller = nav.shadowRoot.querySelector(".scroller");
+    const scrollBy = vi.fn();
+    scroller.scrollBy = scrollBy;
+    Object.defineProperty(scroller, "clientWidth", { get: () => 200 });
+    Object.defineProperty(scroller, "scrollWidth", { get: () => 400 });
+    let right = 300;
+    scroller.getBoundingClientRect = () => ({ left: 0, right, width: right }) as DOMRect;
+    const active = nav.shadowRoot.querySelector("button.active");
+    active.getBoundingClientRect = () => ({ left: 220, right: 280, width: 60 }) as DOMRect;
+    observed!(); // laid out: first reveal
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+
+    observed!(); // nothing changed, item still in view
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+
+    right = 200; // the bar settled narrower: the item now sticks out
+    observed!();
+    expect(scrollBy).toHaveBeenCalledTimes(2);
+
+    scroller.dispatchEvent(new Event("touchstart")); // the user scrolls it away themselves
+    observed!();
+    expect(scrollBy).toHaveBeenCalledTimes(2);
     nav.remove();
     vi.unstubAllGlobals();
   });

@@ -53,3 +53,13 @@ On execution, also save this plan as `Plans/nav-reveal-active.md` (project rule)
 - [x] Edge padding while overflowing
 - [x] Test added; tests, typecheck, build pass
 - [ ] Manual check on a phone-width dashboard
+
+## Round 2 (after v0.9.1 phone recording)
+Seen: on a view change, the new view's bar stopped one item short of the end, leaving the selected item (מרתף) half under the edge fade.
+Cause: the reveal happened once, while the bar was still settling its width; it shrank afterwards and nothing checked again.
+- [x] ResizeObserver watches the bar and every item; any size change re-reveals if the active item isn't fully in view
+- [x] Safety check 600ms after a smooth reveal (scroll cut short by layout or snapping)
+- [x] Never re-reveal after the user touches, drags or wheels the bar
+- [x] `behavior: "auto"` instead of `"instant"` (older iOS Safari)
+- [x] Test: bar settles narrower and the item is revealed again; a touch stops further reveals. 44 tests pass, build ok
+- [ ] Confirm on the phone

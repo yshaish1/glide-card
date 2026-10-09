@@ -39,8 +39,14 @@ export class GlideNav extends GlideBase<NavCardConfig> {
   private stale = false;
   private from?: DOMRect;
   private centred?: string;
-  /** Re-reveals once the bar gets a size: HA often renders a view's nav before laying it out. */
+  /**
+   * Watches the bar and its items: HA often renders a view's nav before it's laid out, and the bar
+   * keeps settling (pinned items, icons) after the first reveal. Any size change re-reveals.
+   */
   private resizer?: ResizeObserver;
+  /** The user touched the bar since the last reveal: leave their scrolling alone. */
+  private touched = false;
+  private settle?: number;
 
   setConfig(config: NavCardConfig) {
     if (!Array.isArray(config.items) || !config.items.length) throw new Error("Nav needs an `items` list");
@@ -53,8 +59,7 @@ export class GlideNav extends GlideBase<NavCardConfig> {
 
   connectedCallback() {
     super.connectedCallback();
-    const scroller = this.scroller();
-    if (scroller) this.resizer?.observe(scroller);
+    this.observe();
     ROUTE_EVENTS.forEach((e) => window.addEventListener(e, this.onRoute));
     if (this.rendered !== undefined && this.rendered !== route()) {
       this.stale = true; // its own indicator is on an old item: don't slide from there
@@ -65,6 +70,7 @@ export class GlideNav extends GlideBase<NavCardConfig> {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.resizer?.disconnect();
+    clearTimeout(this.settle);
     ROUTE_EVENTS.forEach((e) => window.removeEventListener(e, this.onRoute));
   }
 
@@ -96,6 +102,14 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     scroller.classList.toggle("overflow", scroller.scrollWidth - pad > scroller.clientWidth + 1);
   }
 
+  /** The active item is fully inside the bar, clear of the edge fade (or the bar doesn't scroll). */
+  private inView(scroller: HTMLElement) {
+    const active = scroller.querySelector<HTMLElement>("button.active");
+    if (!active || !scroller.classList.contains("overflow")) return true;
+    const s = scroller.getBoundingClientRect(), a = active.getBoundingClientRect();
+    return a.left >= s.left + EDGE - 2 && a.right <= s.right - EDGE + 2;
+  }
+
   /**
    * Centre the active item. Near either end the browser clamps the scroll, so it lands fully in view
    * at that end instead. Rect deltas work the same in LTR and RTL (where scrollLeft is negative).
@@ -108,19 +122,38 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     const active = scroller.querySelector<HTMLElement>("button.active");
     if (active) {
       const s = scroller.getBoundingClientRect(), a = active.getBoundingClientRect();
-      scroller.scrollBy({ left: a.left + a.width / 2 - (s.left + s.width / 2), behavior: smooth ? "smooth" : "instant" });
+      // "auto", not "instant": older iOS Safari rejects the newer value
+      scroller.scrollBy({ left: a.left + a.width / 2 - (s.left + s.width / 2), behavior: smooth ? "smooth" : "auto" });
     }
     this.centred = route();
+    this.touched = false;
+    // A smooth scroll can be cut short (layout shifts, snapping): check where it ended up
+    clearTimeout(this.settle);
+    if (smooth) this.settle = window.setTimeout(() => this.recheck(), 600);
+  }
+
+  private recheck() {
+    const scroller = this.scroller();
+    if (!scroller) return;
+    this.markOverflow(scroller);
+    if (this.centred !== route() || (!this.touched && !this.inView(scroller))) this.reveal(false);
+  }
+
+  private observe() {
+    const scroller = this.scroller();
+    if (!scroller || !this.resizer) return;
+    this.resizer.observe(scroller);
+    scroller.querySelectorAll("button").forEach((b) => this.resizer!.observe(b));
   }
 
   protected firstUpdated() {
     const scroller = this.scroller();
-    if (!scroller || typeof ResizeObserver === "undefined") return;
-    this.resizer = new ResizeObserver(() => {
-      if (this.centred !== route()) this.reveal(false);
-      else this.markOverflow(scroller);
-    });
-    this.resizer.observe(scroller);
+    if (!scroller) return;
+    const touch = () => (this.touched = true);
+    for (const e of ["touchstart", "pointerdown", "wheel"]) scroller.addEventListener(e, touch, { passive: true });
+    if (typeof ResizeObserver === "undefined") return;
+    this.resizer = new ResizeObserver(() => this.recheck());
+    this.observe();
   }
 
   protected willUpdate(changed: PropertyValues<this>) {
@@ -160,6 +193,7 @@ export class GlideNav extends GlideBase<NavCardConfig> {
       );
     }
 
+    this.observe(); // items may have changed
     if (this.centred !== now) this.reveal(!!this.centred || !!inherit);
   }
 
