@@ -50,6 +50,8 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     const el = this.renderRoot.querySelector<HTMLElement>(".surface")!;
     let lastStep = -1;
     this.detach = attachGestures(el, {
+      axis: () => (this.isCover ? "y" : "x"),
+      arm: () => haptic("selection"),
       tap: () => this.hass && runAction(this, this.hass, this.action("tap"), this.config.entity),
       hold: () => this.hass && runAction(this, this.hass, this.action("hold"), this.config.entity),
       doubleTap: this.config.double_tap_action ? () => this.hass && runAction(this, this.hass, this.action("double_tap"), this.config.entity) : undefined,
@@ -86,19 +88,28 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     return this.config.slider === false ? undefined : sliderFor(this.stateOf(this.config.entity));
   }
 
+  /** Covers with a position get the blind look: fill rises from the bottom, dragged vertically. */
+  private get isCover() {
+    return domainOf(this.config.entity) === "cover" && !!this.slider;
+  }
+
   protected render() {
     const s = this.stateOf(this.config.entity);
     const slider = this.slider;
     const value = this.dragValue ?? slider?.value;
-    const on = this.dragValue !== undefined ? this.dragValue > 0 : isActive(s);
+    const cover = this.isCover;
+    // Covers stay neutral like the mockup; the fill alone shows how open they are.
+    const on = !cover && (this.dragValue !== undefined ? this.dragValue > 0 : isActive(s));
     const stateText = this.hass && this.config.entity ? formatState(this.hass, this.config.entity) : "";
     const stateless = STATELESS.has(domainOf(this.config.entity));
     // The badge carries the state; the meta line only adds what the badge can't (e.g. brightness).
-    const meta = slider && on && value !== undefined ? `${value}%` : "";
+    // Covers flip it: the badge shows the position and the meta line spells it out ("40% Open").
+    const badge = cover ? `${value}%` : stateText;
+    const meta = cover ? `${value}% ${stateText}` : slider && on && value !== undefined ? `${value}%` : "";
     const fill = slider ? value ?? 0 : on ? 100 : 0;
     return html`
       <div
-        class="surface ${this.layout} ${on ? "on" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
+        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
         style=${styleMap({ "--domain": cssColor(this.config.color) ?? domainColor(s), "--fill": `${fill}%` })}
         role="button"
         tabindex="0"
@@ -110,7 +121,7 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
           <div class="name">${entityName(s, this.config.name)}</div>
           ${meta ? html`<div class="meta">${meta}</div>` : nothing}
         </div>
-        ${stateText && !stateless ? html`<div class="badge meta">${stateText}</div>` : nothing}
+        ${badge && !stateless ? html`<div class="badge meta">${badge}</div>` : nothing}
       </div>
     `;
   }
@@ -140,6 +151,24 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
         pointer-events: none;
       }
       .fill.dragging { transition: none; }
+      .cover .fill {
+        inset-block: auto 0;
+        inset-inline: 0;
+        width: auto;
+        height: var(--fill);
+        border-top: 1.5px solid color-mix(in srgb, var(--domain) 35%, transparent);
+        border-start-start-radius: 6px;
+        border-start-end-radius: 6px;
+        box-shadow: none;
+        transition: height 0.45s cubic-bezier(0.2, 0.9, 0.25, 1);
+      }
+      .cover .fill.dragging { transition: none; }
+      .cover .badge {
+        background: color-mix(in srgb, var(--gc-text) 7%, transparent);
+        border-color: transparent;
+        color: var(--gc-text);
+      }
+      .cover .meta:not(.badge) { color: var(--gc-text-dim); }
       .icon {
         position: relative;
         display: grid;
