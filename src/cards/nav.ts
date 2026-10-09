@@ -46,7 +46,10 @@ export class GlideNav extends GlideBase<NavCardConfig> {
   private resizer?: ResizeObserver;
   /** The user touched the bar since the last reveal: leave their scrolling alone. */
   private touched = false;
-  private settle?: number;
+  /** A smooth reveal is in flight; resizes retarget it smoothly instead of jumping. */
+  private sliding?: number;
+  /** The route changed before the bar was laid out: the slide (scroll + indicator) runs once it is. */
+  private pending?: { scroll?: number; rect?: DOMRect };
 
   setConfig(config: NavCardConfig) {
     if (!Array.isArray(config.items) || !config.items.length) throw new Error("Nav needs an `items` list");
@@ -70,7 +73,8 @@ export class GlideNav extends GlideBase<NavCardConfig> {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.resizer?.disconnect();
-    clearTimeout(this.settle);
+    clearTimeout(this.sliding);
+    this.sliding = undefined;
     ROUTE_EVENTS.forEach((e) => window.removeEventListener(e, this.onRoute));
   }
 
@@ -119,6 +123,14 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     const scroller = this.scroller();
     if (!scroller || scroller.clientWidth <= 0) return; // not laid out yet: the ResizeObserver retries
     this.markOverflow(scroller);
+    if (this.pending) {
+      // Late layout: start from where the tapped bar was and animate from there, same as an on-time one
+      if (this.pending.scroll !== undefined) scroller.scrollLeft = this.pending.scroll;
+      this.slide(this.pending.rect);
+      this.pending = undefined;
+      smooth = true;
+    }
+    smooth &&= !reducedMotion();
     const active = scroller.querySelector<HTMLElement>("button.active");
     if (active) {
       const s = scroller.getBoundingClientRect(), a = active.getBoundingClientRect();
@@ -128,15 +140,35 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     this.centred = route();
     this.touched = false;
     // A smooth scroll can be cut short (layout shifts, snapping): check where it ended up
-    clearTimeout(this.settle);
-    if (smooth) this.settle = window.setTimeout(() => this.recheck(), 600);
+    clearTimeout(this.sliding);
+    this.sliding = smooth
+      ? window.setTimeout(() => {
+          this.sliding = undefined;
+          this.recheck();
+        }, 600)
+      : undefined;
   }
 
   private recheck() {
     const scroller = this.scroller();
     if (!scroller) return;
     this.markOverflow(scroller);
-    if (this.centred !== route() || (!this.touched && !this.inView(scroller))) this.reveal(false);
+    if (this.centred !== route() || (!this.touched && !this.inView(scroller))) this.reveal(this.sliding !== undefined);
+  }
+
+  /** FLIP the indicator from where it was (`from`, viewport coords) to where it is now. */
+  private slide(from?: DOMRect) {
+    const ind = this.renderRoot.querySelector<HTMLElement>(".ind");
+    const to = ind?.getBoundingClientRect();
+    if (!ind || !usable(from) || !usable(to) || reducedMotion()) return;
+    if (Math.abs(from.left - to.left) + Math.abs(from.width - to.width) <= 1) return;
+    ind.animate(
+      [
+        { transform: `translateX(${from.left - to.left}px)`, width: `${from.width}px` },
+        { transform: "none", width: "100%" },
+      ],
+      SLIDE,
+    );
   }
 
   private observe() {
@@ -171,8 +203,6 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     const scroller = this.scroller();
     if (!scroller) return;
     this.markOverflow(scroller);
-    const ind = this.renderRoot.querySelector<HTMLElement>(".ind");
-    if (!ind) return;
 
     // Slide in from the old spot. Only when the route changed, so a state update mid-slide doesn't
     // restart it. A card that didn't show the old spot (another view's nav, or a cached view coming
@@ -180,17 +210,15 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     const h = handoff && performance.now() - handoff.at < HANDOFF_MS ? handoff : undefined;
     const own = moved ? this.from : undefined;
     const inherit = !own && (moved || first) ? h : undefined;
-    if (inherit) scroller.scrollLeft = inherit.scroll;
     const from = own ?? inherit?.rect;
-    const to = ind.getBoundingClientRect();
-    if (usable(from) && usable(to) && !reducedMotion() && Math.abs(from.left - to.left) + Math.abs(from.width - to.width) > 1) {
-      ind.animate(
-        [
-          { transform: `translateX(${from.left - to.left}px)`, width: `${from.width}px` },
-          { transform: "none", width: "100%" },
-        ],
-        SLIDE,
-      );
+    if (moved || first) {
+      // Not laid out yet (HA renders a view's nav before showing it): hold the slide until it is
+      const laidOut = scroller.clientWidth > 0;
+      this.pending = laidOut || (!from && !inherit) ? undefined : { scroll: inherit?.scroll, rect: from };
+      if (laidOut) {
+        if (inherit) scroller.scrollLeft = inherit.scroll;
+        this.slide(from);
+      }
     }
 
     this.observe(); // items may have changed

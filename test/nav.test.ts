@@ -111,4 +111,30 @@ describe("nav", () => {
     nav.remove();
     vi.unstubAllGlobals();
   });
+
+  it("a view's nav laid out after the tap still slides: from the tapped bar's scroll, smoothly", async () => {
+    let observed: (() => void) | undefined;
+    vi.stubGlobal("ResizeObserver", class { constructor(cb: () => void) { observed = cb; } observe() {} disconnect() {} });
+    go("/d/main");
+    const old = await mount(document.body);
+    old.shadowRoot.querySelector(".ind").getBoundingClientRect = () => ({ left: 10, width: 60, height: 40 }) as DOMRect;
+    old.shadowRoot.querySelector(".scroller").scrollLeft = 0;
+    old.shadowRoot.querySelectorAll("button")[3].click(); // tap "office": hands off, then navigates
+    old.remove();
+
+    const nav = await mount(document.body); // the next view's nav: no width yet
+    const scroller = nav.shadowRoot.querySelector(".scroller");
+    const scrollBy = vi.fn();
+    scroller.scrollBy = scrollBy;
+    expect(scrollBy).not.toHaveBeenCalled();
+
+    Object.defineProperty(scroller, "clientWidth", { get: () => 200 });
+    scroller.getBoundingClientRect = () => ({ left: 0, right: 200, width: 200 }) as DOMRect;
+    nav.shadowRoot.querySelector("button.active").getBoundingClientRect = () => ({ left: 300, right: 360, width: 60 }) as DOMRect;
+    observed!();
+    expect(scrollBy).toHaveBeenCalledOnce();
+    expect(scrollBy.mock.calls[0][0].behavior).toBe("smooth");
+    nav.remove();
+    vi.unstubAllGlobals();
+  });
 });

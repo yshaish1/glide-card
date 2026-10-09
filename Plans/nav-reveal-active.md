@@ -63,3 +63,10 @@ Cause: the reveal happened once, while the bar was still settling its width; it 
 - [x] `behavior: "auto"` instead of `"instant"` (older iOS Safari)
 - [x] Test: bar settles narrower and the item is revealed again; a touch stops further reveals. 44 tests pass, build ok
 - [ ] Confirm on the phone
+
+## Round 3: animate the late reveal
+v0.9.2 works, but when the new view's bar was laid out after its first render, the scroll jumped and the pill didn't slide.
+- [x] Hold the slide (inherited scroll + indicator FLIP) until the bar has a width, then run it smoothly
+- [x] Resizes during a smooth scroll retarget it smoothly instead of jumping; reduced motion stays instant
+- [x] Test: tap → next view's nav laid out late → smooth scroll. 45 tests pass, build ok
+- [ ] Confirm on the phone
