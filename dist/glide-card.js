@@ -1993,12 +1993,12 @@ var Kt = {
 	getGridOptions() {
 		return {
 			columns: 12,
-			rows: 7,
+			rows: 8,
 			min_columns: 6
 		};
 	}
 	getCardSize() {
-		return 7;
+		return 8;
 	}
 	get s() {
 		return this.stateOf(this.config.entity);
@@ -2066,22 +2066,24 @@ var Kt = {
         </header>
 
         <div class="dial">
-          <svg viewBox="0 0 200 200" @pointerdown=${(e) => this.onDial(e)} role="slider"
-            aria-valuemin=${n} aria-valuemax=${r} aria-valuenow=${a ?? ""} aria-label=${q(this.hass, "target")}>
-            ${Ae`
-              <defs>
-                <linearGradient id="arc" gradientUnits="userSpaceOnUse" x1=${l} y1=${u} x2=${d} y2=${f}>
-                  <stop offset="0" style="stop-color:var(--mode);stop-opacity:.45" />
-                  <stop offset="1" style="stop-color:var(--mode)" />
-                </linearGradient>
-              </defs>
-              <path class="track" d=${Xt(Q, 405)} />`}
-            ${a !== void 0 && !o ? Ae`<path class="value" d=${Xt(Q, Math.max(135.5, c))} /><circle class="knob" cx=${d} cy=${f} r="9" />` : N}
-          </svg>
-          <div class="readout">
-            <div class="target">${a === void 0 ? "--" : a.toFixed(m)}<sup>°</sup></div>
-            <div class="meta label">${q(this.hass, "target")}</div>
-            ${t.current_temperature === void 0 ? N : j`<div class="meta current">${q(this.hass, "current")} ${Jt(typeof t.current_temperature == "number" ? t.current_temperature.toFixed(m) : t.current_temperature)}</div>`}
+          <div class="ring">
+            <svg viewBox="0 0 200 200" @pointerdown=${(e) => this.onDial(e)} role="slider"
+              aria-valuemin=${n} aria-valuemax=${r} aria-valuenow=${a ?? ""} aria-label=${q(this.hass, "target")}>
+              ${Ae`
+                <defs>
+                  <linearGradient id="arc" gradientUnits="userSpaceOnUse" x1=${l} y1=${u} x2=${d} y2=${f}>
+                    <stop offset="0" style="stop-color:var(--mode);stop-opacity:.45" />
+                    <stop offset="1" style="stop-color:var(--mode)" />
+                  </linearGradient>
+                </defs>
+                <path class="track" d=${Xt(Q, 405)} />`}
+              ${a !== void 0 && !o ? Ae`<path class="value" d=${Xt(Q, Math.max(135.5, c))} /><circle class="knob" cx=${d} cy=${f} r="9" />` : N}
+            </svg>
+            <div class="readout">
+              <div class="target">${a === void 0 ? "--" : a.toFixed(m)}<sup>°</sup></div>
+              <div class="meta label">${q(this.hass, "target")}</div>
+              ${t.current_temperature === void 0 ? N : j`<div class="meta current">${q(this.hass, "current")} ${Jt(typeof t.current_temperature == "number" ? t.current_temperature.toFixed(m) : t.current_temperature)}</div>`}
+            </div>
           </div>
         </div>
 
@@ -2139,11 +2141,13 @@ var Kt = {
       }
       .chip i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
       .dial { position: relative; flex: 1; min-height: 190px; display: grid; place-items: center; }
-      svg { width: min(100%, 240px); aspect-ratio: 1; touch-action: none; cursor: pointer; overflow: visible; }
+      /* The ring holds the arc and the readout, so the number stays centred on the arc however tall the card is */
+      .ring { position: relative; width: min(100%, 240px); aspect-ratio: 1; }
+      svg { display: block; width: 100%; height: 100%; touch-action: none; cursor: pointer; overflow: visible; }
       .track { fill: none; stroke: var(--line); stroke-width: 14; stroke-linecap: round; }
       .value { fill: none; stroke: url(#arc); stroke-width: 14; stroke-linecap: round; }
       .knob { fill: #fff; stroke: var(--mode); stroke-width: 4; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2)); }
-      .readout { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none; }
+      .readout { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; pointer-events: none; }
       .target { font-size: 54px; font-weight: 750; line-height: 1; letter-spacing: -0.03em; }
       .target sup { font-size: 20px; font-weight: 700; color: var(--mode); vertical-align: 0.9em; margin-inline-start: 2px; }
       .label { text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; color: var(--gc-text-dim); }
@@ -3077,7 +3081,7 @@ var gn = class extends L {
 customElements.define("glide-card-editor", gn);
 //#endregion
 //#region src/glide-card.ts
-var _n = "0.6.1", vn = [
+var _n = "0.6.2", vn = [
 	"button",
 	"popup",
 	"nav",

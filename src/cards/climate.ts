@@ -43,11 +43,11 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
   }
 
   getGridOptions() {
-    return { columns: 12, rows: 7, min_columns: 6 };
+    return { columns: 12, rows: 8, min_columns: 6 };
   }
 
   getCardSize() {
-    return 7;
+    return 8;
   }
 
   private get s() {
@@ -142,24 +142,26 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
         </header>
 
         <div class="dial">
-          <svg viewBox="0 0 200 200" @pointerdown=${(e: PointerEvent) => this.onDial(e)} role="slider"
-            aria-valuemin=${min} aria-valuemax=${max} aria-valuenow=${target ?? ""} aria-label=${t(this.hass, "target")}>
-            ${svg`
-              <defs>
-                <linearGradient id="arc" gradientUnits="userSpaceOnUse" x1=${sx} y1=${sy} x2=${kx} y2=${ky}>
-                  <stop offset="0" style="stop-color:var(--mode);stop-opacity:.45" />
-                  <stop offset="1" style="stop-color:var(--mode)" />
-                </linearGradient>
-              </defs>
-              <path class="track" d=${arc(START, START + SWEEP)} />`}
-            ${target !== undefined && !off
-              ? svg`<path class="value" d=${arc(START, Math.max(START + 0.5, end))} /><circle class="knob" cx=${kx} cy=${ky} r="9" />`
-              : nothing}
-          </svg>
-          <div class="readout">
-            <div class="target">${target !== undefined ? target.toFixed(digits) : "--"}<sup>°</sup></div>
-            <div class="meta label">${t(this.hass, "target")}</div>
-            ${a.current_temperature !== undefined ? html`<div class="meta current">${t(this.hass, "current")} ${deg(typeof a.current_temperature === "number" ? a.current_temperature.toFixed(digits) : a.current_temperature)}</div>` : nothing}
+          <div class="ring">
+            <svg viewBox="0 0 200 200" @pointerdown=${(e: PointerEvent) => this.onDial(e)} role="slider"
+              aria-valuemin=${min} aria-valuemax=${max} aria-valuenow=${target ?? ""} aria-label=${t(this.hass, "target")}>
+              ${svg`
+                <defs>
+                  <linearGradient id="arc" gradientUnits="userSpaceOnUse" x1=${sx} y1=${sy} x2=${kx} y2=${ky}>
+                    <stop offset="0" style="stop-color:var(--mode);stop-opacity:.45" />
+                    <stop offset="1" style="stop-color:var(--mode)" />
+                  </linearGradient>
+                </defs>
+                <path class="track" d=${arc(START, START + SWEEP)} />`}
+              ${target !== undefined && !off
+                ? svg`<path class="value" d=${arc(START, Math.max(START + 0.5, end))} /><circle class="knob" cx=${kx} cy=${ky} r="9" />`
+                : nothing}
+            </svg>
+            <div class="readout">
+              <div class="target">${target !== undefined ? target.toFixed(digits) : "--"}<sup>°</sup></div>
+              <div class="meta label">${t(this.hass, "target")}</div>
+              ${a.current_temperature !== undefined ? html`<div class="meta current">${t(this.hass, "current")} ${deg(typeof a.current_temperature === "number" ? a.current_temperature.toFixed(digits) : a.current_temperature)}</div>` : nothing}
+            </div>
           </div>
         </div>
 
@@ -216,11 +218,13 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
       }
       .chip i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
       .dial { position: relative; flex: 1; min-height: 190px; display: grid; place-items: center; }
-      svg { width: min(100%, 240px); aspect-ratio: 1; touch-action: none; cursor: pointer; overflow: visible; }
+      /* The ring holds the arc and the readout, so the number stays centred on the arc however tall the card is */
+      .ring { position: relative; width: min(100%, 240px); aspect-ratio: 1; }
+      svg { display: block; width: 100%; height: 100%; touch-action: none; cursor: pointer; overflow: visible; }
       .track { fill: none; stroke: var(--line); stroke-width: 14; stroke-linecap: round; }
       .value { fill: none; stroke: url(#arc); stroke-width: 14; stroke-linecap: round; }
       .knob { fill: #fff; stroke: var(--mode); stroke-width: 4; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2)); }
-      .readout { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none; }
+      .readout { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; pointer-events: none; }
       .target { font-size: 54px; font-weight: 750; line-height: 1; letter-spacing: -0.03em; }
       .target sup { font-size: 20px; font-weight: 700; color: var(--mode); vertical-align: 0.9em; margin-inline-start: 2px; }
       .label { text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; color: var(--gc-text-dim); }
