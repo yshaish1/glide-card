@@ -126,6 +126,19 @@ export class GlideChips extends GlideBase<ChipsCardConfig> {
       .text { display: flex; flex-direction: column; line-height: 1.2; }
       .label { font-size: 11px; color: var(--gc-text-dim); white-space: nowrap; }
       .value { font-size: 14px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+      :host([size="compact"]) .row { gap: 8px; }
+      :host([size="compact"]) .chip { gap: 8px; padding-block: 5px; padding-inline: 10px 13px; }
+      :host([size="compact"]) ha-icon { --mdc-icon-size: 20px; }
+      :host([size="compact"]) .label { font-size: 10.5px; }
+      :host([size="compact"]) .value { font-size: 13px; }
+      /* Slim: label and value on one line */
+      :host([size="slim"]) .row { gap: 6px; }
+      :host([size="slim"]) .chip { gap: 7px; padding-block: 5px; padding-inline: 9px 12px; }
+      :host([size="slim"]) ha-icon { --mdc-icon-size: 18px; }
+      :host([size="slim"]) .text { flex-direction: row; align-items: baseline; gap: 5px; }
+      :host([size="slim"]) .label { font-size: 11.5px; }
+      :host([size="slim"]) .value { font-size: 13px; }
     `,
   ];
 }

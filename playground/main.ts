@@ -123,4 +123,10 @@ tapSel.onchange = () => {
   build();
 };
 
+// Dashboard-wide size, the way an HA theme sets `glide-size`.
+(document.getElementById("size") as HTMLSelectElement).onchange = (e) => {
+  document.documentElement.style.setProperty("--glide-size", (e.target as HTMLSelectElement).value);
+  build();
+};
+
 build();

@@ -42,12 +42,16 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
     super.setConfig(config);
   }
 
+  private get rows() {
+    return { full: 8, compact: 7, slim: 5 }[this.size];
+  }
+
   getGridOptions() {
-    return { columns: 12, rows: 8, min_columns: 6 };
+    return { columns: 12, rows: this.rows, min_columns: 6 };
   }
 
   getCardSize() {
-    return 8;
+    return this.rows;
   }
 
   private get s() {
@@ -268,6 +272,40 @@ export class GlideClimate extends GlideBase<ClimateCardConfig> {
         border-color: color-mix(in srgb, var(--c) 50%, transparent);
       }
       .empty { padding: 18px; color: var(--gc-text-dim); }
+
+      :host([size="compact"]) .surface { padding: 16px 14px 14px; gap: 8px; }
+      :host([size="compact"]) .icon { width: 36px; height: 36px; --mdc-icon-size: 20px; }
+      :host([size="compact"]) .name { font-size: 16px; }
+      :host([size="compact"]) .dial { min-height: 160px; }
+      :host([size="compact"]) .ring { width: min(100%, 200px); }
+      :host([size="compact"]) .target { font-size: 46px; }
+      :host([size="compact"]) .target sup { font-size: 17px; }
+      :host([size="compact"]) .round { width: 44px; height: 44px; }
+      :host([size="compact"]) .modes { padding-top: 10px; }
+      :host([size="compact"]) .modes button { padding: 8px 2px; }
+      /* Slim: a small dial with - / + beside it; only the active mode keeps its label */
+      :host([size="slim"]) .surface {
+        display: grid; grid-template-columns: 1fr auto 1fr; align-content: center; gap: 6px; padding: 12px 12px 10px;
+      }
+      :host([size="slim"]) header { grid-column: 1 / -1; gap: 10px; }
+      :host([size="slim"]) .icon { width: 30px; height: 30px; border-radius: 10px; --mdc-icon-size: 18px; }
+      :host([size="slim"]) .name { font-size: 15px; }
+      :host([size="slim"]) .dial { grid-area: 2 / 2; min-height: 0; }
+      :host([size="slim"]) .ring { width: 150px; }
+      :host([size="slim"]) .target { font-size: 36px; }
+      :host([size="slim"]) .target sup { font-size: 14px; }
+      :host([size="slim"]) .readout .label { display: none; }
+      :host([size="slim"]) .current { font-size: 11px; padding: 2px 8px; }
+      :host([size="slim"]) .steppers { display: contents; }
+      :host([size="slim"]) .steppers .meta { display: none; }
+      :host([size="slim"]) .round { width: 38px; height: 38px; align-self: center; }
+      :host([size="slim"]) .round:first-child { grid-area: 2 / 1; justify-self: end; }
+      :host([size="slim"]) .round:last-child { grid-area: 2 / 3; justify-self: start; }
+      :host([size="slim"]) .modes { grid-column: 1 / -1; display: flex; margin-top: 2px; padding-top: 8px; gap: 6px; }
+      :host([size="slim"]) .modes button { flex: 1 1 0; min-width: 0; }
+      :host([size="slim"]) .modes button.on { flex: 2 1 auto; }
+      :host([size="slim"]) .modes button { grid-auto-flow: column; gap: 4px; padding: 6px 2px; border-radius: 12px; --mdc-icon-size: 17px; }
+      :host([size="slim"]) .modes button:not(.on) .meta { display: none; }
     `,
   ];
 }

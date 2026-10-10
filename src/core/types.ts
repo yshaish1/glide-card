@@ -39,6 +39,8 @@ export interface ActionConfig {
 
 export type CardType = "button" | "popup" | "nav" | "climate" | "media" | "chips" | "title" | "heading";
 export type ThemeMode = "auto" | "dark" | "light";
+/** How much room a card takes: today's look, tighter, or the minimum (some layouts change). */
+export type CardSize = "full" | "compact" | "slim";
 
 export interface BaseCardConfig {
   type: string;
@@ -50,6 +52,8 @@ export interface BaseCardConfig {
   lite?: boolean;
   /** Animation played on tap (see TAP_EFFECTS). Default: HA theme variable `glide-tap-animation`, else "shine". */
   tap_animation?: string;
+  /** Card size. Default: HA theme variable `glide-size`, else "full". */
+  size?: CardSize;
   tap_action?: ActionConfig;
   hold_action?: ActionConfig;
   double_tap_action?: ActionConfig;

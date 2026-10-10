@@ -366,6 +366,12 @@ export class GlideNav extends GlideBase<NavCardConfig> {
         border-radius: 50%;
         background: var(--gc-accent);
       }
+      /* Slim: icons only; the active item shows its name beside the icon. Compact is the same as full. */
+      :host([size="slim"]) button { flex-direction: row; gap: 6px; min-width: 40px; padding: 7px 9px; }
+      :host([size="slim"]) button:not(.active) .meta { display: none; }
+      :host([size="slim"]) button.active { padding-inline: 12px 14px; }
+      :host([size="slim"]) button .meta { font-size: 12px; }
+      :host([size="slim"]) .dot { top: 4px; inset-inline-end: 6px; }
     `,
   ];
 }

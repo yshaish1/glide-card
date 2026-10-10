@@ -162,6 +162,21 @@ export class GlideHeading extends GlideBase<HeadingCardConfig> {
       }
       .badge ha-icon { color: var(--c); }
       .badge:focus-visible { outline: 2px solid var(--gc-accent); }
+
+      :host([size="compact"]) .row { min-height: 34px; padding-bottom: 5px; }
+      :host([size="compact"]) .icon { width: 26px; height: 26px; --mdc-icon-size: 16px; }
+      :host([size="compact"]) .title { font-size: 17px; line-height: 26px; }
+      :host([size="compact"]) .sub { line-height: 26px; }
+      :host([size="compact"]) .chev { height: 26px; --mdc-icon-size: 18px; }
+      :host([size="compact"]) .line { margin-bottom: 12px; }
+      :host([size="compact"]) .badge { height: 25px; font-size: 11.5px; --mdc-icon-size: 15px; }
+      :host([size="slim"]) .row { min-height: 28px; padding-bottom: 4px; gap: 8px; }
+      :host([size="slim"]) .icon { width: 22px; height: 22px; --mdc-icon-size: 14px; }
+      :host([size="slim"]) .title { font-size: 15px; line-height: 22px; }
+      :host([size="slim"]) .sub { font-size: 11px; line-height: 22px; }
+      :host([size="slim"]) .chev { height: 22px; --mdc-icon-size: 16px; }
+      :host([size="slim"]) .line { margin-bottom: 10px; }
+      :host([size="slim"]) .badge { height: 22px; padding-inline: 7px 8px; font-size: 11px; --mdc-icon-size: 13px; }
     `,
   ];
 }

@@ -2,7 +2,23 @@ import { LitElement, css, type CSSResultOrNative, type PropertyValues } from "li
 import { resolveDark, resolveThemeId, themeSheet, getTheme } from "../themes";
 import type { GlideTheme } from "../themes";
 import { playTap, resolveTapEffect } from "./tap-fx";
-import type { BaseCardConfig, CardType, HomeAssistant } from "./types";
+import type { BaseCardConfig, CardSize, CardType, HomeAssistant } from "./types";
+
+export const CARD_SIZES: CardSize[] = ["full", "compact", "slim"];
+const isSize = (v: unknown): v is CardSize => CARD_SIZES.includes(v as CardSize);
+
+/**
+ * Card config > HA theme variable `glide-size` > "full". The variable is read from the card, then from
+ * the page root (where HA puts theme variables), so it also works before the card is attached.
+ */
+export function resolveSize(configSize: string | undefined, host: Element): CardSize {
+  if (isSize(configSize)) return configSize;
+  for (const el of [host, document.documentElement]) {
+    const v = getComputedStyle(el).getPropertyValue("--glide-size").trim();
+    if (isSize(v)) return v;
+  }
+  return "full";
+}
 
 /** Shared look every card type builds on; values come only from theme tokens. */
 export const surface = css`
@@ -137,7 +153,7 @@ export abstract class GlideBase<C extends BaseCardConfig = BaseCardConfig> exten
     if (!this.config) return;
     const id = resolveThemeId(this.config.theme, this);
     const dark = resolveDark(this.config.mode, this.hass?.themes?.darkMode);
-    const key = `${id}|${dark}|${this.config.accent ?? ""}|${this.config.lite}|${this.config.tap_animation ?? ""}`;
+    const key = `${id}|${dark}|${this.config.accent ?? ""}|${this.config.lite}|${this.config.tap_animation ?? ""}|${this.config.size ?? ""}`;
     if (key === this.themeKey) return;
     this.themeKey = key;
     this.theme = getTheme(id);
@@ -145,6 +161,7 @@ export abstract class GlideBase<C extends BaseCardConfig = BaseCardConfig> exten
     this.toggleAttribute("lite", isLite(this.config.lite));
     this.dataset.theme = id;
     this.setAttribute("tap-fx", resolveTapEffect(this.config.tap_animation, this));
+    this.setAttribute("size", this.size);
     if (this.config.accent) this.style.setProperty("--gc-accent", this.config.accent);
     else this.style.removeProperty("--gc-accent");
     const base = (this.constructor as typeof LitElement).elementStyles.map((s: CSSResultOrNative) =>
@@ -164,6 +181,11 @@ export abstract class GlideBase<C extends BaseCardConfig = BaseCardConfig> exten
     const cs = getComputedStyle(el);
     const color = ["--domain", "--chip", "--c", "--gc-accent"].map((v) => cs.getPropertyValue(v).trim()).find(Boolean) ?? "#ff9f43";
     playTap(el, effect, { x: point && point.x - box.left, y: point && point.y - box.top, color, ...parts });
+  }
+
+  /** Full / compact / slim; cards style themselves with `:host([size="…"])`. */
+  get size(): CardSize {
+    return resolveSize(this.config?.size, this);
   }
 
   protected stateOf(id?: string) {
