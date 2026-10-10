@@ -2343,7 +2343,7 @@ var cn = [
 		this.styles = [K, S`
       nav {
         display: flex;
-        padding: 6px;
+        padding: 4px;
         border-radius: var(--gc-radius-control);
         background: var(--gc-sheet-bg);
       }
@@ -2399,25 +2399,25 @@ var cn = [
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 2px;
         flex: none;
         scroll-snap-align: center;
         min-width: 64px;
-        padding: 8px 14px;
+        padding: 4px 14px;
         border-radius: var(--gc-radius-control);
         color: var(--gc-text-dim);
         cursor: pointer;
         transition: color 0.2s;
       }
       @media (max-width: 600px) {
-        button { min-width: 52px; padding: 8px 6px; }
+        button { min-width: 52px; padding: 4px 6px; }
       }
       button:focus-visible { outline: 2px solid var(--gc-accent); }
       button.active { color: var(--gc-accent-text); }
-      button .meta { font-size: 11px; color: inherit; }
+      button ha-icon { --mdc-icon-size: 20px; }
+      button .meta { font-size: 10px; line-height: 1.25; color: inherit; }
       .dot {
         position: absolute;
-        top: 6px;
+        top: 3px;
         inset-inline-end: 14px;
         width: 7px;
         height: 7px;
@@ -3655,7 +3655,7 @@ var Yn = class extends I {
 customElements.define("glide-card-editor", Yn);
 //#endregion
 //#region src/glide-card.ts
-var Xn = "0.10.1", Zn = [
+var Xn = "0.10.2", Zn = [
 	"button",
 	"popup",
 	"nav",
