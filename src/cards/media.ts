@@ -20,12 +20,16 @@ export class GlideMedia extends GlideBase<MediaCardConfig> {
     super.setConfig(config);
   }
 
+  private get rows() {
+    return { full: 4, compact: 3, slim: 2 }[this.size];
+  }
+
   getGridOptions() {
-    return { columns: 12, rows: 4, min_columns: 6 };
+    return { columns: 12, rows: this.rows, min_columns: 6 };
   }
 
   getCardSize() {
-    return 4;
+    return this.rows;
   }
 
   private get s() {
@@ -178,6 +182,31 @@ export class GlideMedia extends GlideBase<MediaCardConfig> {
       .track::before { content: ""; position: absolute; inset: -12px 0; } /* bigger hit area */
       .bar { height: 100%; border-radius: 4px; background: var(--gc-text); }
       .empty { color: var(--gc-text-dim); }
+
+      :host([size="compact"]) .surface { padding: 14px; gap: 8px; }
+      :host([size="compact"]) .top { gap: 12px; }
+      :host([size="compact"]) .art { width: 52px; height: 52px; }
+      :host([size="compact"]) .title { font-size: 16px; }
+      :host([size="compact"]) .artist { font-size: 13px; }
+      :host([size="compact"]) .controls { gap: 22px; }
+      :host([size="compact"]) button { width: 38px; height: 38px; }
+      :host([size="compact"]) .play { width: 48px; height: 48px; --mdc-icon-size: 24px; }
+      /* Slim: art, title and play/pause on one line, then a thin progress bar */
+      :host([size="slim"]) .surface {
+        display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: center;
+        column-gap: 10px; row-gap: 8px; padding: 10px 12px;
+      }
+      :host([size="slim"]) .top { grid-area: 1 / 1; gap: 10px; }
+      :host([size="slim"]) .controls { grid-area: 1 / 2; }
+      :host([size="slim"]) .progress { grid-area: 2 / 1 / 3 / 3; height: 3px; }
+      :host([size="slim"]) .times,
+      :host([size="slim"]) .volume,
+      :host([size="slim"]) .source,
+      :host([size="slim"]) .controls button:not(.play) { display: none; }
+      :host([size="slim"]) .art { width: 40px; height: 40px; border-radius: 10px; box-shadow: none; }
+      :host([size="slim"]) .title { font-size: 14px; }
+      :host([size="slim"]) .artist { font-size: 12px; }
+      :host([size="slim"]) .play { width: 38px; height: 38px; --mdc-icon-size: 22px; }
     `,
   ];
 }

@@ -71,9 +71,10 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
     const helpers = await (window as any).loadCardHelpers?.();
     if (!helpers) return;
     this.children_ = (this.config.cards ?? []).map((cfg) => {
-      // Glide children inherit the popup's theme and tap animation unless they set their own.
+      // Glide children inherit the popup's theme, tap animation and size unless they set their own.
+      const c = this.config;
       const conf = cfg.type === "custom:glide-card"
-        ? { ...cfg, theme: cfg.theme ?? this.config.theme, tap_animation: cfg.tap_animation ?? this.config.tap_animation }
+        ? { ...cfg, theme: cfg.theme ?? c.theme, tap_animation: cfg.tap_animation ?? c.tap_animation, size: cfg.size ?? c.size }
         : cfg;
       const el = helpers.createCardElement(conf) as HTMLElement & Record<string, any>;
       if (this.hass) el.hass = this.hass;
@@ -293,6 +294,14 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
         cursor: pointer;
       }
       .close:focus-visible { outline: 2px solid var(--gc-accent); }
+      :host([size="compact"]) header { gap: 10px; padding: 6px 16px 10px; }
+      :host([size="compact"]) .icon { width: 36px; height: 36px; --mdc-icon-size: 20px; }
+      :host([size="compact"]) .title { font-size: 19px; }
+      :host([size="compact"]) .close { width: 32px; height: 32px; --mdc-icon-size: 20px; }
+      :host([size="slim"]) header { gap: 8px; padding: 4px 14px 8px; }
+      :host([size="slim"]) .icon { width: 32px; height: 32px; --mdc-icon-size: 18px; }
+      :host([size="slim"]) .title { font-size: 17px; }
+      :host([size="slim"]) .close { width: 30px; height: 30px; --mdc-icon-size: 18px; }
       .content {
         display: grid;
         grid-template-columns: repeat(12, minmax(0, 1fr));

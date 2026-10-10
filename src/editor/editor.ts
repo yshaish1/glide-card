@@ -207,8 +207,8 @@ export class GlideCardEditor extends LitElement {
   private setType(type: CardType) {
     if (type === this.config.card_type) return;
     // Keep only the shared style fields when switching type.
-    const { type: t, theme, mode, accent, tap_animation } = this.config;
-    const base: Record<string, unknown> = { type: t, card_type: type, theme, mode, accent, tap_animation };
+    const { type: t, theme, mode, accent, tap_animation, size } = this.config;
+    const base: Record<string, unknown> = { type: t, card_type: type, theme, mode, accent, tap_animation, size };
     if (type === "popup") Object.assign(base, { hash: "#room", title: "Room", cards: [] });
     if (type === "chips") Object.assign(base, { chips: [] });
     if (type === "title") Object.assign(base, { title: "Home" });
@@ -266,6 +266,14 @@ export class GlideCardEditor extends LitElement {
             </label>
           </div>
         </div>
+        <div class="row">
+          <span class="hint">Size</span>
+          <div class="seg" title="Empty = dashboard default (glide-size in your theme), else full">
+            ${(["auto", "full", "compact", "slim"] as const).map(
+              (z) => html`<button class=${(c.size ?? "auto") === z ? "sel" : ""} @click=${() => this.update_({ size: z === "auto" ? undefined : z })}>${z === "auto" ? "dashboard" : z}</button>`,
+            )}
+          </div>
+        </div>
       </div>
 
       ${this.ready
@@ -319,6 +327,7 @@ export class GlideCardEditor extends LitElement {
     .seg button { border: 0; background: none; padding: 6px 12px; text-transform: capitalize; }
     .seg button.sel { background: var(--primary-color); color: var(--text-primary-color, #fff); box-shadow: none; }
     .accents { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .hint { font-size: 13px; color: var(--secondary-text-color); }
     .dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; padding: 0; position: relative; }
     .dot.sel { border-color: var(--primary-text-color); box-shadow: none; }
     .dot.none { background: conic-gradient(#ff9f43, #d4ff00, #006a60, #ff9f43); opacity: 0.6; }

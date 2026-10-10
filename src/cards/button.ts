@@ -36,12 +36,19 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     return this.config.layout ?? this.theme.defaults?.buttonLayout ?? "tile";
   }
 
+  /** Grid rows: a pill is always one; a slim tile lays out in one row too. */
+  private get rows() {
+    return this.layout === "pill" || this.size === "slim" ? 1 : 2;
+  }
+
   getGridOptions() {
-    return this.layout === "pill" ? { columns: 12, rows: 1, min_columns: 6 } : { columns: 6, rows: 2, min_columns: 3, min_rows: 2 };
+    return this.layout === "pill"
+      ? { columns: 12, rows: 1, min_columns: 6 }
+      : { columns: 6, rows: this.rows, min_columns: 3, min_rows: this.rows };
   }
 
   getCardSize() {
-    return this.layout === "pill" ? 1 : 2;
+    return this.rows;
   }
 
   private action(kind: "tap" | "hold" | "double_tap"): ActionConfig | undefined {
@@ -276,6 +283,35 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       }
       .pill .text { flex: 1; }
       .pill .name { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+      /* Compact: same layouts, tighter */
+      :host([size="compact"]) .icon { width: 38px; height: 38px; --mdc-icon-size: 20px; }
+      :host([size="compact"]) .badge { padding: 2px 8px; }
+      :host([size="compact"]) .tile { padding: 12px; min-height: 96px; }
+      :host([size="compact"]) .tile .name { font-size: 15px; }
+      :host([size="compact"]) .pill { padding: 5px; padding-inline-end: 12px; gap: 10px; min-height: 48px; }
+      :host([size="compact"]) .pill .name { font-size: 14.5px; }
+
+      /* Slim: the tile becomes one row (icon beside the name); the pill puts name and meta on one line */
+      :host([size="slim"]) .badge { padding: 2px 7px; }
+      :host([size="slim"]) .tile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px;
+        padding-inline-end: 12px;
+        min-height: 56px;
+      }
+      :host([size="slim"]) .tile .icon { width: 36px; height: 36px; --mdc-icon-size: 19px; }
+      :host([size="slim"]) .tile .text { flex: 1; align-self: center; }
+      :host([size="slim"]) .tile .badge { align-self: center; }
+      :host([size="slim"]) .tile .name { font-size: 14px; -webkit-line-clamp: 1; line-clamp: 1; }
+      :host([size="slim"]) .tile .meta { font-size: 11.5px; }
+      :host([size="slim"]) .pill { padding: 4px; padding-inline-end: 12px; gap: 8px; min-height: 40px; }
+      :host([size="slim"]) .pill .icon { width: 32px; height: 32px; --mdc-icon-size: 18px; }
+      :host([size="slim"]) .pill .text { display: flex; align-items: baseline; gap: 8px; }
+      :host([size="slim"]) .pill .name { font-size: 14px; flex: 0 1 auto; min-width: 0; }
+      :host([size="slim"]) .pill .meta { flex: none; font-size: 11px; }
     `,
   ];
 }
