@@ -39,6 +39,27 @@ const HA_COLORS = new Set([
 /** HA colour names map to the frontend's `--<name>-color` variables; anything else is used as a CSS colour. */
 export const cssColor = (c?: string) => (c ? (HA_COLORS.has(c) ? `var(--${c}-color)` : c) : undefined);
 
+/** True for a light custom colour (#rgb, #rrggbb or rgb()): pastels too pale to use as text. */
+export function isLightColor(c?: string): boolean {
+  if (!c) return false;
+  let rgb: number[] | undefined;
+  const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(c.trim());
+  if (hex) {
+    const h = hex[1].length === 3 ? [...hex[1]].map((x) => x + x).join("") : hex[1];
+    rgb = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
+  } else {
+    const m = /^rgba?\(\s*(\d+)[\s,]+(\d+)[\s,]+(\d+)/i.exec(c.trim());
+    if (m) rgb = m.slice(1, 4).map(Number);
+  }
+  if (!rgb) return false;
+  const [r, g, b] = rgb.map((v) => { const x = v / 255; return x <= 0.04045 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.5;
+}
+
+/** Text/icon colour for an "on" button: light custom colours get a darker shade of themselves. */
+export const onTextColor = (c?: string) =>
+  isLightColor(c) ? `color-mix(in oklab, ${c} 40%, var(--gc-text))` : undefined;
+
 /** Slider support per domain: current value (0-100) and how to set it. */
 export interface SliderSpec {
   value: number;

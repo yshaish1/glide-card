@@ -2,7 +2,7 @@ import { css, html, nothing, type PropertyValues } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
 import { runAction } from "../core/actions";
 import { GlideBase, surface } from "../core/base-card";
-import { cssColor, domainColor, domainOf, entityIcon, entityName, isActive, isUnavailable, sliderFor } from "../core/entity";
+import { cssColor, domainColor, domainOf, entityIcon, entityName, isActive, isUnavailable, onTextColor, sliderFor } from "../core/entity";
 import { haptic } from "../core/fire";
 import { attachGestures } from "../core/gestures";
 import { formatState } from "../core/i18n";
@@ -142,10 +142,11 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       ? this.tpl.get("secondary") ?? ""
       : cover ? `${value}% ${stateText}` : slider && on && value !== undefined ? `${value}%` : "";
     const fill = slider ? value ?? 0 : on ? 100 : 0;
+    const color = this.tpl.get("color")?.trim();
     return html`
       <div
-        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
-        style=${styleMap({ "--domain": cssColor(this.tpl.get("color")?.trim()) ?? domainColor(s), "--fill": `${fill}%` })}
+        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${this.config.fill === false ? "nofill" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
+        style=${styleMap({ "--domain": cssColor(color) ?? domainColor(s), "--gc-icon-on": onTextColor(color), "--fill": `${fill}%` })}
         role="button"
         tabindex="0"
         aria-label=${name}
@@ -186,6 +187,7 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
         pointer-events: none;
       }
       .fill.dragging { transition: none; }
+      .nofill .fill { display: none; }
       .cover .fill {
         inset-block: auto 0;
         inset-inline: 0;

@@ -114,3 +114,23 @@ describe("seedOf", () => {
     for (const entity of ids) expect(seedOf({ entity }).tint).toBeGreaterThanOrEqual(1);
   });
 });
+
+import { isLightColor, onTextColor } from "../src/core/entity";
+
+describe("light custom colours", () => {
+  it("spots pastels in hex and rgb()", () => {
+    expect(isLightColor("#F3D9A4")).toBe(true);
+    expect(isLightColor("#fce")).toBe(true);
+    expect(isLightColor("rgb(242, 193, 209)")).toBe(true);
+  });
+  it("leaves strong, dark and named colours alone", () => {
+    expect(isLightColor("#ff9800")).toBe(false);
+    expect(isLightColor("#3355aa")).toBe(false);
+    expect(isLightColor("amber")).toBe(false);
+    expect(isLightColor(undefined)).toBe(false);
+  });
+  it("darkens only light colours for on-state text", () => {
+    expect(onTextColor("#F3D9A4")).toBe("color-mix(in oklab, #F3D9A4 40%, var(--gc-text))");
+    expect(onTextColor("amber")).toBeUndefined();
+  });
+});

@@ -123,6 +123,10 @@ tap_action:
 
 `secondary` replaces the automatic brightness/position text, and `badge` replaces the state. All of these also take plain text. In the visual editor, they're under **Templates**.
 
+### Soft buttons
+
+`fill: false` drops the solid color fill when a button is on; the glass gradient takes the button's color instead (color fading to white). It pairs well with pastel colors such as `color: "#F3D9A4"`. A light custom color is also used in a darker shade for the icon and the line under the name, so they stay readable.
+
 ### Chip visibility
 
 A chip shows only while its `visibility` conditions all pass. The format is the same as Home Assistant's card visibility: `state` (`state` / `state_not`, one value or a list), `numeric_state` (`above` / `below`), `and`, `or`. The chip row updates live and hidden chips leave no gap.

@@ -66,6 +66,8 @@ export interface ButtonCardConfig extends BaseCardConfig {
   icon?: string;
   layout?: "tile" | "pill";
   slider?: boolean;
+  /** `false`: no solid colour fill when on; the glass gradient takes the colour instead. */
+  fill?: boolean;
   /** Overrides the domain colour: an HA colour name (`cyan`, `light-blue`, ...) or any CSS colour. */
   color?: string;
   /** Line under the name, replacing the automatic brightness/position text. */
