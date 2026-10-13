@@ -4301,7 +4301,7 @@ var pr = class extends L {
 customElements.define("glide-card-editor", pr);
 //#endregion
 //#region src/glide-card.ts
-var mr = "0.14.1", hr = [
+var mr = "0.14.2", hr = [
 	"button",
 	"popup",
 	"nav",

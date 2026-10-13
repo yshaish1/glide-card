@@ -2,11 +2,11 @@
 
 [![HACS][hacs-badge]][hacs-url]
 [![Release][release-badge]][release-url]
-[![License][license-badge]](LICENSE)
+[![License][license-badge]](https://github.com/yshaish1/glide-card/blob/main/LICENSE)
 
 **Themeable Home Assistant cards that feel like a native app.** Swipe-to-dim buttons, covers that look like real blinds and curtains, pop-up sheets, a floating nav bar, and climate and media cards. Three built-in designs, dark and light, with full RTL support.
 
-![Glide Card in Liquid Glass, Refined Bubble and Material You](docs/images/hero-dark.webp)
+![Glide Card in Liquid Glass, Refined Bubble and Material You](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/hero-dark.webp)
 
 [![Open your Home Assistant instance and open this repository in HACS.][my-hacs-badge]][my-hacs-url]
 
@@ -24,7 +24,7 @@
 
 | Light | Pop-up | Covers |
 | :---: | :---: | :---: |
-| <img src="docs/images/hero-light.webp" alt="Light themes"> | <img src="docs/images/popup.gif" width="220" alt="Pop-up sheet"> | <img src="docs/images/covers.gif" alt="Blinds and curtains"> |
+| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/hero-light.webp" alt="Light themes"> | <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/popup.gif" width="220" alt="Pop-up sheet"> | <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/covers.gif" alt="Blinds and curtains"> |
 
 ## Installation
 
@@ -40,7 +40,7 @@
 <details>
 <summary><b>Manual</b></summary>
 
-1. Download [`dist/glide-card.js`](dist/glide-card.js) from this repo.
+1. Download [`dist/glide-card.js`](https://raw.githubusercontent.com/yshaish1/glide-card/main/dist/glide-card.js) from this repo.
 2. Copy it to `/config/www/`.
 3. In **Settings → Dashboards → ⋮ → Resources**, add `/local/glide-card.js?v=1` as a **JavaScript module**.
 4. Reload the browser. After each update, bump `?v=` so browsers don't keep the old file.
@@ -65,16 +65,16 @@ theme: glass      # glass | bubble | material
 
 | | Card | |
 | --- | --- | --- |
-| <img src="docs/images/button.webp" width="260"> | **[Button](docs/cards/button.md)** | Tile or pill. Tap to toggle, hold for more-info, swipe to set brightness, speed or position. Templates and soft colors. |
-| <img src="docs/images/covers.webp" width="260"> | **[Cover](docs/cards/cover.md)** | A blind or curtains over a garden, sky, city or sea view (or your own photo), with night following the sun. Optional open, stop and close buttons. |
-| <img src="docs/images/popup-light.webp" width="130"> | **[Pop-up](docs/cards/popup.md)** | A sheet opened by a `#hash`, holding any cards. |
-| <img src="docs/images/nav.webp" width="260"> | **[Nav bar](docs/cards/nav.md)** | A floating bar with a sliding indicator, scrolling items and pinned items. |
-| <img src="docs/images/climate.webp" width="260"> | **[Climate](docs/cards/climate.md)** | A drag dial with −/+, and mode buttons. |
-| <img src="docs/images/media.webp" width="260"> | **[Media](docs/cards/media.md)** | Artwork, progress, transport and volume. |
-| <img src="docs/images/chips.webp" width="260"> | **[Title and chips](docs/cards/chips.md)** | A page greeting and a row of info pills, with per-chip visibility conditions. |
-| <img src="docs/images/chips.webp" width="260"> | **[Heading](docs/cards/heading.md)** | A section heading with an icon, badges and an optional link. |
+| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/button.webp" width="260"> | **[Button](https://github.com/yshaish1/glide-card/blob/main/docs/cards/button.md)** | Tile or pill. Tap to toggle, hold for more-info, swipe to set brightness, speed or position. Templates and soft colors. |
+| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/covers.webp" width="260"> | **[Cover](https://github.com/yshaish1/glide-card/blob/main/docs/cards/cover.md)** | A blind or curtains over a garden, sky, city or sea view (or your own photo), with night following the sun. Optional open, stop and close buttons. |
+| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/popup-light.webp" width="130"> | **[Pop-up](https://github.com/yshaish1/glide-card/blob/main/docs/cards/popup.md)** | A sheet opened by a `#hash`, holding any cards. |
+| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/nav.webp" width="260"> | **[Nav bar](https://github.com/yshaish1/glide-card/blob/main/docs/cards/nav.md)** | A floating bar with a sliding indicator, scrolling items and pinned items. |
+| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/climate.webp" width="260"> | **[Climate](https://github.com/yshaish1/glide-card/blob/main/docs/cards/climate.md)** | A drag dial with −/+, and mode buttons. |
+| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/media.webp" width="260"> | **[Media](https://github.com/yshaish1/glide-card/blob/main/docs/cards/media.md)** | Artwork, progress, transport and volume. |
+| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/chips.webp" width="260"> | **[Title and chips](https://github.com/yshaish1/glide-card/blob/main/docs/cards/chips.md)** | A page greeting and a row of info pills, with per-chip visibility conditions. |
+| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/chips.webp" width="260"> | **[Heading](https://github.com/yshaish1/glide-card/blob/main/docs/cards/heading.md)** | A section heading with an icon, badges and an optional link. |
 
-**More:** [shared options, sizes and tap animations](docs/options.md) · [themes](docs/themes.md)
+**More:** [shared options, sizes and tap animations](https://github.com/yshaish1/glide-card/blob/main/docs/options.md) · [themes](https://github.com/yshaish1/glide-card/blob/main/docs/themes.md)
 
 ## Example dashboard
 
@@ -153,7 +153,7 @@ Ideas and bug reports are welcome in [issues](https://github.com/yshaish1/glide-
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/yshaish1/glide-card/blob/main/LICENSE)
 
 [hacs-badge]: https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=flat-square
 [hacs-url]: https://hacs.xyz/docs/faq/custom_repositories/
