@@ -1898,7 +1898,6 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
       <div class="view ${e ? "night" : "day"} ${this.view === "image" ? "photo" : t}">
         ${this.view === "image" ? A`<img src=${this.config.view_image} alt="" draggable="false" />` : Jt(t, e)}
       </div>
-      <div class="scrim"></div>
     `;
 	}
 	render() {
@@ -1974,7 +1973,7 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
       .cover .meta:not(.badge) { color: var(--gc-text-dim); }
 
       /* Window: the outdoor view sits behind a blind that drops from the top. */
-      .view, .scrim { position: absolute; inset: 0; pointer-events: none; }
+      .view { position: absolute; inset: 0; pointer-events: none; }
       .view svg, .view img { display: block; width: 100%; height: 100%; object-fit: cover; }
       .view.day { background: linear-gradient(to bottom, #7cc0ef, #cfe9fb 75%); }
       .view.night { background: linear-gradient(to bottom, #0d1630, #23305a 80%); }
@@ -2016,9 +2015,6 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
       }
       @keyframes gc-drift { from { translate: -14px 0; } to { translate: 14px 0; } }
       @keyframes gc-twinkle { 50% { opacity: 0.3; } }
-      /* Keeps the name readable over the view. */
-      .scrim { background: linear-gradient(to top, color-mix(in srgb, var(--gc-surface-solid, var(--gc-surface)) 75%, transparent), transparent 55%); }
-      .pill .scrim, :host([size="slim"]) .scrim { background: color-mix(in srgb, var(--gc-surface-solid, var(--gc-surface)) 55%, transparent); }
       .surface.window .fill {
         inset-block: 0 auto;
         border-top: none;
@@ -2077,6 +2073,20 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
       }
 
       .window .icon, .window .badge { background: var(--gc-surface-solid, var(--gc-surface)); }
+      /* Keeps the name readable over the view, blind or drapes: a frosted chip that hugs the text. */
+      .window .text {
+        padding: 4px 10px;
+        margin-inline-start: -4px;
+        border-radius: var(--gc-radius-control);
+        box-shadow: inset 0 0 0 1px var(--gc-border);
+        background: color-mix(in srgb, var(--gc-surface-solid, var(--gc-surface)) 55%, transparent);
+        backdrop-filter: blur(10px) saturate(1.2);
+        -webkit-backdrop-filter: blur(10px) saturate(1.2);
+      }
+      .tile.window .text { justify-self: start; max-width: 100%; }
+      .pill.window .text, :host([size="slim"]) .tile.window .text { flex: 0 1 auto; min-width: 0; margin-inline-end: auto; }
+      :host([size="compact"]) .window .text { padding: 2px 8px; }
+      :host([size="slim"]) .window .text { padding: 0 8px; }
       .icon {
         position: relative;
         display: grid;
@@ -4301,7 +4311,7 @@ var pr = class extends L {
 customElements.define("glide-card-editor", pr);
 //#endregion
 //#region src/glide-card.ts
-var mr = "0.14.3", hr = [
+var mr = "0.14.4", hr = [
 	"button",
 	"popup",
 	"nav",
