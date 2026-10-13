@@ -149,6 +149,15 @@ cover_style: curtain
 color: "#b38b6d"
 ```
 
+`cover_buttons: true` adds small round open, stop and close buttons where the badge was (the line under the name still shows the position). Each button shows only when the cover supports it. Open greys out when the cover is fully open, close greys out when it is closed, and stop lights up while the cover moves. This works on covers without a position too, such as a garage door:
+
+```yaml
+type: custom:glide-card
+card_type: button
+entity: cover.garage
+cover_buttons: true
+```
+
 ### Chip visibility
 
 A chip shows only while its `visibility` conditions all pass. The format is the same as Home Assistant's card visibility: `state` (`state` / `state_not`, one value or a list), `numeric_state` (`above` / `below`), `and`, `or`. The chip row updates live and hidden chips leave no gap.

@@ -144,6 +144,7 @@ const SCHEMAS: Record<CardType, unknown[]> = {
           name: "cover_style",
           selector: { select: { mode: "dropdown", options: [{ value: "blind", label: "Blind" }, { value: "curtain", label: "Curtain" }] } },
         },
+        { name: "cover_buttons", selector: { boolean: {} } },
       ],
     },
     actions,
@@ -201,6 +202,7 @@ const LABELS: Record<string, string> = {
   view: "Cover view (covers only, empty = garden)",
   view_image: "Cover view photo, e.g. /local/yard.jpg",
   cover_style: "Cover style (empty = auto from device class)",
+  cover_buttons: "Open / stop / close buttons (covers)",
 };
 
 /** Loads HA's lazy form components (ha-form etc.) by asking a built-in card for its editor. */

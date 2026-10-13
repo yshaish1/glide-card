@@ -5,6 +5,7 @@ const en = {
   heating: "Heating to", cooling: "Cooling to", idle: "Idle", target: "Target temp", current: "Current", active: "Active", step: "Step",
   heat: "Heat", cool: "Cool", heat_cool: "Auto", auto: "Auto", dry: "Dry", fan_only: "Fan",
   nothing_playing: "Nothing playing", popup_placeholder: "Pop-up", close: "Close",
+  open_cover: "Open", close_cover: "Close", stop_cover: "Stop",
 };
 type Key = keyof typeof en;
 
@@ -13,6 +14,7 @@ const he: Record<Key, string> = {
   heating: "מחמם ל־", cooling: "מקרר ל־", idle: "במנוחה", target: "יעד", current: "נוכחי", active: "פעיל", step: "צעד",
   heat: "חימום", cool: "קירור", heat_cool: "אוטו", auto: "אוטו", dry: "ייבוש", fan_only: "מאוורר",
   nothing_playing: "לא מתנגן כלום", popup_placeholder: "חלון קופץ", close: "סגירה",
+  open_cover: "פתיחה", close_cover: "סגירה", stop_cover: "עצירה",
 };
 
 const langs: Record<string, Record<Key, string>> = { en, he };

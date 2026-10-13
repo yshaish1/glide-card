@@ -18,6 +18,9 @@ const DOUBLE_MS = 250;
 const ARM_MS = 250;
 const SLOP = 8;
 
+/** Controls inside the element (e.g. cover buttons) opt out with `data-no-gesture`. */
+const ignored = (e: Event) => e.composedPath().some((n) => n instanceof Element && n.hasAttribute("data-no-gesture"));
+
 /**
  * Pointer gestures for a single element: tap, long-press, double tap and
  * drag-to-adjust. Horizontal drags start at once and vertical movement is
@@ -37,7 +40,7 @@ export function attachGestures(el: HTMLElement, h: GestureHandlers): () => void 
   const rtl = () => getComputedStyle(el).direction === "rtl";
 
   const down = (e: PointerEvent) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || ignored(e)) return;
     x0 = e.clientX; y0 = e.clientY; state = "down";
     clear();
     axis = h.axis?.() ?? "x";
@@ -82,7 +85,7 @@ export function attachGestures(el: HTMLElement, h: GestureHandlers): () => void 
   const menu = (e: Event) => { if (h.hold) e.preventDefault(); };
   // Once a vertical drag is armed, keep the browser from scrolling the page.
   const touchmove = (e: TouchEvent) => { if (armed && (state === "down" || state === "drag")) e.preventDefault(); };
-  const key = (e: KeyboardEvent) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); h.tap?.(); } };
+  const key = (e: KeyboardEvent) => { if (ignored(e)) return; if (e.key === "Enter" || e.key === " ") { e.preventDefault(); h.tap?.(); } };
 
   el.addEventListener("pointerdown", down);
   el.addEventListener("pointermove", move);

@@ -14,6 +14,18 @@ const ev = (el: HTMLElement, type: string, x: number, y: number, pointerType = "
 afterEach(() => { vi.useRealTimers(); document.body.innerHTML = ""; });
 
 describe("attachGestures", () => {
+  it("ignores presses and keys on children marked data-no-gesture", () => {
+    const el = box(), tap = vi.fn(), dragEnd = vi.fn();
+    const btn = document.createElement("button");
+    btn.setAttribute("data-no-gesture", "");
+    el.append(btn);
+    attachGestures(el, { tap, dragStart: () => 40, dragEnd });
+    ev(btn, "pointerdown", 0, 50); ev(btn, "pointermove", 50, 50); ev(btn, "pointerup", 50, 50);
+    btn.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+    expect(tap).not.toHaveBeenCalled();
+    expect(dragEnd).not.toHaveBeenCalled();
+  });
+
   it("x axis: horizontal drag adds width percent", () => {
     const el = box(), dragEnd = vi.fn();
     attachGestures(el, { dragStart: () => 40, dragEnd });

@@ -72,6 +72,8 @@ export interface ButtonCardConfig extends BaseCardConfig {
   view_image?: string;
   /** Covers: `curtain` parts two drapes from the centre, `blind` drops from the top; unset follows the device class. */
   cover_style?: "blind" | "curtain";
+  /** Covers: open, stop and close buttons on the card (each only when the cover supports it). */
+  cover_buttons?: boolean;
   /** `false`: no solid colour fill when on; the glass gradient takes the colour instead. */
   fill?: boolean;
   /** Overrides the domain colour: an HA colour name (`cyan`, `light-blue`, ...) or any CSS colour. */

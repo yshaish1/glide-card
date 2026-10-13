@@ -6,14 +6,16 @@ import { cssColor, domainColor, domainOf, entityIcon, entityName, isActive, isUn
 import { haptic } from "../core/fire";
 import { attachGestures } from "../core/gestures";
 import { isScene, sceneSvg } from "./cover-scenes";
-import { formatState } from "../core/i18n";
+import { formatState, t } from "../core/i18n";
 import { TemplateController } from "../core/templates";
-import type { ActionConfig, ButtonCardConfig } from "../core/types";
+import type { ActionConfig, ButtonCardConfig, HassEntity } from "../core/types";
 
 /** A rendered icon template only counts when it looks like an icon ("mdi:..."), e.g. not "unknown". */
 const iconOrUndefined = (v?: string) => (v && /^[\w-]+:[\w-]+$/.test(v.trim()) ? v.trim() : undefined);
 
 const STATELESS = new Set(["scene", "script", "button", "input_button"]);
+/** HA's CoverEntityFeature bits for the cover buttons. */
+const COVER_OPEN = 1, COVER_CLOSE = 2, COVER_STOP = 8;
 const TOGGLEABLE = new Set(["light", "switch", "fan", "input_boolean", "cover", "lock", "scene", "script", "button", "input_button", "siren", "humidifier"]);
 
 export class GlideButton extends GlideBase<ButtonCardConfig> {
@@ -140,6 +142,36 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     return "scene";
   }
 
+  /** Open / stop / close buttons, opt-in with `cover_buttons`; also for covers without a position. */
+  private get coverButtons() {
+    return domainOf(this.config.entity) === "cover" && !!this.config.cover_buttons;
+  }
+
+  private renderCoverButtons(s?: HassEntity) {
+    const id = this.config.entity!;
+    const a = s?.attributes ?? ({} as HassEntity["attributes"]);
+    const feat: number = a.supported_features ?? COVER_OPEN | COVER_CLOSE | COVER_STOP;
+    const pos: number | undefined = a.current_position;
+    const moving = s?.state === "opening" || s?.state === "closing";
+    const off = !s || isUnavailable(s);
+    // Fully open or closed greys out the button that would do nothing; while moving both stay live.
+    const opened = !moving && (pos !== undefined ? pos >= 100 : s?.state === "open");
+    const closed = !moving && (pos !== undefined ? pos <= 0 : s?.state === "closed");
+    const curtain = this.isCurtain;
+    const btn = (service: string, icon: string, label: string, disabled: boolean, cls = "") => html`
+      <button class="round ${cls}" aria-label=${label} title=${label} ?disabled=${off || disabled}
+        @click=${(e: Event) => { e.stopPropagation(); haptic("light"); this.hass?.callService("cover", service, { entity_id: id }); }}>
+        <ha-icon .icon=${icon}></ha-icon>
+      </button>`;
+    return html`
+      <div class="cover-btns" data-no-gesture>
+        ${feat & COVER_OPEN ? btn("open_cover", curtain ? "mdi:arrow-split-vertical" : "mdi:arrow-up", t(this.hass, "open_cover"), opened) : nothing}
+        ${feat & COVER_STOP ? btn("stop_cover", "mdi:stop", t(this.hass, "stop_cover"), !moving, moving ? "stop live" : "stop") : nothing}
+        ${feat & COVER_CLOSE ? btn("close_cover", curtain ? "mdi:arrow-collapse-horizontal" : "mdi:arrow-down", t(this.hass, "close_cover"), closed) : nothing}
+      </div>
+    `;
+  }
+
   protected watched() {
     // Day/night of the cover view follows the sun.
     return this.view ? [...super.watched(), "sun.sun"] : super.watched();
@@ -175,13 +207,14 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     const badge = customBadge ?? (stateless ? "" : cover ? `${value}%` : stateText);
     const meta = this.config.secondary !== undefined
       ? this.tpl.get("secondary") ?? ""
-      : cover ? `${value}% ${stateText}` : slider && on && value !== undefined ? `${value}%` : "";
+      : cover ? `${value}% ${stateText}` : this.coverButtons ? stateText : slider && on && value !== undefined ? `${value}%` : "";
     // In the window look the fill is the blind, so it covers what is closed.
     const fill = view && !curtain ? 100 - (value ?? 0) : slider ? value ?? 0 : on ? 100 : 0;
     const color = this.tpl.get("color")?.trim();
+    const buttons = this.coverButtons;
     return html`
       <div
-        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${view ? "window" : ""} ${curtain ? "curtain" : ""} ${this.config.fill === false ? "nofill" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
+        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${view ? "window" : ""} ${curtain ? "curtain" : ""} ${buttons ? "has-btns" : ""} ${this.config.fill === false ? "nofill" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
         style=${styleMap({ "--domain": cssColor(color) ?? domainColor(s), "--gc-icon-on": onTextColor(color), "--fill": `${fill}%`,
           "--closed": `${(100 - (value ?? 0)) / 100}`,
           "--gc-fabric": curtain ? cssColor(color) : undefined,
@@ -199,7 +232,8 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
           <div class="name">${name}</div>
           ${meta ? html`<div class="meta">${meta}</div>` : nothing}
         </div>
-        ${badge ? html`<div class="badge meta">${badge}</div>` : nothing}
+        ${badge && !buttons ? html`<div class="badge meta">${badge}</div>` : nothing}
+        ${buttons ? this.renderCoverButtons(s) : nothing}
       </div>
     `;
   }
@@ -417,6 +451,44 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
         .tile .name { font-size: 14px; }
       }
 
+      /* Cover buttons: small round controls at the end, solid so they read over the view. */
+      .cover-btns {
+        position: relative;
+        display: flex;
+        gap: 6px;
+        cursor: default;
+      }
+      .cover-btns .round {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        border-radius: 50%;
+        border: 1px solid var(--gc-border);
+        background: var(--gc-surface-solid, var(--gc-surface));
+        color: var(--gc-text);
+        --mdc-icon-size: 18px;
+        cursor: pointer;
+        font: inherit;
+        transition: opacity 0.2s, background 0.2s, color 0.2s;
+      }
+      .cover-btns .round:active:not(:disabled) { transform: scale(0.92); }
+      .cover-btns .round:disabled { opacity: 0.4; cursor: default; }
+      .cover-btns .round.live {
+        background: color-mix(in srgb, var(--domain) 22%, var(--gc-surface-solid, var(--gc-surface)));
+        border-color: color-mix(in srgb, var(--domain) 45%, transparent);
+        color: var(--domain);
+      }
+      /* They take the badge's place (the meta line still says "40% Open"), so the name keeps the full width. */
+      .tile .cover-btns { grid-area: badge; align-self: start; }
+      .pill .cover-btns { flex: none; }
+      .pill.has-btns { padding-inline-end: 6px; }
+      /* Short of room, stop only shows while the cover moves. */
+      @container (max-width: 260px) {
+        :host([size="slim"]) .cover-btns .stop:disabled, .pill .cover-btns .stop:disabled { display: none; }
+      }
+
       /* Pill: one row */
       .pill {
         display: flex;
@@ -437,6 +509,8 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       :host([size="compact"]) .tile .name { font-size: 15px; }
       :host([size="compact"]) .pill { padding: 5px; padding-inline-end: 12px; gap: 10px; min-height: 48px; }
       :host([size="compact"]) .pill .name { font-size: 14.5px; }
+      :host([size="compact"]) .cover-btns .round, :host([size="slim"]) .cover-btns .round { width: 28px; height: 28px; --mdc-icon-size: 16px; }
+      :host([size="compact"]) .cover-btns, :host([size="slim"]) .cover-btns { gap: 4px; }
 
       /* Slim: the tile becomes one row (icon beside the name); the pill puts name and meta on one line */
       :host([size="slim"]) .badge { padding: 2px 7px; }
@@ -451,6 +525,8 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       :host([size="slim"]) .tile .icon { width: 36px; height: 36px; --mdc-icon-size: 19px; }
       :host([size="slim"]) .tile .text { flex: 1; align-self: center; }
       :host([size="slim"]) .tile .badge { align-self: center; }
+      :host([size="slim"]) .tile .cover-btns { align-self: center; }
+      :host([size="slim"]) .tile.has-btns, :host([size="slim"]) .pill.has-btns { padding-inline-end: 8px; }
       :host([size="slim"]) .tile .name { font-size: 14px; -webkit-line-clamp: 1; line-clamp: 1; }
       :host([size="slim"]) .tile .meta { font-size: 11.5px; }
       :host([size="slim"]) .pill { padding: 4px; padding-inline-end: 12px; gap: 8px; min-height: 40px; }

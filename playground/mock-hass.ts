@@ -12,6 +12,7 @@ const initial: HassEntity[] = [
   e("cover.kitchen", "open", { friendly_name: "תריס מטבח", current_position: 70 }),
   e("cover.office", "closed", { friendly_name: "Office Shutter", current_position: 15 }),
   e("cover.living_curtains", "open", { friendly_name: "Living Curtains", device_class: "curtain", current_position: 50 }),
+  e("cover.garage", "opening", { friendly_name: "Garage Door", device_class: "garage", supported_features: 11 }),
   e("sun.sun", "above_horizon", { friendly_name: "Sun" }),
   e("fan.ceiling", "on", { friendly_name: "Ceiling Fan", percentage: 66 }),
   e("switch.coffee", "off", { friendly_name: "Coffee Machine", icon: "mdi:coffee-maker" }),
@@ -67,6 +68,9 @@ async function callService(domain: string, service: string, data: Record<string,
     case "fan.toggle": return patch(id, on ? "off" : "on");
     case "fan.set_percentage": return patch(id, data.percentage ? "on" : "off", { percentage: data.percentage });
     case "cover.toggle": return patch(id, on ? "closed" : "open", { current_position: on ? 0 : 100 });
+    case "cover.open_cover": return patch(id, "open", "current_position" in s.attributes ? { current_position: 100 } : {});
+    case "cover.close_cover": return patch(id, "closed", "current_position" in s.attributes ? { current_position: 0 } : {});
+    case "cover.stop_cover": return patch(id, s.attributes.current_position ? "open" : s.state === "opening" ? "open" : s.state === "closing" ? "closed" : s.state);
     case "cover.set_cover_position": return patch(id, data.position ? "open" : "closed", { current_position: data.position });
     case "climate.set_temperature": return patch(id, undefined, { temperature: data.temperature });
     case "climate.set_hvac_mode": return patch(id, data.hvac_mode, { hvac_action: data.hvac_mode === "off" ? "off" : data.hvac_mode === "cool" ? "cooling" : "heating" });
