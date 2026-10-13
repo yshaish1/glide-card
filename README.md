@@ -127,6 +127,18 @@ tap_action:
 
 `fill: false` drops the solid color fill when a button is on; the glass gradient takes the button's color instead (color fading to white). It pairs well with pastel colors such as `color: "#F3D9A4"`. A light custom color is also used in a darker shade for the icon and the line under the name, so they stay readable.
 
+### Cover view
+
+A cover button with a position looks like a window. An outdoor view sits behind it, and a slatted blind comes down from the top, so a half-open cover shows half blind and half sky. The view turns to night (moon, stars, lit windows) when `sun.sun` is below the horizon.
+
+```yaml
+type: custom:glide-card
+card_type: button
+entity: cover.living_room
+view: garden              # garden (default) | sky | city | sea | color (the plain fill)
+# view_image: /local/yard.jpg   # or your own photo
+```
+
 ### Chip visibility
 
 A chip shows only while its `visibility` conditions all pass. The format is the same as Home Assistant's card visibility: `state` (`state` / `state_not`, one value or a list), `numeric_state` (`above` / `below`), `and`, `or`. The chip row updates live and hidden chips leave no gap.

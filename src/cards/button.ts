@@ -5,6 +5,7 @@ import { GlideBase, surface } from "../core/base-card";
 import { cssColor, domainColor, domainOf, entityIcon, entityName, isActive, isUnavailable, onTextColor, sliderFor } from "../core/entity";
 import { haptic } from "../core/fire";
 import { attachGestures } from "../core/gestures";
+import { isScene, sceneSvg } from "./cover-scenes";
 import { formatState } from "../core/i18n";
 import { TemplateController } from "../core/templates";
 import type { ActionConfig, ButtonCardConfig } from "../core/types";
@@ -123,11 +124,37 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     return domainOf(this.config.entity) === "cover" && !!this.slider;
   }
 
+  /** Covers look like a window: an outdoor view (built-in scene or the user's photo) behind a blind; `view: color` keeps the plain fill. */
+  private get view(): "scene" | "image" | undefined {
+    if (!this.isCover) return undefined;
+    const v = this.config.view;
+    if (v === "color") return undefined;
+    if (v === undefined && this.config.view_image) return "image";
+    return "scene";
+  }
+
+  protected watched() {
+    // Day/night of the cover view follows the sun.
+    return this.view ? [...super.watched(), "sun.sun"] : super.watched();
+  }
+
+  private renderView() {
+    const night = this.hass?.states["sun.sun"]?.state === "below_horizon";
+    const scene = isScene(this.config.view) ? this.config.view : "garden";
+    return html`
+      <div class="view ${night ? "night" : "day"} ${this.view === "image" ? "photo" : scene}">
+        ${this.view === "image" ? html`<img src=${this.config.view_image!} alt="" draggable="false" />` : sceneSvg(scene, night)}
+      </div>
+      <div class="scrim"></div>
+    `;
+  }
+
   protected render() {
     const s = this.stateOf(this.config.entity);
     const slider = this.slider;
     const value = this.dragValue ?? slider?.value;
     const cover = this.isCover;
+    const view = this.view;
     // Covers stay neutral like the mockup; the fill alone shows how open they are.
     const on = !cover && (this.dragValue !== undefined ? this.dragValue > 0 : isActive(s));
     const stateText = this.hass && this.config.entity && s ? formatState(this.hass, this.config.entity) : "";
@@ -141,16 +168,18 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     const meta = this.config.secondary !== undefined
       ? this.tpl.get("secondary") ?? ""
       : cover ? `${value}% ${stateText}` : slider && on && value !== undefined ? `${value}%` : "";
-    const fill = slider ? value ?? 0 : on ? 100 : 0;
+    // In the window look the fill is the blind, so it covers what is closed.
+    const fill = view ? 100 - (value ?? 0) : slider ? value ?? 0 : on ? 100 : 0;
     const color = this.tpl.get("color")?.trim();
     return html`
       <div
-        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${this.config.fill === false ? "nofill" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
+        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${view ? "window" : ""} ${this.config.fill === false ? "nofill" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
         style=${styleMap({ "--domain": cssColor(color) ?? domainColor(s), "--gc-icon-on": onTextColor(color), "--fill": `${fill}%` })}
         role="button"
         tabindex="0"
         aria-label=${name}
       >
+        ${view ? this.renderView() : nothing}
         <div class="fill ${this.dragValue !== undefined ? "dragging" : ""}"></div>
         <div class="icon"><ha-icon .icon=${entityIcon(s, iconOrUndefined(this.tpl.get("icon")))}></ha-icon></div>
         <div class="text">
@@ -206,6 +235,64 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
         color: var(--gc-text);
       }
       .cover .meta:not(.badge) { color: var(--gc-text-dim); }
+
+      /* Window: the outdoor view sits behind a blind that drops from the top. */
+      .view, .scrim { position: absolute; inset: 0; pointer-events: none; }
+      .view svg, .view img { display: block; width: 100%; height: 100%; object-fit: cover; }
+      .view.day { background: linear-gradient(to bottom, #7cc0ef, #cfe9fb 75%); }
+      .view.night { background: linear-gradient(to bottom, #0d1630, #23305a 80%); }
+      .view.photo.night img { filter: brightness(0.6) saturate(0.8); }
+      .view .sun { fill: #ffd65a; }
+      .view .halo { fill: #fff2b0; opacity: 0.45; }
+      .view .cloud { fill: #fff; opacity: 0.92; }
+      .view .moon { fill: #f3efd8; }
+      .view .moon-cut { fill: #13204a; }
+      .view .star { fill: #fff; }
+      .view .hill-back { fill: #a3d48c; }
+      .view .hill { fill: #6cb257; }
+      .view .leaf { fill: #4f9a45; }
+      .view .pine { fill: #2f7d4a; }
+      .view .trunk { fill: #8a6243; }
+      .view .bld-back { fill: #a9bdd6; }
+      .view .bld { fill: #7a93b5; }
+      .view .win { fill: #ffd56b; }
+      .view .water { fill: #3d9bd6; }
+      .view .wave { fill: none; stroke: #fff; stroke-width: 1.2; stroke-linecap: round; opacity: 0.55; }
+      .view .sail { fill: #fff; }
+      .view .hull { fill: #c8553d; }
+      .view.night .cloud { fill: #8a96b8; opacity: 0.35; }
+      .view.night .hill-back { fill: #22402f; }
+      .view.night .hill { fill: #16301f; }
+      .view.night .leaf, .view.night .pine { fill: #10261a; }
+      .view.night .trunk { fill: #1d1a17; }
+      .view.night .bld-back { fill: #26345a; }
+      .view.night .bld { fill: #1a2442; }
+      .view.night .water { fill: #172a52; }
+      .view.night .wave { opacity: 0.25; }
+      .view.night .sail { fill: #9aa5c4; }
+      .view.night .hull { fill: #5a2a22; }
+      @media (prefers-reduced-motion: no-preference) {
+        .view .cloud { animation: gc-drift 80s ease-in-out infinite alternate; }
+        .view .cloud.c2 { animation-duration: 110s; animation-direction: alternate-reverse; }
+        .view .cloud.c3 { animation-duration: 95s; }
+        .view .star { animation: gc-twinkle 4s ease-in-out infinite; }
+      }
+      @keyframes gc-drift { from { translate: -14px 0; } to { translate: 14px 0; } }
+      @keyframes gc-twinkle { 50% { opacity: 0.3; } }
+      /* Keeps the name readable over the view. */
+      .scrim { background: linear-gradient(to top, color-mix(in srgb, var(--gc-surface-solid, var(--gc-surface)) 75%, transparent), transparent 55%); }
+      .pill .scrim, :host([size="slim"]) .scrim { background: color-mix(in srgb, var(--gc-surface-solid, var(--gc-surface)) 55%, transparent); }
+      .surface.window .fill {
+        inset-block: 0 auto;
+        border-top: none;
+        border-radius: 0;
+        border-bottom: 3px solid color-mix(in srgb, var(--gc-text) 22%, var(--gc-surface-solid, var(--gc-surface)));
+        background:
+          repeating-linear-gradient(to bottom, transparent 0 8px, color-mix(in srgb, var(--gc-text) 10%, transparent) 8px 9px),
+          var(--gc-surface-solid, var(--gc-surface));
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+      }
+      .window .icon, .window .badge { background: var(--gc-surface-solid, var(--gc-surface)); }
       .icon {
         position: relative;
         display: grid;

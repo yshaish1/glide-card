@@ -9,7 +9,7 @@ export type TokenMap = Record<`--gc-${string}`, string>;
  * Token contract (all optional except where noted; base defaults cover the rest):
  *   --gc-font, --gc-font-meta, --gc-meta-transform, --gc-meta-spacing
  *   --gc-text, --gc-text-dim, --gc-accent, --gc-on-accent, --gc-accent-text
- *   --gc-surface, --gc-surface-on, --gc-border, --gc-highlight, --gc-shadow
+ *   --gc-surface, --gc-surface-on, --gc-surface-solid (opaque surface, e.g. a cover's blind), --gc-border, --gc-highlight, --gc-shadow
  *   --gc-backdrop, --gc-fill-strength, --gc-radius, --gc-radius-control, --gc-gap
  *   --gc-sheet-bg, --gc-scrim
  *   --gc-light, --gc-fan, --gc-heat, --gc-cool, --gc-cover, --gc-media (domain colors)

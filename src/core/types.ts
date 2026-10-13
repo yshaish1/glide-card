@@ -66,6 +66,10 @@ export interface ButtonCardConfig extends BaseCardConfig {
   icon?: string;
   layout?: "tile" | "pill";
   slider?: boolean;
+  /** Covers: the outdoor view behind the blind (`garden` by default), or `color` for the plain fill. */
+  view?: "garden" | "sky" | "city" | "sea" | "color";
+  /** Covers: your own photo for the view (e.g. `/local/yard.jpg`), used when `view` is not set. */
+  view_image?: string;
   /** `false`: no solid colour fill when on; the glass gradient takes the colour instead. */
   fill?: boolean;
   /** Overrides the domain colour: an HA colour name (`cyan`, `light-blue`, ...) or any CSS colour. */

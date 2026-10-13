@@ -1,6 +1,6 @@
 import "./ha-icon";
 import "../src/glide-card";
-import { getHass, setDark, setLanguage, subscribe } from "./mock-hass";
+import { getHass, setDark, setLanguage, setState, subscribe } from "./mock-hass";
 import { listThemes } from "../src/themes";
 import { TAP_EFFECTS } from "../src/core/tap-fx";
 
@@ -29,6 +29,12 @@ const cards: Cfg[] = [
     color: "amber",
   },
   { card_type: "button", entity: "cover.blinds" },
+  { card_type: "button", entity: "cover.kitchen", view: "city" },
+  { card_type: "button", entity: "cover.office", view: "sea" },
+  { card_type: "button", entity: "cover.kitchen", name: "Sky view", view: "sky" },
+  { card_type: "button", entity: "cover.office", name: "Photo view", view_image: "https://picsum.photos/seed/garden/400/300" },
+  { card_type: "button", entity: "cover.blinds", name: "Plain colour", view: "color" },
+  { card_type: "button", entity: "cover.kitchen", name: "Pill blind", layout: "pill", view: "sea" },
   { card_type: "button", entity: "fan.ceiling" },
   { card_type: "button", entity: "script.good_night" },
   { card_type: "heading", title: "תריסים", subtitle: "1 פתוח", icon: "mdi:blinds", color: "purple", tap_action: { action: "navigate", navigation_path: "/blinds" } },
@@ -128,5 +134,7 @@ tapSel.onchange = () => {
   document.documentElement.style.setProperty("--glide-size", (e.target as HTMLSelectElement).value);
   build();
 };
+
+(document.getElementById("sun") as HTMLSelectElement).onchange = (e) => setState("sun.sun", (e.target as HTMLSelectElement).value);
 
 build();

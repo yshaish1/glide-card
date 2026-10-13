@@ -9,6 +9,9 @@ const initial: HassEntity[] = [
   e("light.ceiling", "on", { friendly_name: "Ceiling Light", brightness: 178, supported_color_modes: ["brightness"] }),
   e("light.floor_lamp", "off", { friendly_name: "Floor Lamp", icon: "mdi:floor-lamp", supported_color_modes: ["brightness"] }),
   e("cover.blinds", "open", { friendly_name: "Motorized Blinds", current_position: 40 }),
+  e("cover.kitchen", "open", { friendly_name: "תריס מטבח", current_position: 70 }),
+  e("cover.office", "closed", { friendly_name: "Office Shutter", current_position: 15 }),
+  e("sun.sun", "above_horizon", { friendly_name: "Sun" }),
   e("fan.ceiling", "on", { friendly_name: "Ceiling Fan", percentage: 66 }),
   e("switch.coffee", "off", { friendly_name: "Coffee Machine", icon: "mdi:coffee-maker" }),
   e("climate.living", "heat", {

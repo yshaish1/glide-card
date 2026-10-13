@@ -120,6 +120,28 @@ const SCHEMAS: Record<CardType, unknown[]> = {
         { name: "color", selector: { ui_color: {} } },
       ],
     },
+    {
+      type: "grid",
+      name: "",
+      schema: [
+        {
+          name: "view",
+          selector: {
+            select: {
+              mode: "dropdown",
+              options: [
+                { value: "garden", label: "Garden" },
+                { value: "sky", label: "Sky" },
+                { value: "city", label: "City" },
+                { value: "sea", label: "Sea" },
+                { value: "color", label: "Plain colour" },
+              ],
+            },
+          },
+        },
+        { name: "view_image", selector: { text: {} } },
+      ],
+    },
     actions,
   ],
   popup: [
@@ -172,6 +194,8 @@ const LABELS: Record<string, string> = {
   tap_animation: "Tap animation (empty = dashboard default)",
   secondary: "Secondary line, e.g. {{ states.light | selectattr('state','eq','on') | list | count }} of 7 on",
   badge: "Badge text (empty = entity state)",
+  view: "Cover view (covers only, empty = garden)",
+  view_image: "Cover view photo, e.g. /local/yard.jpg",
 };
 
 /** Loads HA's lazy form components (ha-form etc.) by asking a built-in card for its editor. */
