@@ -116,6 +116,12 @@ function emit() {
   tplSubs.forEach(sendTpl);
 }
 
+/** Swaps every entity at once (the screenshot page uses its own demo set). */
+export const replaceStates = (list: HassEntity[]) => ((states = Object.fromEntries(list.map((x) => [x.entity_id, x]))), emit());
+/** Sets state and attributes together (the screenshot page animates covers this way). */
+export const patchState = (id: string, state: string | undefined, attrs: Record<string, any> = {}) => patch(id, state, attrs);
+export { e as entity };
+
 /** Lets the playground change a sensor to watch templates update. */
 export const setState = (id: string, state: string) => patch(id, state);
 

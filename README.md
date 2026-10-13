@@ -1,214 +1,164 @@
 # Glide Card
 
-Themeable Home Assistant cards: buttons with swipe-to-dim, real pop-up sheets, a floating nav bar, climate and media cards.
-It's one card type with three built-in designs, and adding a new design takes one file.
+[![HACS][hacs-badge]][hacs-url]
+[![Release][release-badge]][release-url]
+[![License][license-badge]](LICENSE)
 
-| Liquid Glass | Refined Bubble | Material You |
-| --- | --- | --- |
-| ![](design/a-liquid-glass.png) | ![](design/b-refined-bubble.png) | ![](design/c-material-you.png) |
+**Themeable Home Assistant cards that feel like a native app.** Swipe-to-dim buttons, covers that look like real blinds and curtains, pop-up sheets, a floating nav bar, and climate and media cards. Three built-in designs, dark and light, with full RTL support.
 
-## Install
+![Glide Card in Liquid Glass, Refined Bubble and Material You](docs/images/hero-dark.webp)
 
-**HACS:** add this repo as a custom repository (type *Dashboard*), install **Glide Card**, then reload.
+[![Open your Home Assistant instance and open this repository in HACS.][my-hacs-badge]][my-hacs-url]
 
-**Manual:** copy `dist/glide-card.js` to `/config/www/`, then add it as a dashboard resource: `/local/glide-card.js` (JavaScript module).
+## Features
+
+- **One card, eight widgets.** Button, pop-up, nav bar, climate, media, chips, title and heading, all as `custom:glide-card`, all in the visual editor.
+- **Three designs.** Liquid Glass, Refined Bubble and Material You, each in dark and light. Switch per card or for the whole dashboard.
+- **Made for touch.** Swipe a tile to set brightness or position, hold for more-info, drag the climate dial. Haptics, plus 17 tap animations (or a random one each tap).
+- **Covers you can read at a glance.** An outdoor view behind a blind or curtains, with day and night following the sun.
+- **Real pop-ups.** A bottom sheet on phones and a centred modal on desktop. The tile morphs into it, and any HA card works inside.
+- **Templates.** Name, icon, color, badge and secondary line accept HA templates, like Mushroom.
+- **Three sizes.** Full, compact and slim, per card or dashboard-wide.
+- **Fast.** One small file with no dependencies at runtime. A lite mode drops the blur on slow wall tablets.
+- **RTL.** Hebrew and Arabic dashboards mirror correctly, gestures included.
+
+| Light | Pop-up | Covers |
+| :---: | :---: | :---: |
+| <img src="docs/images/hero-light.webp" alt="Light themes"> | <img src="docs/images/popup.gif" width="220" alt="Pop-up sheet"> | <img src="docs/images/covers.gif" alt="Blinds and curtains"> |
+
+## Installation
+
+<details open>
+<summary><b>HACS (recommended)</b></summary>
+
+1. Click the **Open in HACS** button above, or in HACS go to the menu (⋮) → **Custom repositories** and add `https://github.com/yshaish1/glide-card` with the type **Dashboard**.
+2. Install **Glide Card**.
+3. Reload the browser.
+
+</details>
+
+<details>
+<summary><b>Manual</b></summary>
+
+1. Download [`dist/glide-card.js`](dist/glide-card.js) from this repo.
+2. Copy it to `/config/www/`.
+3. In **Settings → Dashboards → ⋮ → Resources**, add `/local/glide-card.js?v=1` as a **JavaScript module**.
+4. Reload the browser. After each update, bump `?v=` so browsers don't keep the old file.
+
+</details>
+
+> [!TIP]
+> If a new version doesn't show up, clear the browser cache. In the Companion app, use **Settings → Companion app → Debugging → Reset frontend cache**.
+
+## Quick start
+
+Add a card, pick **Glide Card** in the card picker, and choose a type. In YAML:
+
+```yaml
+type: custom:glide-card
+card_type: button
+entity: light.living_room
+theme: glass      # glass | bubble | material
+```
 
 ## Cards
 
-Every card is `type: custom:glide-card` plus a `card_type`. All of them can be edited in the visual editor.
+| | Card | |
+| --- | --- | --- |
+| <img src="docs/images/button.webp" width="260"> | **[Button](docs/cards/button.md)** | Tile or pill. Tap to toggle, hold for more-info, swipe to set brightness, speed or position. Templates and soft colors. |
+| <img src="docs/images/covers.webp" width="260"> | **[Cover](docs/cards/cover.md)** | A blind or curtains over a garden, sky, city or sea view (or your own photo), with night following the sun. Optional open, stop and close buttons. |
+| <img src="docs/images/popup-light.webp" width="130"> | **[Pop-up](docs/cards/popup.md)** | A sheet opened by a `#hash`, holding any cards. |
+| <img src="docs/images/nav.webp" width="260"> | **[Nav bar](docs/cards/nav.md)** | A floating bar with a sliding indicator, scrolling items and pinned items. |
+| <img src="docs/images/climate.webp" width="260"> | **[Climate](docs/cards/climate.md)** | A drag dial with −/+, and mode buttons. |
+| <img src="docs/images/media.webp" width="260"> | **[Media](docs/cards/media.md)** | Artwork, progress, transport and volume. |
+| <img src="docs/images/chips.webp" width="260"> | **[Title and chips](docs/cards/chips.md)** | A page greeting and a row of info pills, with per-chip visibility conditions. |
+| <img src="docs/images/chips.webp" width="260"> | **[Heading](docs/cards/heading.md)** | A section heading with an icon, badges and an optional link. |
+
+**More:** [shared options, sizes and tap animations](docs/options.md) · [themes](docs/themes.md)
+
+## Example dashboard
+
+<details>
+<summary>The dashboard from the screenshot</summary>
 
 ```yaml
-# Button: tap = toggle, hold = more-info, swipe sideways = brightness / position / speed
-type: custom:glide-card
-card_type: button
-entity: light.ceiling
-layout: tile        # tile | pill (default comes from the theme)
-
-# Pop-up sheet: opens when the URL hash matches; bottom sheet on phones, centered modal on wide screens
-type: custom:glide-card
-card_type: popup
-hash: "#kitchen"
-title: Kitchen
-icon: mdi:silverware-fork-knife
+type: grid
+columns: 1
+square: false
 cards:
   - type: custom:glide-card
-    card_type: button
-    entity: switch.coffee
-  - type: tile          # any HA card works inside
-    entity: light.kitchen
-
-# Open it from anywhere (the tile morphs into the sheet)
-type: custom:glide-card
-card_type: button
-entity: light.kitchen
-tap_action:
-  action: navigate
-  navigation_path: "#kitchen"
-
-# Floating nav bar
-type: custom:glide-card
-card_type: nav
-items:
-  - { name: Home, icon: mdi:home, navigation_path: /dashboard-home/0 }
-  - { name: Kitchen, icon: mdi:silverware-fork-knife, navigation_path: "#kitchen", entity: light.kitchen }
-  - { name: More, icon: mdi:dots-grid, navigation_path: "#more", pinned: true }   # stays at the end
-# Items that don't fit scroll sideways and the current page is centred.
-
-# Page title + subtitle
-type: custom:glide-card
-card_type: title
-title: משפחת שיש
-subtitle: גם כשלא היה הרבה, היה לנו הכל
-
-# Section heading (use instead of HA's heading card)
-type: custom:glide-card
-card_type: heading
-title: תריסים
-icon: mdi:blinds
-color: purple
-subtitle: 1 פתוח          # optional
-style: title              # title | subtitle (smaller)
-badges:                   # optional mini entity badges at the end
-  - entity: sensor.living_temp
-    icon: mdi:thermometer
-tap_action:               # optional; shows a chevron
-  action: navigate
-  navigation_path: /home-glass/blinds
-
-# Info chips row (scrolls sideways when it doesn't fit)
-# weather = "condition · temp", timestamp sensors = "06:40", numbers keep their unit
-type: custom:glide-card
-card_type: chips
-chips:
-  - entity: weather.home
-  - entity: sensor.sun_next_rising
-    icon: mdi:weather-sunset-up
-    color: amber
-  - entity: sensor.mspr_mzgnym_dvlqym
-    name: מזגנים דולקים
-    icon: mdi:air-conditioner
-    color: light-green
-    tap_action:
-      action: navigate
-      navigation_path: /home-glass/climate
-
-# Climate (drag the dial) and media
-type: custom:glide-card
-card_type: climate
-entity: climate.living
----
-type: custom:glide-card
-card_type: media
-entity: media_player.sonos
+    card_type: title
+    title: Good evening
+    subtitle: 3 lights on · 22° outside
+  - type: custom:glide-card
+    card_type: chips
+    chips:
+      - entity: weather.home
+      - entity: sensor.sun_next_setting
+        name: Sunset
+        icon: mdi:weather-sunset-down
+        color: deep-orange
+      - entity: sensor.lights_on
+        name: ""
+        icon: mdi:lightbulb-group
+        color: amber
+  - type: custom:glide-card
+    card_type: heading
+    title: Living Room
+    icon: mdi:sofa
+    color: orange
+    badges:
+      - entity: sensor.living_temp
+        icon: mdi:thermometer
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - { type: custom:glide-card, card_type: button, entity: light.ceiling }
+      - { type: custom:glide-card, card_type: button, entity: light.floor_lamp }
+      - { type: custom:glide-card, card_type: button, entity: cover.blinds }
+      - { type: custom:glide-card, card_type: button, entity: cover.curtains }
+  - type: custom:glide-card
+    card_type: climate
+    entity: climate.living
+    size: slim
+  - type: custom:glide-card
+    card_type: media
+    entity: media_player.living
+    size: slim
+  - type: custom:glide-card
+    card_type: nav
+    items:
+      - { name: Home, icon: mdi:home, navigation_path: /dashboard-home/0 }
+      - { name: Lights, icon: mdi:lightbulb-group, navigation_path: "#lights", entity: light.ceiling }
+      - { name: Climate, icon: mdi:thermostat, navigation_path: /dashboard-home/climate }
+      - { name: Media, icon: mdi:play-circle, navigation_path: /dashboard-home/media }
 ```
 
-### Templates (buttons)
+In a sections dashboard, Glide cards size themselves to the grid, so you can drop them in directly.
 
-A button's `name`, `secondary` (the line under the name), `badge` (the corner pill), `icon` and `color` accept Home Assistant templates, like a Mushroom template card. Home Assistant renders them and updates them live. On/off still follows `entity`. A button with no `entity` works as a summary tile.
-
-```yaml
-type: custom:glide-card
-card_type: button
-name: Lights
-icon: mdi:lightbulb-group
-secondary: >-
-  {% set lights = area_entities('living_room') | select('match', 'light.') | list %}
-  {{ lights | select('is_state', 'on') | list | count }} of {{ lights | count }} on
-badge: "{{ states('sensor.outdoor_lights_on') }} outside"
-color: "{{ 'amber' if is_state('light.living_room', 'on') else 'grey' }}"
-tap_action:
-  action: navigate
-  navigation_path: "#lights"
-```
-
-`secondary` replaces the automatic brightness/position text, and `badge` replaces the state. All of these also take plain text. In the visual editor, they're under **Templates**.
-
-### Soft buttons
-
-`fill: false` drops the solid color fill when a button is on; the glass gradient takes the button's color instead (color fading to white). It pairs well with pastel colors such as `color: "#F3D9A4"`. A light custom color is also used in a darker shade for the icon and the line under the name, so they stay readable.
-
-### Cover view
-
-A cover button with a position looks like a window. An outdoor view sits behind it, and a slatted blind comes down from the top, so a half-open cover shows half blind and half sky. The view turns to night (moon, stars, lit windows) when `sun.sun` is below the horizon.
-
-```yaml
-type: custom:glide-card
-card_type: button
-entity: cover.living_room
-view: garden              # garden (default) | sky | city | sea | color (the plain fill)
-# view_image: /local/yard.jpg   # or your own photo
-```
-
-Curtains (HA device class `curtain`) part two folded drapes from the centre instead, and you drag them sideways. `cover_style: curtain` or `cover_style: blind` forces either look, and `color` tints the fabric:
-
-```yaml
-type: custom:glide-card
-card_type: button
-entity: cover.bedroom
-cover_style: curtain
-color: "#b38b6d"
-```
-
-`cover_buttons: true` adds small round open, stop and close buttons where the badge was (the line under the name still shows the position). Each button shows only when the cover supports it. Open greys out when the cover is fully open, close greys out when it is closed, and stop lights up while the cover moves. This works on covers without a position too, such as a garage door:
-
-```yaml
-type: custom:glide-card
-card_type: button
-entity: cover.garage
-cover_buttons: true
-```
-
-### Chip visibility
-
-A chip shows only while its `visibility` conditions all pass. The format is the same as Home Assistant's card visibility: `state` (`state` / `state_not`, one value or a list), `numeric_state` (`above` / `below`), `and`, `or`. The chip row updates live and hidden chips leave no gap.
-
-```yaml
-type: custom:glide-card
-card_type: chips
-chips:
-  - entity: sensor.jewish_calendar_upcoming_shabbat_candle_lighting
-    name: כניסת שבת
-    icon: mdi:candle
-    color: amber
-    visibility:
-      - condition: state
-        entity: sensor.shabbat_phase
-        state: candle_lighting
-```
-
-### Shared options
-
-| Option | Values |
-| --- | --- |
-| `theme` | `glass` (default), `bubble`, `material`, or any registered theme |
-| `mode` | `auto` (follows HA), `dark`, `light` |
-| `accent` | any CSS color; overrides the theme accent |
-| `color` | buttons only: an HA color name (`cyan`, `light-blue`, `amber`...) or any CSS color; replaces the per-domain color |
-| `lite` | `true` turns off blur for slow tablets. When unset, it's detected automatically. Per device: `localStorage["glide-card-lite"]="1"` |
-| `tap_action` / `hold_action` / `double_tap_action` | standard HA actions, plus `navigate` to a `#hash` to open a pop-up |
-| `tap_animation` | animation on tap (buttons, chips, heading badges, nav bar; a pop-up passes it to its cards): `shine` (default), `random` (a different effect each tap, only ones the widget can show, never the same twice in a row), `press`, `spring`, `ripple`, `glow`, `jelly`, `tilt`, `icon-pop`, `ring`, `deep-press`, `bloom`, `breathe`, `sparks`, `icon-flip`, `border-trace`, `nudge`, `badge-pop`, `none`. Turned off when the device asks for reduced motion |
-| `size` | `full` (default), `compact` (same layouts, tighter) or `slim` (the minimum: one-row tiles, one-line chips, a one-line media player, a small climate dial with −/+ beside it, an icon-only nav). In a sections dashboard tiles, media and climate shrink by whole grid rows. A pop-up passes it to its cards |
-
-**Dashboard-wide theme:** add `glide-theme: bubble` to your HA theme YAML. A card's own `theme` still wins.
-
-**Dashboard-wide tap animation:** add `glide-tap-animation: ripple` to your HA theme YAML. A card's own `tap_animation` still wins.
-
-**Dashboard-wide size:** add `glide-size: slim` (or `compact`) to your HA theme YAML. A card's own `size` still wins.
-
-## Themes
-
-A theme is one object containing semantic tokens (`--gc-surface`, `--gc-accent`, `--gc-radius`, `--gc-backdrop`, ...), optional extra CSS per card type, and layout defaults. Cards only read tokens, so a new design never touches card code.
-
-- **Built-in:** add `src/themes/<id>/index.ts` (copy `glass`) and list it in `src/themes/index.ts`.
-- **From another HACS resource:** `window.glideCardThemes.register({ id, name, version, preview, tokens: { dark, light } })`.
-
-See `src/themes/types.ts` for the full token contract.
+</details>
 
 ## Develop
 
 ```bash
 npm install
-npm run dev     # playground with mock HA: themes, dark/light, Hebrew RTL, phone/tablet/desktop
+npm run dev     # playground with a mock HA: themes, dark/light, Hebrew RTL, phone/tablet/desktop
 npm test
 npm run build   # -> dist/glide-card.js
+npm run shots   # regenerate the README images in docs/images (needs ffmpeg)
 ```
+
+Ideas and bug reports are welcome in [issues](https://github.com/yshaish1/glide-card/issues).
+
+## License
+
+[MIT](LICENSE)
+
+[hacs-badge]: https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=flat-square
+[hacs-url]: https://hacs.xyz/docs/faq/custom_repositories/
+[release-badge]: https://img.shields.io/github/v/release/yshaish1/glide-card?style=flat-square
+[release-url]: https://github.com/yshaish1/glide-card/releases/latest
+[license-badge]: https://img.shields.io/github/license/yshaish1/glide-card?style=flat-square
+[my-hacs-badge]: https://my.home-assistant.io/badges/hacs_repository.svg
+[my-hacs-url]: https://my.home-assistant.io/redirect/hacs_repository/?owner=yshaish1&repository=glide-card&category=plugin

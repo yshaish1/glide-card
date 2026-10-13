@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Glide Card Shots</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --red-color:#f44336; --pink-color:#e91e63; --purple-color:#926bc7; --indigo-color:#3f51b5; --blue-color:#2196f3;
+        --light-blue-color:#03a9f4; --cyan-color:#00bcd4; --teal-color:#009688; --green-color:#4caf50; --light-green-color:#8bc34a;
+        --lime-color:#cddc39; --yellow-color:#ffeb3b; --amber-color:#ffc107; --orange-color:#ff9800; --deep-orange-color:#ff6f22;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; background: transparent; font-family: Inter, system-ui, sans-serif; }
+      body.solid { background: #f2f1f4; }
+      body.solid.dark { background: #101014; }
+      #stage { display: inline-flex; gap: 28px; padding: 28px; align-items: flex-start; }
+      .phone {
+        position: relative;
+        width: var(--w, 390px);
+        min-height: var(--h, auto);
+        padding: 20px 14px 84px;
+        border-radius: 36px;
+        overflow: hidden;
+        /* Holds the fixed nav bar inside the panel. */
+        transform: translateZ(0);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.06);
+      }
+      .phone.short { padding-bottom: 20px; }
+      .phone[data-bg="glass-dark"] { background: radial-gradient(120% 70% at 10% 0%, #5a3518 0%, transparent 55%), radial-gradient(90% 60% at 100% 45%, #2b2246 0%, transparent 60%), #121016; }
+      .phone[data-bg="glass-light"] { background: radial-gradient(120% 70% at 10% 0%, #ffd9b0 0%, transparent 55%), radial-gradient(90% 60% at 100% 45%, #d9d4ff 0%, transparent 60%), #f4f1ee; }
+      .phone[data-bg="bubble-dark"] { background: #0a0a0c; }
+      .phone[data-bg="bubble-light"] { background: #ececef; }
+      .phone[data-bg="material-dark"] { background: #0f1513; }
+      .phone[data-bg="material-light"] { background: linear-gradient(#e6f4ef, #f4faf7); }
+      .label {
+        margin: 0 0 14px;
+        font: 600 13px/1 Inter, sans-serif;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.55;
+      }
+      .phone[data-mode="dark"] .label { color: #fff; }
+      .grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: minmax(56px, auto); gap: 8px; }
+      .grid > * { grid-column: span var(--cols, 6); grid-row: span var(--rows, 2); min-width: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="stage"></div>
+    <script type="module" src="./shots.ts"></script>
+  </body>
+</html>
