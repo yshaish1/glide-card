@@ -12,7 +12,7 @@ import "./editor/editor";
 import type { GlideBase } from "./core/base-card";
 import type { GlideCardConfig, HomeAssistant } from "./core/types";
 
-const VERSION = "0.14.4";
+const VERSION = "0.14.5";
 const TYPES = ["button", "popup", "nav", "climate", "media", "chips", "title", "heading"] as const;
 
 /**

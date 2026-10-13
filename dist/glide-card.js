@@ -2073,11 +2073,12 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
       }
 
       .window .icon, .window .badge { background: var(--gc-surface-solid, var(--gc-surface)); }
-      /* Keeps the name readable over the view, blind or drapes: a frosted chip that hugs the text. */
+      /* Keeps the name readable over the view, blind or drapes: a frosted chip that hugs the text.
+         Its corner is concentric with the card's (card radius minus card padding). */
       .window .text {
-        padding: 4px 10px;
+        padding: 4px 12px;
         margin-inline-start: -4px;
-        border-radius: var(--gc-radius-control);
+        border-radius: 12px;
         box-shadow: inset 0 0 0 1px var(--gc-border);
         background: color-mix(in srgb, var(--gc-surface-solid, var(--gc-surface)) 55%, transparent);
         backdrop-filter: blur(10px) saturate(1.2);
@@ -2085,8 +2086,9 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
       }
       .tile.window .text { justify-self: start; max-width: 100%; }
       .pill.window .text, :host([size="slim"]) .tile.window .text { flex: 0 1 auto; min-width: 0; margin-inline-end: auto; }
-      :host([size="compact"]) .window .text { padding: 2px 8px; }
-      :host([size="slim"]) .window .text { padding: 0 8px; }
+      :host([size="compact"]) .window .text { padding: 2px 11px; border-radius: 11px; }
+      /* Slim keeps tight sides so "40% Open" stays on its line. */
+      :host([size="slim"]) .window .text { padding: 0 8px; border-radius: 10px; }
       .icon {
         position: relative;
         display: grid;
@@ -4311,7 +4313,7 @@ var pr = class extends L {
 customElements.define("glide-card-editor", pr);
 //#endregion
 //#region src/glide-card.ts
-var mr = "0.14.4", hr = [
+var mr = "0.14.5", hr = [
 	"button",
 	"popup",
 	"nav",

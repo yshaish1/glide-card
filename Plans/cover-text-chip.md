@@ -36,6 +36,7 @@ At execution this plan is copied to `Plans/cover-text-chip.md`, following the pr
 - [x] Frosted chip on `.window .text`, scrim removed, size tweaks
 - [x] Built and checked. Two changes from the plan: the outline is an inset shadow, not a border, and slim has no vertical padding, so no card height changes (slim stays at 65px, tile at 120, pill at 60).
 - [x] Released as v0.14.4
+- [x] v0.14.5: the chip corner is concentric with the card's, chosen from real-card mockups (variant C of pill / wider pill / 12px / 6px). It is 12px with 12px sides on full tiles and 11px on compact; slim keeps 8px sides and a 10px corner so no height changes.
 
 ## Open questions
 - None.
