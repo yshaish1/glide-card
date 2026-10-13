@@ -11,6 +11,7 @@ const initial: HassEntity[] = [
   e("cover.blinds", "open", { friendly_name: "Motorized Blinds", current_position: 40 }),
   e("cover.kitchen", "open", { friendly_name: "תריס מטבח", current_position: 70 }),
   e("cover.office", "closed", { friendly_name: "Office Shutter", current_position: 15 }),
+  e("cover.living_curtains", "open", { friendly_name: "Living Curtains", device_class: "curtain", current_position: 50 }),
   e("sun.sun", "above_horizon", { friendly_name: "Sun" }),
   e("fan.ceiling", "on", { friendly_name: "Ceiling Fan", percentage: 66 }),
   e("switch.coffee", "off", { friendly_name: "Coffee Machine", icon: "mdi:coffee-maker" }),

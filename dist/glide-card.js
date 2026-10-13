@@ -50,7 +50,7 @@ var e = {
 			"--gc-cover": "#c6f000"
 		}
 	},
-	styles: { button: ".fill{box-shadow:inset -2px 0 0 var(--gc-accent)}.cover .fill{box-shadow:inset 0 2px 0 var(--gc-accent);border-top-color:transparent}.surface.window .fill{box-shadow:inset 0 -2px 0 var(--gc-accent)}" },
+	styles: { button: ".fill{box-shadow:inset -2px 0 0 var(--gc-accent)}.cover .fill{box-shadow:inset 0 2px 0 var(--gc-accent);border-top-color:transparent}.surface.window .fill{box-shadow:inset 0 -2px 0 var(--gc-accent)}.drape.start{border-inline-end:2px solid var(--gc-accent)}.drape.end{border-inline-start:2px solid var(--gc-accent)}" },
 	defaults: { buttonLayout: "pill" }
 }, t = {
 	id: "glass",
@@ -810,13 +810,13 @@ var Xe = {
 	vacuum: ["mdi:robot-vacuum", "mdi:robot-vacuum"],
 	scene: ["mdi:palette", "mdi:palette"],
 	script: ["mdi:script-text-play", "mdi:script-text"]
-}, z = (e, t) => t ?? e?.attributes.icon ?? (at[R(e?.entity_id)]?.[+!it(e)] || "mdi:help-circle-outline"), ot = (e, t) => t ?? e?.attributes.friendly_name ?? e?.entity_id ?? "", st = (e) => ({
+}, ot = (e, t) => t ?? e?.attributes.icon ?? (at[R(e?.entity_id)]?.[+!it(e)] || "mdi:help-circle-outline"), st = (e, t) => t ?? e?.attributes.friendly_name ?? e?.entity_id ?? "", ct = (e) => ({
 	light: "var(--gc-light)",
 	fan: "var(--gc-fan)",
 	cover: "var(--gc-cover)",
 	climate: "var(--gc-heat)",
 	media_player: "var(--gc-media)"
-})[R(e?.entity_id)] ?? "var(--gc-accent)", ct = /* @__PURE__ */ new Set([
+})[R(e?.entity_id)] ?? "var(--gc-accent)", lt = /* @__PURE__ */ new Set([
 	"primary",
 	"accent",
 	"red",
@@ -841,7 +841,7 @@ var Xe = {
 	"black",
 	"white",
 	"disabled"
-]), lt = (e) => e ? ct.has(e) ? `var(--${e}-color)` : e : void 0;
+]), z = (e) => e ? lt.has(e) ? `var(--${e}-color)` : e : void 0;
 function ut(e) {
 	if (!e) return !1;
 	let t, n = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(e.trim());
@@ -1811,7 +1811,7 @@ var Zt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), Qt = class {
 	firstUpdated() {
 		let e = this.renderRoot.querySelector(".surface"), t = -1;
 		this.detach = zt(e, {
-			axis: () => this.isCover ? "y" : "x",
+			axis: () => this.isCover && !this.isCurtain ? "y" : "x",
 			arm: () => V("selection"),
 			tap: (t) => {
 				this.playTapFx(e, t, {
@@ -1854,6 +1854,11 @@ var Zt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), Qt = class {
 	get isCover() {
 		return R(this.config.entity) === "cover" && !!this.slider;
 	}
+	get isCurtain() {
+		if (!this.isCover) return !1;
+		let e = this.config.cover_style;
+		return e === "curtain" || e !== "blind" && this.stateOf(this.config.entity)?.attributes.device_class === "curtain";
+	}
 	get view() {
 		if (!this.isCover) return;
 		let e = this.config.view;
@@ -1872,27 +1877,29 @@ var Zt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), Qt = class {
     `;
 	}
 	render() {
-		let e = this.stateOf(this.config.entity), t = this.slider, n = this.dragValue ?? t?.value, r = this.isCover, i = this.view, a = !r && (this.dragValue === void 0 ? it(e) : this.dragValue > 0), o = this.hass && this.config.entity && e ? Xt(this.hass, this.config.entity) : "", s = en.has(R(this.config.entity)), c = ot(e, this.tpl.get("name") || void 0), l = (this.config.badge === void 0 ? void 0 : this.tpl.get("badge") ?? "") ?? (s ? "" : r ? `${n}%` : o), u = this.config.secondary === void 0 ? r ? `${n}% ${o}` : t && a && n !== void 0 ? `${n}%` : "" : this.tpl.get("secondary") ?? "", d = i ? 100 - (n ?? 0) : t ? n ?? 0 : a ? 100 : 0, f = this.tpl.get("color")?.trim();
+		let e = this.stateOf(this.config.entity), t = this.slider, n = this.dragValue ?? t?.value, r = this.isCover, i = this.view, a = this.isCurtain, o = !r && (this.dragValue === void 0 ? it(e) : this.dragValue > 0), s = this.hass && this.config.entity && e ? Xt(this.hass, this.config.entity) : "", c = en.has(R(this.config.entity)), l = st(e, this.tpl.get("name") || void 0), u = (this.config.badge === void 0 ? void 0 : this.tpl.get("badge") ?? "") ?? (c ? "" : r ? `${n}%` : s), d = this.config.secondary === void 0 ? r ? `${n}% ${s}` : t && o && n !== void 0 ? `${n}%` : "" : this.tpl.get("secondary") ?? "", f = i && !a ? 100 - (n ?? 0) : t ? n ?? 0 : o ? 100 : 0, p = this.tpl.get("color")?.trim();
 		return A`
       <div
-        class="surface ${this.layout} ${a ? "on" : ""} ${r ? "cover" : ""} ${i ? "window" : ""} ${this.config.fill === !1 ? "nofill" : ""} ${rt(e) && this.config.entity ? "unavailable" : ""}"
+        class="surface ${this.layout} ${o ? "on" : ""} ${r ? "cover" : ""} ${i ? "window" : ""} ${a ? "curtain" : ""} ${this.config.fill === !1 ? "nofill" : ""} ${rt(e) && this.config.entity ? "unavailable" : ""}"
         style=${tt({
-			"--domain": lt(f) ?? st(e),
-			"--gc-icon-on": dt(f),
-			"--fill": `${d}%`
+			"--domain": z(p) ?? ct(e),
+			"--gc-icon-on": dt(p),
+			"--fill": `${f}%`,
+			"--closed": `${(100 - (n ?? 0)) / 100}`,
+			"--gc-fabric": a ? z(p) : void 0
 		})}
         role="button"
         tabindex="0"
-        aria-label=${c}
+        aria-label=${l}
       >
         ${i ? this.renderView() : N}
-        <div class="fill ${this.dragValue === void 0 ? "" : "dragging"}"></div>
-        <div class="icon"><ha-icon .icon=${z(e, $t(this.tpl.get("icon")))}></ha-icon></div>
+        ${i && a ? A`<div class="rod"></div>${["start", "end"].map((e) => A`<div class="drape ${e} ${this.dragValue === void 0 ? "" : "dragging"}"></div>`)}` : A`<div class="fill ${this.dragValue === void 0 ? "" : "dragging"}"></div>`}
+        <div class="icon"><ha-icon .icon=${ot(e, $t(this.tpl.get("icon")))}></ha-icon></div>
         <div class="text">
-          <div class="name">${c}</div>
-          ${u ? A`<div class="meta">${u}</div>` : N}
+          <div class="name">${l}</div>
+          ${d ? A`<div class="meta">${d}</div>` : N}
         </div>
-        ${l ? A`<div class="badge meta">${l}</div>` : N}
+        ${u ? A`<div class="badge meta">${u}</div>` : N}
       </div>
     `;
 	}
@@ -1996,6 +2003,50 @@ var Zt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), Qt = class {
           var(--gc-surface-solid, var(--gc-surface));
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
       }
+      /* Curtains: two folded drapes under a rod, parting from the centre; a bunched panel stays at each side when open. */
+      .curtain { --fabric: var(--gc-fabric, var(--gc-surface-solid, var(--gc-surface))); }
+      .rod {
+        position: absolute;
+        inset-inline: 0;
+        top: 0;
+        height: 4px;
+        background: color-mix(in srgb, var(--gc-text) 30%, var(--fabric));
+        pointer-events: none;
+      }
+      .drape {
+        position: absolute;
+        top: 4px;
+        bottom: 0;
+        width: calc(7% + 44% * var(--closed));
+        background: repeating-linear-gradient(
+          to right,
+          color-mix(in srgb, var(--fabric), black 16%) 0,
+          var(--fabric) 25%,
+          color-mix(in srgb, var(--fabric), white 14%) 50%,
+          var(--fabric) 75%,
+          color-mix(in srgb, var(--fabric), black 16%) 100%
+        );
+        background-size: 25% 100%;
+        border-bottom: 3px solid color-mix(in srgb, var(--fabric), black 22%);
+        transition: width 0.45s cubic-bezier(0.2, 0.9, 0.25, 1);
+        pointer-events: none;
+      }
+      .drape.dragging { transition: none; }
+      .drape.start { inset-inline-start: 0; }
+      .drape.end { inset-inline-end: 0; }
+      .drape.start:dir(ltr), .drape.end:dir(rtl) { box-shadow: 3px 0 6px rgba(0, 0, 0, 0.22); }
+      .drape.end:dir(ltr), .drape.start:dir(rtl) { box-shadow: -3px 0 6px rgba(0, 0, 0, 0.22); }
+      /* With the plain fill, a curtain fills start to end like the drag. */
+      .cover.curtain:not(.window) .fill {
+        inset-block: 0;
+        inset-inline: 0 auto;
+        width: var(--fill);
+        height: auto;
+        border-top: none;
+        border-radius: 0;
+        transition: width 0.45s cubic-bezier(0.2, 0.9, 0.25, 1);
+      }
+
       .window .icon, .window .badge { background: var(--gc-surface-solid, var(--gc-surface)); }
       .icon {
         position: relative;
@@ -2289,7 +2340,7 @@ var rn = "(min-width: 768px)", an = 120, on = .6, sn = [
         <div class="handle" @pointerdown=${(e) => this.onDragStart(e)}>
           <div class="grabber"></div>
           <header>
-            ${e.icon || t ? A`<div class="icon"><ha-icon .icon=${e.icon ?? z(t)}></ha-icon></div>` : N}
+            ${e.icon || t ? A`<div class="icon"><ha-icon .icon=${e.icon ?? ot(t)}></ha-icon></div>` : N}
             <div class="titles">
               <div class="title">${e.title ?? ""}</div>
               ${t && this.hass ? A`<div class="meta">${Xt(this.hass, e.entity)}</div>` : N}
@@ -2882,7 +2933,7 @@ var jn = {
         <header>
           <div class="icon"><ha-icon .icon=${jn[e.state] ?? "mdi:thermostat"}></ha-icon></div>
           <div class="titles">
-            <div class="name">${ot(e, this.config.name)}</div>
+            <div class="name">${st(e, this.config.name)}</div>
             <div class="meta mode-text">${y}</div>
           </div>
           ${b ? A`<div class="chip meta"><i></i>${Y(this.hass, "active")}</div>` : N}
@@ -3131,7 +3182,7 @@ var Ln = {
         <div class="top">
           <div class="art">${c ? A`<img src=${c} alt="" loading="lazy" />` : A`<ha-icon icon="mdi:music" .icon=${"mdi:music"}></ha-icon>`}</div>
           <div class="info">
-            <div class="meta source">${[t.app_name ?? t.source, ot(e, this.config.name)].filter(Boolean).join(" • ")}</div>
+            <div class="meta source">${[t.app_name ?? t.source, st(e, this.config.name)].filter(Boolean).join(" • ")}</div>
             <div class="title">${n ? Y(this.hass, "nothing_playing") : t.media_title}</div>
             ${!n && t.media_artist ? A`<div class="artist">${t.media_artist}</div>` : N}
           </div>
@@ -3328,10 +3379,10 @@ var Jn = class extends q {
 	renderChip(e) {
 		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? qn(this.hass, t, e.attribute) : "");
 		return A`
-      <div class="chip surface" role="button" tabindex="0" style="--chip:${lt(e.color) ?? (t ? st(t) : "var(--gc-accent)")}">
-        <ha-icon .icon=${z(t, e.icon)}></ha-icon>
+      <div class="chip surface" role="button" tabindex="0" style="--chip:${z(e.color) ?? (t ? ct(t) : "var(--gc-accent)")}">
+        <ha-icon .icon=${ot(t, e.icon)}></ha-icon>
         <div class="text">
-          ${e.name === "" ? N : A`<div class="label">${ot(t, e.name)}</div>`}
+          ${e.name === "" ? N : A`<div class="label">${st(t, e.name)}</div>`}
           <div class="value">${n}</div>
         </div>
       </div>
@@ -3478,14 +3529,14 @@ var Xn = (e) => e instanceof MouseEvent && e.detail ? {
 		return A`
       <button
         class="badge surface"
-        style="--c:${lt(e.color) ?? (t ? st(t) : "var(--gc-accent)")}"
+        style="--c:${z(e.color) ?? (t ? ct(t) : "var(--gc-accent)")}"
         @click=${(t) => {
 			t.stopPropagation();
 			let n = t.currentTarget;
 			this.playTapFx(n, Xn(t), { icon: n.querySelector("ha-icon") }), this.hass && H(t.currentTarget, this.hass, e.tap_action ?? { action: "more-info" }, e.entity);
 		}}
       >
-        ${e.icon || t ? A`<ha-icon .icon=${z(t, e.icon)}></ha-icon>` : N}
+        ${e.icon || t ? A`<ha-icon .icon=${ot(t, e.icon)}></ha-icon>` : N}
         <span>${n}</span>
       </button>
     `;
@@ -3495,7 +3546,7 @@ var Xn = (e) => e instanceof MouseEvent && e.detail ? {
 		return A`
       <div class="row ${e.style === "subtitle" ? "small" : ""} ${t ? "linked" : ""}" @click=${t ? this.tap : void 0}
         role=${t ? "link" : "heading"} tabindex=${t ? "0" : "-1"}>
-        ${e.icon ? A`<span class="icon" style="--c:${lt(e.color) ?? "var(--gc-accent)"}"><ha-icon .icon=${e.icon}></ha-icon></span>` : N}
+        ${e.icon ? A`<span class="icon" style="--c:${z(e.color) ?? "var(--gc-accent)"}"><ha-icon .icon=${e.icon}></ha-icon></span>` : N}
         <span class="title">${e.title}</span>
         ${e.subtitle ? A`<span class="sub">${e.subtitle}</span>` : N}
         ${t ? A`<ha-icon class="chev" icon="mdi:chevron-right" .icon=${"mdi:chevron-right"}></ha-icon>` : N}
@@ -3881,37 +3932,53 @@ var ar = { select: {
 		{
 			type: "grid",
 			name: "",
-			schema: [{
-				name: "view",
-				selector: { select: {
-					mode: "dropdown",
-					options: [
-						{
-							value: "garden",
-							label: "Garden"
-						},
-						{
-							value: "sky",
-							label: "Sky"
-						},
-						{
-							value: "city",
-							label: "City"
-						},
-						{
-							value: "sea",
-							label: "Sea"
-						},
-						{
-							value: "color",
-							label: "Plain colour"
-						}
-					]
-				} }
-			}, {
-				name: "view_image",
-				selector: { text: {} }
-			}]
+			schema: [
+				{
+					name: "view",
+					selector: { select: {
+						mode: "dropdown",
+						options: [
+							{
+								value: "garden",
+								label: "Garden"
+							},
+							{
+								value: "sky",
+								label: "Sky"
+							},
+							{
+								value: "city",
+								label: "City"
+							},
+							{
+								value: "sea",
+								label: "Sea"
+							},
+							{
+								value: "color",
+								label: "Plain colour"
+							}
+						]
+					} }
+				},
+				{
+					name: "view_image",
+					selector: { text: {} }
+				},
+				{
+					name: "cover_style",
+					selector: { select: {
+						mode: "dropdown",
+						options: [{
+							value: "blind",
+							label: "Blind"
+						}, {
+							value: "curtain",
+							label: "Curtain"
+						}]
+					} }
+				}
+			]
 		},
 		er
 	],
@@ -3987,7 +4054,8 @@ var ar = { select: {
 	secondary: "Secondary line, e.g. {{ states.light | selectattr('state','eq','on') | list | count }} of 7 on",
 	badge: "Badge text (empty = entity state)",
 	view: "Cover view (covers only, empty = garden)",
-	view_image: "Cover view photo, e.g. /local/yard.jpg"
+	view_image: "Cover view photo, e.g. /local/yard.jpg",
+	cover_style: "Cover style (empty = auto from device class)"
 };
 async function cr() {
 	customElements.get("ha-form") || await (await (await window.loadCardHelpers?.())?.createCardElement({
@@ -4157,7 +4225,7 @@ var lr = class extends L {
 customElements.define("glide-card-editor", lr);
 //#endregion
 //#region src/glide-card.ts
-var ur = "0.12.0", dr = [
+var ur = "0.13.0", dr = [
 	"button",
 	"popup",
 	"nav",

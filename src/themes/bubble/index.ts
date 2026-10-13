@@ -50,7 +50,7 @@ export const bubble: GlideTheme = {
   },
   styles: {
     // Active fills end in a hard accent edge, like the mockup.
-    button: `.fill{box-shadow:inset -2px 0 0 var(--gc-accent)}.cover .fill{box-shadow:inset 0 2px 0 var(--gc-accent);border-top-color:transparent}.surface.window .fill{box-shadow:inset 0 -2px 0 var(--gc-accent)}`,
+    button: `.fill{box-shadow:inset -2px 0 0 var(--gc-accent)}.cover .fill{box-shadow:inset 0 2px 0 var(--gc-accent);border-top-color:transparent}.surface.window .fill{box-shadow:inset 0 -2px 0 var(--gc-accent)}.drape.start{border-inline-end:2px solid var(--gc-accent)}.drape.end{border-inline-start:2px solid var(--gc-accent)}`,
   },
   defaults: { buttonLayout: "pill" },
 };

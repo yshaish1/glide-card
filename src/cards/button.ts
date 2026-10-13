@@ -73,7 +73,7 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     const el = this.renderRoot.querySelector<HTMLElement>(".surface")!;
     let lastStep = -1;
     this.detach = attachGestures(el, {
-      axis: () => (this.isCover ? "y" : "x"),
+      axis: () => (this.isCover && !this.isCurtain ? "y" : "x"),
       arm: () => haptic("selection"),
       tap: (p) => {
         this.playTapFx(el, p, { icon: el.querySelector(".icon"), badge: el.querySelector(".badge") });
@@ -124,6 +124,13 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     return domainOf(this.config.entity) === "cover" && !!this.slider;
   }
 
+  /** Curtains part from the centre and drag sideways: HA's `curtain` device class, or `cover_style` to force either look. */
+  private get isCurtain() {
+    if (!this.isCover) return false;
+    const style = this.config.cover_style;
+    return style === "curtain" || (style !== "blind" && this.stateOf(this.config.entity)?.attributes.device_class === "curtain");
+  }
+
   /** Covers look like a window: an outdoor view (built-in scene or the user's photo) behind a blind; `view: color` keeps the plain fill. */
   private get view(): "scene" | "image" | undefined {
     if (!this.isCover) return undefined;
@@ -155,6 +162,7 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     const value = this.dragValue ?? slider?.value;
     const cover = this.isCover;
     const view = this.view;
+    const curtain = this.isCurtain;
     // Covers stay neutral like the mockup; the fill alone shows how open they are.
     const on = !cover && (this.dragValue !== undefined ? this.dragValue > 0 : isActive(s));
     const stateText = this.hass && this.config.entity && s ? formatState(this.hass, this.config.entity) : "";
@@ -169,18 +177,23 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       ? this.tpl.get("secondary") ?? ""
       : cover ? `${value}% ${stateText}` : slider && on && value !== undefined ? `${value}%` : "";
     // In the window look the fill is the blind, so it covers what is closed.
-    const fill = view ? 100 - (value ?? 0) : slider ? value ?? 0 : on ? 100 : 0;
+    const fill = view && !curtain ? 100 - (value ?? 0) : slider ? value ?? 0 : on ? 100 : 0;
     const color = this.tpl.get("color")?.trim();
     return html`
       <div
-        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${view ? "window" : ""} ${this.config.fill === false ? "nofill" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
-        style=${styleMap({ "--domain": cssColor(color) ?? domainColor(s), "--gc-icon-on": onTextColor(color), "--fill": `${fill}%` })}
+        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${view ? "window" : ""} ${curtain ? "curtain" : ""} ${this.config.fill === false ? "nofill" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
+        style=${styleMap({ "--domain": cssColor(color) ?? domainColor(s), "--gc-icon-on": onTextColor(color), "--fill": `${fill}%`,
+          "--closed": `${(100 - (value ?? 0)) / 100}`,
+          "--gc-fabric": curtain ? cssColor(color) : undefined,
+        })}
         role="button"
         tabindex="0"
         aria-label=${name}
       >
         ${view ? this.renderView() : nothing}
-        <div class="fill ${this.dragValue !== undefined ? "dragging" : ""}"></div>
+        ${view && curtain
+          ? html`<div class="rod"></div>${["start", "end"].map((side) => html`<div class="drape ${side} ${this.dragValue !== undefined ? "dragging" : ""}"></div>`)}`
+          : html`<div class="fill ${this.dragValue !== undefined ? "dragging" : ""}"></div>`}
         <div class="icon"><ha-icon .icon=${entityIcon(s, iconOrUndefined(this.tpl.get("icon")))}></ha-icon></div>
         <div class="text">
           <div class="name">${name}</div>
@@ -292,6 +305,50 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
           var(--gc-surface-solid, var(--gc-surface));
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
       }
+      /* Curtains: two folded drapes under a rod, parting from the centre; a bunched panel stays at each side when open. */
+      .curtain { --fabric: var(--gc-fabric, var(--gc-surface-solid, var(--gc-surface))); }
+      .rod {
+        position: absolute;
+        inset-inline: 0;
+        top: 0;
+        height: 4px;
+        background: color-mix(in srgb, var(--gc-text) 30%, var(--fabric));
+        pointer-events: none;
+      }
+      .drape {
+        position: absolute;
+        top: 4px;
+        bottom: 0;
+        width: calc(7% + 44% * var(--closed));
+        background: repeating-linear-gradient(
+          to right,
+          color-mix(in srgb, var(--fabric), black 16%) 0,
+          var(--fabric) 25%,
+          color-mix(in srgb, var(--fabric), white 14%) 50%,
+          var(--fabric) 75%,
+          color-mix(in srgb, var(--fabric), black 16%) 100%
+        );
+        background-size: 25% 100%;
+        border-bottom: 3px solid color-mix(in srgb, var(--fabric), black 22%);
+        transition: width 0.45s cubic-bezier(0.2, 0.9, 0.25, 1);
+        pointer-events: none;
+      }
+      .drape.dragging { transition: none; }
+      .drape.start { inset-inline-start: 0; }
+      .drape.end { inset-inline-end: 0; }
+      .drape.start:dir(ltr), .drape.end:dir(rtl) { box-shadow: 3px 0 6px rgba(0, 0, 0, 0.22); }
+      .drape.end:dir(ltr), .drape.start:dir(rtl) { box-shadow: -3px 0 6px rgba(0, 0, 0, 0.22); }
+      /* With the plain fill, a curtain fills start to end like the drag. */
+      .cover.curtain:not(.window) .fill {
+        inset-block: 0;
+        inset-inline: 0 auto;
+        width: var(--fill);
+        height: auto;
+        border-top: none;
+        border-radius: 0;
+        transition: width 0.45s cubic-bezier(0.2, 0.9, 0.25, 1);
+      }
+
       .window .icon, .window .badge { background: var(--gc-surface-solid, var(--gc-surface)); }
       .icon {
         position: relative;

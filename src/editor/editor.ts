@@ -140,6 +140,10 @@ const SCHEMAS: Record<CardType, unknown[]> = {
           },
         },
         { name: "view_image", selector: { text: {} } },
+        {
+          name: "cover_style",
+          selector: { select: { mode: "dropdown", options: [{ value: "blind", label: "Blind" }, { value: "curtain", label: "Curtain" }] } },
+        },
       ],
     },
     actions,
@@ -196,6 +200,7 @@ const LABELS: Record<string, string> = {
   badge: "Badge text (empty = entity state)",
   view: "Cover view (covers only, empty = garden)",
   view_image: "Cover view photo, e.g. /local/yard.jpg",
+  cover_style: "Cover style (empty = auto from device class)",
 };
 
 /** Loads HA's lazy form components (ha-form etc.) by asking a built-in card for its editor. */

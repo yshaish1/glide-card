@@ -139,6 +139,16 @@ view: garden              # garden (default) | sky | city | sea | color (the pla
 # view_image: /local/yard.jpg   # or your own photo
 ```
 
+Curtains (HA device class `curtain`) part two folded drapes from the centre instead, and you drag them sideways. `cover_style: curtain` or `cover_style: blind` forces either look, and `color` tints the fabric:
+
+```yaml
+type: custom:glide-card
+card_type: button
+entity: cover.bedroom
+cover_style: curtain
+color: "#b38b6d"
+```
+
 ### Chip visibility
 
 A chip shows only while its `visibility` conditions all pass. The format is the same as Home Assistant's card visibility: `state` (`state` / `state_not`, one value or a list), `numeric_state` (`above` / `below`), `and`, `or`. The chip row updates live and hidden chips leave no gap.
