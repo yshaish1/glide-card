@@ -2044,15 +2044,18 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
         top: 4px;
         bottom: 0;
         width: calc(7% + 44% * var(--closed));
+        /* Sheer like real fabric: the creases are dense, the crests let the view through, and what shows is softened. */
         background: repeating-linear-gradient(
           to right,
-          color-mix(in srgb, var(--fabric), black 16%) 0,
-          var(--fabric) 25%,
-          color-mix(in srgb, var(--fabric), white 14%) 50%,
-          var(--fabric) 75%,
-          color-mix(in srgb, var(--fabric), black 16%) 100%
+          color-mix(in srgb, color-mix(in srgb, var(--fabric), black 16%) 92%, transparent) 0,
+          color-mix(in srgb, var(--fabric) 80%, transparent) 25%,
+          color-mix(in srgb, color-mix(in srgb, var(--fabric), white 14%) 66%, transparent) 50%,
+          color-mix(in srgb, var(--fabric) 80%, transparent) 75%,
+          color-mix(in srgb, color-mix(in srgb, var(--fabric), black 16%) 92%, transparent) 100%
         );
         background-size: 25% 100%;
+        backdrop-filter: blur(1.5px) saturate(0.85);
+        -webkit-backdrop-filter: blur(1.5px) saturate(0.85);
         border-bottom: 3px solid color-mix(in srgb, var(--fabric), black 22%);
         transition: width 0.45s cubic-bezier(0.2, 0.9, 0.25, 1);
         pointer-events: none;
@@ -4298,7 +4301,7 @@ var pr = class extends L {
 customElements.define("glide-card-editor", pr);
 //#endregion
 //#region src/glide-card.ts
-var mr = "0.14.0", hr = [
+var mr = "0.14.1", hr = [
 	"button",
 	"popup",
 	"nav",
