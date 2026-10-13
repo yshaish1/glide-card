@@ -22,9 +22,9 @@
 - **Fast.** One small file with no dependencies at runtime. A lite mode drops the blur on slow wall tablets.
 - **RTL.** Hebrew and Arabic dashboards mirror correctly, gestures included.
 
-| Light | Pop-up | Covers |
-| :---: | :---: | :---: |
-| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/hero-light.webp" alt="Light themes"> | <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/popup.gif" width="220" alt="Pop-up sheet"> | <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/covers.gif" alt="Blinds and curtains"> |
+![Light themes](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/hero-light.webp)
+
+![Blinds and curtains](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/covers.gif) ![Pop-up sheet](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/popup.gif)
 
 ## Installation
 
@@ -63,16 +63,18 @@ theme: glass      # glass | bubble | material
 
 ## Cards
 
-| | Card | |
-| --- | --- | --- |
-| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/button.webp" width="260"> | **[Button](https://github.com/yshaish1/glide-card/blob/main/docs/cards/button.md)** | Tile or pill. Tap to toggle, hold for more-info, swipe to set brightness, speed or position. Templates and soft colors. |
-| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/covers.webp" width="260"> | **[Cover](https://github.com/yshaish1/glide-card/blob/main/docs/cards/cover.md)** | A blind or curtains over a garden, sky, city or sea view (or your own photo), with night following the sun. Optional open, stop and close buttons. |
-| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/popup-light.webp" width="130"> | **[Pop-up](https://github.com/yshaish1/glide-card/blob/main/docs/cards/popup.md)** | A sheet opened by a `#hash`, holding any cards. |
-| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/nav.webp" width="260"> | **[Nav bar](https://github.com/yshaish1/glide-card/blob/main/docs/cards/nav.md)** | A floating bar with a sliding indicator, scrolling items and pinned items. |
-| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/climate.webp" width="260"> | **[Climate](https://github.com/yshaish1/glide-card/blob/main/docs/cards/climate.md)** | A drag dial with −/+, and mode buttons. |
-| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/media.webp" width="260"> | **[Media](https://github.com/yshaish1/glide-card/blob/main/docs/cards/media.md)** | Artwork, progress, transport and volume. |
-| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/chips.webp" width="260"> | **[Title and chips](https://github.com/yshaish1/glide-card/blob/main/docs/cards/chips.md)** | A page greeting and a row of info pills, with per-chip visibility conditions. |
-| <img src="https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/chips.webp" width="260"> | **[Heading](https://github.com/yshaish1/glide-card/blob/main/docs/cards/heading.md)** | A section heading with an icon, badges and an optional link. |
+| Card | What it does |
+| --- | --- |
+| **[Button](https://github.com/yshaish1/glide-card/blob/main/docs/cards/button.md)** | Tile or pill. Tap to toggle, hold for more-info, swipe to set brightness, speed or position. Templates and soft colors. |
+| **[Cover](https://github.com/yshaish1/glide-card/blob/main/docs/cards/cover.md)** | A blind or curtains over a garden, sky, city or sea view (or your own photo), with night following the sun. Optional open, stop and close buttons. |
+| **[Pop-up](https://github.com/yshaish1/glide-card/blob/main/docs/cards/popup.md)** | A sheet opened by a `#hash`, holding any cards. |
+| **[Nav bar](https://github.com/yshaish1/glide-card/blob/main/docs/cards/nav.md)** | A floating bar with a sliding indicator, scrolling items and pinned items. |
+| **[Climate](https://github.com/yshaish1/glide-card/blob/main/docs/cards/climate.md)** | A drag dial with −/+, and mode buttons. |
+| **[Media](https://github.com/yshaish1/glide-card/blob/main/docs/cards/media.md)** | Artwork, progress, transport and volume. |
+| **[Title and chips](https://github.com/yshaish1/glide-card/blob/main/docs/cards/chips.md)** | A page greeting and a row of info pills, with per-chip visibility conditions. |
+| **[Heading](https://github.com/yshaish1/glide-card/blob/main/docs/cards/heading.md)** | A section heading with an icon, badges and an optional link. |
+
+![Cards](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/button.webp)
 
 **More:** [shared options, sizes and tap animations](https://github.com/yshaish1/glide-card/blob/main/docs/options.md) · [themes](https://github.com/yshaish1/glide-card/blob/main/docs/themes.md)
 
