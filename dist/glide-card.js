@@ -2819,7 +2819,10 @@ var Mn = [
 	constructor(...e) {
 		super(...e), this.cardType = "nav", this.onRoute = () => {
 			this.closeMenu(), this.requestUpdate();
-		}, this.stale = !1, this.touched = !1, this.closeMenu = () => {
+		}, this.stale = !1, this.touched = !1, this.menuShift = {
+			y: 0,
+			x: 0
+		}, this.closeMenu = () => {
 			this.menuFor && (this.menuFor = this.menuAnchor = void 0, window.removeEventListener("pointerdown", this.onOutside, !0), window.removeEventListener("keydown", this.onKey), window.removeEventListener("resize", this.closeMenu), this.requestUpdate());
 		}, this.onOutside = (e) => {
 			let t = e.composedPath(), n = this.renderRoot.querySelector(".menu");
@@ -2839,22 +2842,46 @@ var Mn = [
 		return this.config.items.flatMap((e) => [e.entity, ...(e.items ?? []).map((e) => e.entity)]);
 	}
 	openMenu(e, t, n) {
-		this.menuFor = e, this.menuAnchor = t, window.addEventListener("pointerdown", this.onOutside, !0), window.addEventListener("keydown", this.onKey), window.addEventListener("resize", this.closeMenu), this.requestUpdate(), this.updateComplete.then(() => {
+		this.menuFor = e, this.menuAnchor = t, window.addEventListener("pointerdown", this.onOutside, !0), window.addEventListener("keydown", this.onKey), window.addEventListener("resize", this.closeMenu), this.menuShift = {
+			y: 0,
+			x: 0
+		}, this.requestUpdate(), this.updateComplete.then(async () => {
 			let e = this.renderRoot.querySelector(".menu");
-			e && (n && e.querySelector("button")?.focus(), !U() && e.animate([{
+			if (!e) return;
+			let t = this.menuTarget(), r = e.getBoundingClientRect();
+			if (t) {
+				let n = t.right === void 0 ? t.left - r.left : r.right - t.right, i = r.bottom - t.bottom;
+				if ((Math.abs(n) > .5 || Math.abs(i) > .5) && (this.menuShift = {
+					x: n,
+					y: i
+				}, this.requestUpdate(), await this.updateComplete, e = this.renderRoot.querySelector(".menu"), !e)) return;
+			}
+			n && e.querySelector("button")?.focus(), !U() && e.animate([{
 				opacity: 0,
 				transform: `translateY(${Z}px) scale(.92)`
 			}, {
 				opacity: 1,
 				transform: "none"
-			}], Vn));
+			}], Vn);
 		});
 	}
-	menuPosition() {
+	menuTarget() {
 		let e = this.menuAnchor?.getBoundingClientRect();
+		if (!e) return;
+		let t = this.renderRoot.querySelector("nav")?.getBoundingClientRect(), n = t && t.width ? t.left + t.width / 2 : innerWidth / 2, r = Math.min(innerHeight - Z, e.top - Z);
+		return e.left + e.width / 2 > n ? {
+			bottom: r,
+			right: Math.min(innerWidth - Z, e.right)
+		} : {
+			bottom: r,
+			left: Math.max(Z, e.left)
+		};
+	}
+	menuPosition() {
+		let e = this.menuTarget();
 		if (!e) return "";
-		let t = `bottom: ${Math.max(Z, innerHeight - e.top + Z)}px;`;
-		return e.left + e.width / 2 > innerWidth / 2 ? `${t} right: ${Math.max(Z, innerWidth - e.right)}px; transform-origin: bottom right;` : `${t} left: ${Math.max(Z, e.left)}px; transform-origin: bottom left;`;
+		let { x: t, y: n } = this.menuShift, r = `bottom: ${innerHeight - e.bottom + n}px;`;
+		return e.right === void 0 ? `${r} left: ${e.left + t}px; transform-origin: bottom left;` : `${r} right: ${innerWidth - e.right + t}px; transform-origin: bottom right;`;
 	}
 	connectedCallback() {
 		super.connectedCallback(), this.observe(), Mn.forEach((e) => window.addEventListener(e, this.onRoute)), this.rendered !== void 0 && this.rendered !== Nn() && (this.stale = !0, this.requestUpdate());
@@ -4625,7 +4652,7 @@ var Cr = class extends R {
 customElements.define("glide-card-editor", Cr);
 //#endregion
 //#region src/glide-card.ts
-var wr = "0.16.0", Tr = [
+var wr = "0.16.1", Tr = [
 	"button",
 	"popup",
 	"nav",

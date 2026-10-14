@@ -72,6 +72,11 @@ export class GlideNav extends GlideBase<NavCardConfig> {
   private menuFor?: NavItem;
   /** The button that opened it, which the menu sits above. */
   private menuAnchor?: HTMLElement;
+  /**
+   * Correction for a transformed ancestor, which makes it the containing block of the fixed menu
+   * instead of the viewport: measured once on open (px added to bottom and to the inline side).
+   */
+  private menuShift = { y: 0, x: 0 };
 
   setConfig(config: NavCardConfig) {
     if (!Array.isArray(config.items) || !config.items.length) throw new Error("Nav needs an `items` list");
@@ -92,10 +97,23 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     window.addEventListener("pointerdown", this.onOutside, true);
     window.addEventListener("keydown", this.onKey);
     window.addEventListener("resize", this.closeMenu);
+    this.menuShift = { y: 0, x: 0 };
     this.requestUpdate();
-    this.updateComplete.then(() => {
-      const menu = this.renderRoot.querySelector<HTMLElement>(".menu");
+    this.updateComplete.then(async () => {
+      let menu = this.renderRoot.querySelector<HTMLElement>(".menu");
       if (!menu) return;
+      const want = this.menuTarget(), got = menu.getBoundingClientRect();
+      if (want) {
+        const x = want.right !== undefined ? got.right - want.right : want.left! - got.left;
+        const y = got.bottom - want.bottom;
+        if (Math.abs(x) > 0.5 || Math.abs(y) > 0.5) {
+          this.menuShift = { x, y };
+          this.requestUpdate();
+          await this.updateComplete;
+          menu = this.renderRoot.querySelector<HTMLElement>(".menu");
+          if (!menu) return;
+        }
+      }
       if (keyboard) menu.querySelector<HTMLElement>("button")?.focus();
       if (reducedMotion()) return;
       menu.animate(
@@ -133,13 +151,29 @@ export class GlideNav extends GlideBase<NavCardConfig> {
   };
 
   /** Above the button, lined up with its outer edge (the one nearer the screen edge) and kept on screen. */
-  private menuPosition() {
+  /**
+   * Where the menu's corner belongs, in viewport coordinates: lined up with the button's edge on
+   * the side of the bar it sits on, so it opens inwards.
+   */
+  private menuTarget(): { bottom: number; left?: number; right?: number } | undefined {
     const r = this.menuAnchor?.getBoundingClientRect();
-    if (!r) return "";
-    const bottom = `bottom: ${Math.max(MENU_GAP, innerHeight - r.top + MENU_GAP)}px;`;
-    return r.left + r.width / 2 > innerWidth / 2
-      ? `${bottom} right: ${Math.max(MENU_GAP, innerWidth - r.right)}px; transform-origin: bottom right;`
-      : `${bottom} left: ${Math.max(MENU_GAP, r.left)}px; transform-origin: bottom left;`;
+    if (!r) return undefined;
+    const bar = this.renderRoot.querySelector("nav")?.getBoundingClientRect();
+    const centre = bar && bar.width ? bar.left + bar.width / 2 : innerWidth / 2;
+    const bottom = Math.min(innerHeight - MENU_GAP, r.top - MENU_GAP);
+    return r.left + r.width / 2 > centre
+      ? { bottom, right: Math.min(innerWidth - MENU_GAP, r.right) }
+      : { bottom, left: Math.max(MENU_GAP, r.left) };
+  }
+
+  private menuPosition() {
+    const t = this.menuTarget();
+    if (!t) return "";
+    const { x, y } = this.menuShift;
+    const bottom = `bottom: ${innerHeight - t.bottom + y}px;`;
+    return t.right !== undefined
+      ? `${bottom} right: ${innerWidth - t.right + x}px; transform-origin: bottom right;`
+      : `${bottom} left: ${t.left! + x}px; transform-origin: bottom left;`;
   }
 
   connectedCallback() {

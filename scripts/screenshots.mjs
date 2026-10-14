@@ -43,6 +43,10 @@ for (const [shot, query, popup] of PNGS) {
   if (!want(shot)) continue;
   const page = await browser.newPage({ viewport: popup ? { width: 390, height: 800 } : { width: 1600, height: 1000 }, deviceScaleFactor: 2 });
   await open(page, shot, query);
+  if (shot === "nav") {
+    await page.evaluate(() => window.openMenus());
+    await page.waitForTimeout(700);
+  }
   if (popup) {
     await page.evaluate(() => window.openPopup("#lights"));
     await page.waitForTimeout(1200);
@@ -94,6 +98,25 @@ await gif("covers", "gif-covers", { width: 496, height: 296 }, async (page) => {
   await steps(page, "cover.curtains", 0, 55, 600);
   await page.waitForTimeout(600);
 });
+
+/** All eight cover styles travelling together, reported in steps like a real motor (the card glides between them). */
+const STYLE_IDS = ["blind", "bottom_up", "roman", "venetian", "shutter", "curtain", "curtain_side", "vertical"].map((s) => `cover.style_${s}`);
+const travel = async (page, from, to, n = 8, ms = 260) => {
+  for (let i = 1; i <= n; i++) {
+    const pos = Math.round(from + ((to - from) * i) / n);
+    await page.evaluate(([ids, pos, opening, moving]) => ids.forEach((id) => window.moveCover(id, pos, opening, moving)), [STYLE_IDS, pos, to > from, i < n]);
+    await page.waitForTimeout(ms);
+  }
+};
+await gif("cover-styles", "gif-styles", { width: 916, height: 340 }, async (page) => {
+  await page.waitForTimeout(400);
+  await travel(page, 45, 100);
+  await page.waitForTimeout(500);
+  await travel(page, 100, 0, 10);
+  await page.waitForTimeout(500);
+  await travel(page, 0, 45, 6);
+  await page.waitForTimeout(700);
+}, { dark: true, width: 640, fps: 15 });
 
 await gif("popup", "popup", { width: 390, height: 800 }, async (page) => {
   await page.waitForTimeout(700);

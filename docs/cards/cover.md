@@ -2,7 +2,7 @@
 
 [← Back to README](../../README.md)
 
-![Covers](../images/covers.webp)
+![All eight cover styles](../images/covers.webp)
 
 A cover button with a position looks like a window. An outdoor view sits behind it, and the cover opens the way your real one does: a blind from the top, a shade from the sill, curtains from the middle or to one side, and more (see [Styles](#styles)). You can tell at a glance how open it is. You drag the way the cover opens: up and down for blinds and shades, sideways for curtains and vertical blinds.
 
@@ -26,6 +26,8 @@ Everything from [Button](button.md), plus:
 | `cover_buttons` | boolean | `false` | Open, stop and close buttons in place of the badge. |
 
 ## Styles
+
+![Eight cover styles moving](../images/cover-styles.gif)
 
 | `cover_style` | Looks like | Drag |
 | --- | --- | --- |

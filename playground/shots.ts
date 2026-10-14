@@ -5,7 +5,7 @@ import { entity as e, getHass, patchState, replaceStates, setLanguage, subscribe
 
 type Cfg = Record<string, any>;
 type Mode = "dark" | "light";
-interface Panel { theme: string; mode: Mode; cards: Cfg[]; label?: string; short?: boolean; width?: number; height?: number }
+interface Panel { theme: string; mode: Mode; cards: Cfg[]; label?: string; short?: boolean; width?: number; height?: number; span?: number }
 
 const now = new Date().toISOString();
 const at = (h: number, m: number) => { const d = new Date(); d.setHours(h, m, 0, 0); return d.toISOString(); };
@@ -19,6 +19,12 @@ const EN = [
   e("cover.office", "open", { friendly_name: "Office Shutter", current_position: 70 }),
   e("cover.curtains", "open", { friendly_name: "Curtains", device_class: "curtain", current_position: 55 }),
   e("cover.bedroom", "open", { friendly_name: "Bedroom Drapes", device_class: "curtain", current_position: 30 }),
+  // One per cover style, for the styles GIF and stills
+  ...([
+    ["blind", "Blind"], ["bottom_up", "Bottom-up shade"], ["roman", "Roman shade"], ["venetian", "Venetian"],
+    ["shutter", "Roller shutter"], ["curtain", "Curtains"], ["curtain_side", "One-side curtain"], ["vertical", "Vertical blinds"],
+  ] as const).map(([style, name]) =>
+    e(`cover.style_${style}`, "open", { friendly_name: name, current_position: 45, ...(style === "venetian" ? { current_tilt_position: 30 } : {}) })),
   e("fan.ceiling", "on", { friendly_name: "Ceiling Fan", percentage: 66 }),
   e("switch.coffee", "off", { friendly_name: "Coffee Machine", icon: "mdi:coffee-maker" }),
   e("lock.front", "locked", { friendly_name: "Front Door" }),
@@ -69,9 +75,24 @@ const nav: Cfg = {
     { name: he ? "בית" : "Home", icon: "mdi:home", navigation_path: location.pathname },
     { name: he ? "אורות" : "Lights", icon: "mdi:lightbulb-group", navigation_path: "#lights", entity: "light.ceiling" },
     { name: he ? "אקלים" : "Climate", icon: "mdi:thermostat", navigation_path: "#climate" },
-    { name: he ? "מדיה" : "Media", icon: "mdi:play-circle", navigation_path: "#media" },
+    {
+      name: he ? "עוד" : "More", icon: "mdi:dots-horizontal", pinned: true,
+      items: [
+        { name: he ? "מדיה" : "Media", icon: "mdi:play-circle", navigation_path: "#media", entity: "media_player.living" },
+        { name: he ? "מצלמות" : "Cameras", icon: "mdi:cctv", navigation_path: "#cameras" },
+        { name: he ? "הגדרות" : "Settings", icon: "mdi:cog", navigation_path: "#settings" },
+      ],
+    },
   ],
 };
+const STYLES = ["blind", "bottom_up", "roman", "venetian", "shutter", "curtain", "curtain_side", "vertical"];
+/** One tile per cover style; fabric styles get a soft tint so they read as fabric. */
+const styleTiles = (): Cfg[] =>
+  STYLES.map((style) => ({
+    card_type: "button", entity: `cover.style_${style}`, cover_style: style,
+    ...(style === "roman" ? { color: "#c9b79c" } : style === "curtain_side" ? { color: "#8e9fb5" } : style === "curtain" ? { color: "#b38b6d" } : {}),
+    ...(style === "vertical" ? { cover_side: "end" } : {}),
+  }));
 const chips: Cfg = {
   card_type: "chips",
   chips: [
@@ -97,7 +118,7 @@ const dashboard = (he = false): Cfg[] => [
   { card_type: "heading", title: he ? "סלון" : "Living Room", icon: "mdi:sofa", color: "orange", badges: [{ entity: "sensor.living_temp", icon: "mdi:thermometer", color: "orange" }] },
   { card_type: "button", entity: "light.ceiling" },
   { card_type: "button", entity: "light.floor_lamp" },
-  { card_type: "button", entity: "cover.blinds" },
+  { card_type: "button", entity: "cover.blinds", cover_style: "venetian" },
   { card_type: "button", entity: "cover.curtains" },
   { card_type: "climate", entity: "climate.living", size: "slim" },
   { card_type: "media", entity: "media_player.living", size: "slim" },
@@ -127,17 +148,12 @@ const SHOTS: Record<string, () => Panel[]> = {
     { card_type: "button", entity: "light.kitchen", layout: "pill" },
     { card_type: "button", entity: "script.good_night", layout: "pill" },
   ]),
-  covers: () => pair([
-    { card_type: "button", entity: "cover.blinds" },
-    { card_type: "button", entity: "cover.curtains" },
-    { card_type: "button", entity: "cover.office", view: "city" },
-    { card_type: "button", entity: "cover.bedroom", color: "#b38b6d", view: "sea" },
-  ]),
+  covers: () => pair(styleTiles(), { width: 440 }),
   "covers-night": () => pair([
     { card_type: "button", entity: "cover.blinds" },
     { card_type: "button", entity: "cover.curtains" },
-    { card_type: "button", entity: "cover.office", view: "city" },
-    { card_type: "button", entity: "cover.bedroom", color: "#b38b6d", view: "sea" },
+    { card_type: "button", entity: "cover.office", view: "city", cover_style: "shutter" },
+    { card_type: "button", entity: "cover.bedroom", color: "#b38b6d", view: "sea", cover_style: "curtain_side" },
   ]),
   climate: () => pair([{ card_type: "climate", entity: "climate.living" }]),
   media: () => pair([{ card_type: "media", entity: "media_player.living" }]),
@@ -147,7 +163,7 @@ const SHOTS: Record<string, () => Panel[]> = {
     { card_type: "heading", title: "Living Room", icon: "mdi:sofa", color: "orange", badges: [{ entity: "sensor.living_temp", icon: "mdi:thermometer", color: "orange" }, { entity: "sensor.humidity", icon: "mdi:water-percent", color: "light-blue" }] },
     { card_type: "heading", title: "Blinds", subtitle: "1 open", icon: "mdi:blinds", color: "purple", style: "subtitle", tap_action: { action: "navigate", navigation_path: "#blinds" } },
   ]),
-  nav: () => pair([{ card_type: "button", entity: "light.ceiling" }, { card_type: "button", entity: "cover.blinds" }, nav], { short: false, height: 250 }),
+  nav: () => pair([{ card_type: "button", entity: "light.ceiling" }, { card_type: "button", entity: "cover.blinds" }, nav], { short: false, height: 300 }),
   sizes: () =>
     (["full", "compact", "slim"] as const).map((size) => ({
       theme: "glass", mode: "dark" as Mode, label: size, short: true,
@@ -165,6 +181,7 @@ const SHOTS: Record<string, () => Panel[]> = {
     theme: "glass", mode: "light", short: true, width: 440,
     cards: [{ card_type: "button", entity: "cover.blinds" }, { card_type: "button", entity: "cover.curtains" }],
   }],
+  "gif-styles": () => [{ theme: "glass", mode: "dark", short: true, width: 860, span: 3, cards: styleTiles() }],
   "gif-tap": () => [{
     theme: "glass", mode: "dark", short: true, width: 440,
     cards: (["shine", "ripple", "jelly", "sparks"] as const).map((fx, i) => ({
@@ -204,7 +221,7 @@ for (const p of panels) {
     el.hass = getHass();
     grid.append(el);
     const g = el.getGridOptions?.() ?? { columns: 12, rows: 1 };
-    el.style.setProperty("--cols", g.columns);
+    el.style.setProperty("--cols", p.span && cfg.card_type === "button" ? p.span : g.columns);
     if (typeof g.rows === "number") el.style.setProperty("--rows", g.rows);
     else el.style.gridRow = "auto";
     els.push(el);
@@ -215,6 +232,16 @@ subscribe((h) => els.forEach((el) => (el.hass = h)));
 // Hooks for the capture script.
 Object.assign(window, {
   setCover: (id: string, pos: number) => patchState(id, pos ? "open" : "closed", { current_position: pos }),
+  /** A position report from a moving cover (`moving` false for the last one), so the smooth glide shows. */
+  moveCover: (id: string, pos: number, opening: boolean, moving = true) =>
+    patchState(id, moving ? (opening ? "opening" : "closing") : pos ? "open" : "closed", { current_position: pos }),
+  /** Opens every nav bar's pinned menu, for the nav still. */
+  openMenus: () =>
+    document.querySelectorAll("glide-card").forEach((c: any) => {
+      const nav = c.shadowRoot?.querySelector("glide-nav") ?? c.querySelector?.("glide-nav");
+      // A pointer click (detail 1), so the menu doesn't treat it as a key press and focus a row
+      nav?.shadowRoot?.querySelector(".pinned button")?.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, detail: 1 }));
+    }),
   openPopup: (hash: string) => { history.pushState({}, "", hash); window.dispatchEvent(new HashChangeEvent("hashchange")); },
   closePopup: () => { history.pushState({}, "", location.pathname + location.search); window.dispatchEvent(new HashChangeEvent("hashchange")); },
 });
