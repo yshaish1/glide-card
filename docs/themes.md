@@ -2,9 +2,18 @@
 
 [← Back to README](../README.md)
 
-| Liquid Glass | Refined Bubble | Material You |
+| Theme | `theme:` | Look |
 | --- | --- | --- |
-| Frosted translucent tiles with a warm glow | Solid carbon surfaces, full-width pill rows, one electric accent; fast on tablets | Soft tonal surfaces from a teal seed |
+| Liquid Glass | `glass` | Frosted translucent tiles with a warm glow (default) |
+| Refined Bubble | `bubble` | Solid carbon surfaces, full-width pill rows, one electric accent; fast on tablets |
+| Material You | `material` | Soft tonal surfaces from a teal seed |
+| Soft Clay | `clay` | Neumorphic: tiles pressed out of one matte colour, sunk in with a coral rim when on |
+| Terminal | `terminal` | Retro CRT: phosphor green on black, monospace, scanlines, inverse video when on, amber heat |
+| Brutalist | `brutal` | Paper, thick black outlines, hard offset shadows, flat poster colours (yellow, cyan, red, cobalt) |
+| Aurora | `aurora` | Night glass lit by violet, teal and pink; lit tiles burn in a gradient with a coloured glow |
+| E-Ink | `ink` | Monochrome paper and serif type, hairlines, no colour, blur or shadow; tiles invert when on, levels are hatched. Light on slow wall tablets |
+
+The newer themes name fonts like Nunito Sans, JetBrains Mono, Space Grotesk, Outfit/Sora and Newsreader, and fall back to similar system fonts when those aren't installed. To get the exact look, load the font in HA (for example a Google Fonts stylesheet as a dashboard resource).
 
 ![Themes, dark](images/hero-dark.webp)
 

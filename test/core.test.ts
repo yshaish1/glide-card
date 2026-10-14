@@ -60,9 +60,19 @@ describe("springEasing", () => {
 });
 
 describe("theme registry", () => {
-  it("ships the three built-in themes and falls back to glass", () => {
-    expect(listThemes().map((t) => t.id)).toEqual(expect.arrayContaining(["glass", "bubble", "material"]));
+  it("ships the built-in themes and falls back to glass", () => {
+    expect(listThemes().map((t) => t.id)).toEqual(
+      expect.arrayContaining(["glass", "bubble", "material", "clay", "terminal", "brutal", "aurora", "ink"]),
+    );
     expect(getTheme("nope").id).toBe("glass");
+  });
+  it("gives every built-in theme the core colours in both modes", () => {
+    const core = ["--gc-text", "--gc-text-dim", "--gc-accent", "--gc-on-accent", "--gc-surface", "--gc-border", "--gc-sheet-bg"] as const;
+    for (const t of listThemes().filter((t) => t.id !== "test")) {
+      for (const mode of ["dark", "light"] as const) {
+        for (const k of core) expect(t.tokens[mode][k], `${t.id} ${mode} ${k}`).toBeTruthy();
+      }
+    }
   });
   it("merges base, theme base and mode tokens plus per-card styles", () => {
     registerTheme({

@@ -1,5 +1,148 @@
-//#region src/themes/bubble/index.ts
+//#region src/themes/aurora/index.ts
 var e = {
+	id: "aurora",
+	name: "Aurora",
+	version: "1.0.0",
+	description: "Night glass with vivid violet, teal and pink gradients",
+	preview: {
+		background: "linear-gradient(135deg,#2b1a6b,#0b0820 55%,#0d3b3a)",
+		surface: "rgba(30,24,70,.7)",
+		accent: "#c084fc"
+	},
+	tokens: {
+		base: {
+			"--gc-font": "Outfit, 'Poppins', system-ui, sans-serif",
+			"--gc-backdrop": "blur(20px) saturate(1.4)",
+			"--gc-radius": "24px",
+			"--gc-fill-strength": "55%",
+			"--gc-a1": "#8b5cf6",
+			"--gc-a2": "#2dd4bf",
+			"--gc-a3": "#f472b6"
+		},
+		dark: {
+			"--gc-text": "#f3f0ff",
+			"--gc-text-dim": "rgba(214,206,255,.6)",
+			"--gc-accent": "#c084fc",
+			"--gc-on-accent": "#ffffff",
+			"--gc-surface": "rgba(20,16,48,.62)",
+			"--gc-surface-on": "rgba(36,24,80,.7)",
+			"--gc-surface-solid": "#1a1540",
+			"--gc-border": "rgba(167,139,250,.28)",
+			"--gc-highlight": "rgba(255,255,255,.06)",
+			"--gc-shadow": "0 12px 32px rgba(5,2,20,.5)",
+			"--gc-sheet-bg": "rgba(16,12,40,.82)",
+			"--gc-scrim": "rgba(5,2,20,.55)",
+			"--gc-light": "#f472b6",
+			"--gc-fan": "#2dd4bf",
+			"--gc-heat": "#fb7185",
+			"--gc-cool": "#60a5fa",
+			"--gc-cover": "#a78bfa",
+			"--gc-media": "#c084fc"
+		},
+		light: {
+			"--gc-text": "#1e1640",
+			"--gc-text-dim": "rgba(50,40,100,.6)",
+			"--gc-accent": "#8b5cf6",
+			"--gc-on-accent": "#ffffff",
+			"--gc-accent-text": "#6d3fe0",
+			"--gc-surface": "rgba(255,255,255,.6)",
+			"--gc-surface-on": "rgba(255,255,255,.75)",
+			"--gc-surface-solid": "#f6f3ff",
+			"--gc-border": "rgba(139,92,246,.25)",
+			"--gc-highlight": "rgba(255,255,255,.8)",
+			"--gc-shadow": "0 10px 28px rgba(90,60,180,.14)",
+			"--gc-sheet-bg": "rgba(250,248,255,.85)",
+			"--gc-scrim": "rgba(40,20,90,.2)",
+			"--gc-light": "#ec4899",
+			"--gc-fan": "#14b8a6",
+			"--gc-heat": "#f43f5e",
+			"--gc-cool": "#3b82f6",
+			"--gc-cover": "#8b5cf6",
+			"--gc-media": "#8b5cf6"
+		}
+	},
+	styles: {
+		all: ".name,.title{font-family:Sora,Outfit,system-ui,sans-serif;letter-spacing:-.01em}.surface{background-image:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--gc-a1) 14%,transparent),transparent 60%),radial-gradient(100% 80% at 100% 100%,color-mix(in srgb,var(--gc-a2) 10%,transparent),transparent 60%)}",
+		button: ".surface.on:not(.cover){background-image:linear-gradient(135deg,var(--domain),color-mix(in srgb,var(--domain) 40%,var(--gc-a1)));color:#fff;border-color:transparent;box-shadow:0 10px 28px color-mix(in srgb,var(--domain) 45%,transparent)}.surface.on:not(.cover) .meta{color:rgba(255,255,255,.85)}.surface.on:not(.cover) .icon{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.35);color:#fff}.surface.on:not(.cover) .badge{border-color:rgba(255,255,255,.4);color:#fff}.surface.on:not(.cover) .fill{background:rgba(255,255,255,.18)}",
+		climate: ".value{filter:drop-shadow(0 0 8px color-mix(in srgb,var(--mode) 60%,transparent))}",
+		media: ".surface.playing{box-shadow:0 10px 30px color-mix(in srgb,var(--gc-media) 35%,transparent)}",
+		nav: ".ind{background:linear-gradient(135deg,var(--gc-a1),var(--gc-a3));border-color:transparent}button.active:has(.ind){color:#fff}"
+	},
+	defaults: { buttonLayout: "tile" }
+}, t = {
+	id: "brutal",
+	name: "Brutalist",
+	version: "1.0.0",
+	description: "Thick black outlines, hard shadows, flat yellow",
+	preview: {
+		background: "#f4f0e8",
+		surface: "#ffffff",
+		accent: "#ffd400"
+	},
+	tokens: {
+		base: {
+			"--gc-font": "'Space Grotesk', 'Archivo', 'Arial Black', system-ui, sans-serif",
+			"--gc-font-meta": "'Space Mono', ui-monospace, monospace",
+			"--gc-meta-transform": "uppercase",
+			"--gc-meta-spacing": "0.04em",
+			"--gc-radius": "10px",
+			"--gc-radius-control": "6px",
+			"--gc-gap": "14px",
+			"--gc-fill-strength": "100%"
+		},
+		dark: {
+			"--gc-ink": "#f4f0e8",
+			"--gc-pale": "#f4f0e8",
+			"--gc-text": "#f4f0e8",
+			"--gc-text-dim": "#b8b2a6",
+			"--gc-accent": "#ffd400",
+			"--gc-on-accent": "#111111",
+			"--gc-surface": "#1b1b1b",
+			"--gc-surface-on": "#ffd400",
+			"--gc-surface-solid": "#2a2a2a",
+			"--gc-border": "#f4f0e8",
+			"--gc-shadow": "5px 5px 0 #f4f0e8",
+			"--gc-sheet-bg": "#161616",
+			"--gc-scrim": "rgba(0,0,0,.6)",
+			"--gc-light": "#ffd400",
+			"--gc-fan": "#00f0ff",
+			"--gc-heat": "#ff2a5f",
+			"--gc-cool": "#2563eb",
+			"--gc-cover": "#b18cff",
+			"--gc-media": "#ff2a5f"
+		},
+		light: {
+			"--gc-ink": "#111111",
+			"--gc-pale": "#ffffff",
+			"--gc-text": "#111111",
+			"--gc-text-dim": "#55524c",
+			"--gc-accent": "#ffd400",
+			"--gc-on-accent": "#111111",
+			"--gc-accent-text": "#111111",
+			"--gc-surface": "#ffffff",
+			"--gc-surface-on": "#ffd400",
+			"--gc-surface-solid": "#ffffff",
+			"--gc-border": "#111111",
+			"--gc-shadow": "5px 5px 0 #111111",
+			"--gc-sheet-bg": "#f4f0e8",
+			"--gc-scrim": "rgba(0,0,0,.35)",
+			"--gc-light": "#ffd400",
+			"--gc-fan": "#00f0ff",
+			"--gc-heat": "#ff2a5f",
+			"--gc-cool": "#2563eb",
+			"--gc-cover": "#b18cff",
+			"--gc-media": "#ff2a5f"
+		}
+	},
+	styles: {
+		all: ".surface{border-width:3px}.name,.title{font-weight:700;text-transform:uppercase;letter-spacing:.01em}.name{font-size:14px}",
+		button: ".surface.on:not(.cover){background:color-mix(in srgb,var(--domain) 45%,var(--gc-pale));color:#111}.surface.on:not(.cover) .meta{color:#111}.surface:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--gc-ink)}.icon{border:2px solid var(--gc-ink);border-radius:8px;color:var(--gc-text)}.on .icon,.surface.on:not(.cover) .icon{background:#fff;border-color:#111;color:#111}.badge{border:2px solid currentColor;border-radius:4px;font-weight:700}.fill{border-inline-end:3px solid #111}.surface.on.nofill{background:var(--domain)}.cover .fill{border-top:3px solid var(--gc-ink);border-radius:0}",
+		chips: ".chip{border:2px solid var(--gc-ink);box-shadow:3px 3px 0 var(--gc-ink)}",
+		climate: ".round,.modes button{border:2px solid var(--gc-ink);border-radius:6px;box-shadow:2px 2px 0 var(--gc-ink)}",
+		nav: ".ind{background:var(--gc-accent);border:2px solid var(--gc-ink)}button.active:has(.ind){color:#111}"
+	},
+	defaults: { buttonLayout: "tile" }
+}, n = {
 	id: "bubble",
 	name: "Refined Bubble",
 	version: "1.0.0",
@@ -52,7 +195,75 @@ var e = {
 	},
 	styles: { button: ".fill{box-shadow:inset -2px 0 0 var(--gc-accent)}.cover .fill{box-shadow:inset 0 2px 0 var(--gc-accent);border-top-color:transparent}.surface.window .fill{box-shadow:inset 0 -2px 0 var(--gc-accent)}.drape.start{border-inline-end:2px solid var(--gc-accent)}.drape.end{border-inline-start:2px solid var(--gc-accent)}" },
 	defaults: { buttonLayout: "pill" }
-}, t = {
+}, r = {
+	id: "clay",
+	name: "Soft Clay",
+	version: "1.0.0",
+	description: "Neumorphic tiles from one matte colour, pressed in when on",
+	preview: {
+		background: "#e4e0db",
+		surface: "#e4e0db",
+		accent: "#f2734e"
+	},
+	tokens: {
+		base: {
+			"--gc-font": "'Nunito Sans', Nunito, 'Varela Round', 'SF Pro Rounded', ui-rounded, system-ui, sans-serif",
+			"--gc-radius": "24px",
+			"--gc-fill-strength": "18%"
+		},
+		dark: {
+			"--gc-clay": "#2b2d33",
+			"--gc-clay-lit": "rgba(255,255,255,.07)",
+			"--gc-clay-dark": "rgba(0,0,0,.55)",
+			"--gc-text": "#e6e3de",
+			"--gc-text-dim": "#8e8c94",
+			"--gc-accent": "#ff8a65",
+			"--gc-on-accent": "#2b1810",
+			"--gc-surface": "#2b2d33",
+			"--gc-surface-on": "#2b2d33",
+			"--gc-surface-solid": "#33353c",
+			"--gc-border": "transparent",
+			"--gc-shadow": "10px 10px 24px var(--gc-clay-dark), -8px -8px 18px var(--gc-clay-lit)",
+			"--gc-sheet-bg": "#2b2d33",
+			"--gc-scrim": "rgba(10,10,14,.55)",
+			"--gc-light": "#ffb36b",
+			"--gc-fan": "#6fd3c5",
+			"--gc-heat": "#ff8a65",
+			"--gc-cool": "#7fb2ff",
+			"--gc-cover": "#c7a8ff"
+		},
+		light: {
+			"--gc-clay": "#e4e0db",
+			"--gc-clay-lit": "rgba(255,255,255,.85)",
+			"--gc-clay-dark": "rgba(150,135,120,.38)",
+			"--gc-text": "#3c3733",
+			"--gc-text-dim": "#8d847c",
+			"--gc-accent": "#f2734e",
+			"--gc-on-accent": "#ffffff",
+			"--gc-accent-text": "#c04f2c",
+			"--gc-surface": "#e4e0db",
+			"--gc-surface-on": "#e4e0db",
+			"--gc-surface-solid": "#ece8e3",
+			"--gc-border": "transparent",
+			"--gc-shadow": "7px 7px 15px var(--gc-clay-dark), -7px -7px 15px var(--gc-clay-lit)",
+			"--gc-sheet-bg": "#e4e0db",
+			"--gc-scrim": "rgba(60,50,40,.25)",
+			"--gc-light": "#f59e3d",
+			"--gc-fan": "#2fa999",
+			"--gc-heat": "#f2734e",
+			"--gc-cool": "#4f8fe6",
+			"--gc-cover": "#9c7ae6"
+		}
+	},
+	styles: {
+		all: ".surface.on,.surface.playing{border-color:color-mix(in srgb,var(--domain,var(--gc-accent)) 40%,transparent);box-shadow:inset 6px 6px 12px var(--gc-clay-dark),inset -6px -6px 12px var(--gc-clay-lit)}",
+		button: ".icon{border-color:transparent;box-shadow:4px 4px 9px var(--gc-clay-dark),-4px -4px 9px var(--gc-clay-lit)}.on .icon{background:var(--gc-clay);border-color:transparent;box-shadow:inset 3px 3px 7px var(--gc-clay-dark),inset -3px -3px 7px var(--gc-clay-lit);filter:drop-shadow(0 0 6px color-mix(in srgb,var(--domain) 40%,transparent))}.badge{border-color:transparent;box-shadow:inset 2px 2px 4px var(--gc-clay-dark),inset -2px -2px 4px var(--gc-clay-lit)}",
+		climate: ".round,.modes button{border-color:transparent;box-shadow:4px 4px 9px var(--gc-clay-dark),-4px -4px 9px var(--gc-clay-lit)}",
+		chips: ".chip{box-shadow:4px 4px 9px var(--gc-clay-dark),-4px -4px 9px var(--gc-clay-lit)}",
+		nav: ".ind{background:var(--gc-clay);border-color:transparent;box-shadow:inset 3px 3px 7px var(--gc-clay-dark),inset -3px -3px 7px var(--gc-clay-lit)}"
+	},
+	defaults: { buttonLayout: "tile" }
+}, i = {
 	id: "glass",
 	name: "Liquid Glass",
 	version: "1.0.0",
@@ -116,7 +327,74 @@ var e = {
 		chips: ".chip{--gc-tint-strength:var(--gc-wash-strength)}"
 	},
 	defaults: { buttonLayout: "tile" }
-}, n = {
+}, a = {
+	id: "ink",
+	name: "E-Ink",
+	version: "1.0.0",
+	description: "Monochrome paper and serif type, inverted when on",
+	preview: {
+		background: "#efede6",
+		surface: "#efede6",
+		accent: "#161616"
+	},
+	tokens: {
+		base: {
+			"--gc-font": "Newsreader, 'Source Serif 4', 'Iowan Old Style', Georgia, serif",
+			"--gc-font-meta": "'Space Grotesk', ui-sans-serif, system-ui, sans-serif",
+			"--gc-meta-transform": "uppercase",
+			"--gc-meta-spacing": "0.12em",
+			"--gc-radius": "4px",
+			"--gc-radius-control": "4px",
+			"--gc-fill-strength": "100%"
+		},
+		dark: {
+			"--gc-text": "#e9e6dc",
+			"--gc-text-dim": "#8f8c84",
+			"--gc-accent": "#e9e6dc",
+			"--gc-on-accent": "#141414",
+			"--gc-accent-text": "#e9e6dc",
+			"--gc-surface": "#161616",
+			"--gc-surface-on": "#e9e6dc",
+			"--gc-surface-solid": "#262626",
+			"--gc-border": "rgba(233,230,220,.28)",
+			"--gc-sheet-bg": "#141414",
+			"--gc-scrim": "rgba(0,0,0,.6)",
+			"--gc-hatch": "rgba(233,230,220,.35)",
+			"--gc-light": "#e9e6dc",
+			"--gc-fan": "#e9e6dc",
+			"--gc-heat": "#e9e6dc",
+			"--gc-cool": "#a9a69e",
+			"--gc-cover": "#e9e6dc",
+			"--gc-media": "#e9e6dc"
+		},
+		light: {
+			"--gc-text": "#161616",
+			"--gc-text-dim": "#6b6862",
+			"--gc-accent": "#161616",
+			"--gc-on-accent": "#efede6",
+			"--gc-surface": "#efede6",
+			"--gc-surface-on": "#161616",
+			"--gc-surface-solid": "#e4e1d8",
+			"--gc-border": "rgba(22,22,22,.28)",
+			"--gc-sheet-bg": "#efede6",
+			"--gc-scrim": "rgba(0,0,0,.2)",
+			"--gc-hatch": "rgba(22,22,22,.35)",
+			"--gc-light": "#161616",
+			"--gc-fan": "#161616",
+			"--gc-heat": "#161616",
+			"--gc-cool": "#55524c",
+			"--gc-cover": "#161616",
+			"--gc-media": "#161616"
+		}
+	},
+	styles: {
+		all: ".name,.title{font-weight:500;letter-spacing:-.005em}",
+		button: ".surface.on:not(.cover){color:var(--gc-on-accent)}.surface.on:not(.cover) .meta,.surface.on:not(.cover) .icon{color:var(--gc-on-accent)}.surface.on:not(.cover) .icon{background:transparent;border-color:var(--gc-on-accent)}.surface.on:not(.cover) .badge{border-color:var(--gc-on-accent)}.fill{background:repeating-linear-gradient(-45deg,var(--gc-hatch) 0 1px,transparent 1px 6px)}.surface.on:not(.cover) .fill{background:repeating-linear-gradient(-45deg,color-mix(in srgb,var(--gc-on-accent) 30%,transparent) 0 1px,transparent 1px 6px)}.icon{border-radius:4px}.cover .fill{border-top-color:var(--gc-text)}",
+		nav: ".ind{background:transparent;border:0;border-bottom:2px solid var(--gc-text);border-radius:0}",
+		climate: ".value{stroke:var(--gc-text)}"
+	},
+	defaults: { buttonLayout: "tile" }
+}, o = {
 	id: "material",
 	name: "Material You",
 	version: "1.0.0",
@@ -167,13 +445,83 @@ var e = {
 		climate: ".round,.modes button{background:var(--gc-surface-on)}"
 	},
 	defaults: { buttonLayout: "tile" }
-}, r = "data:font/woff2;base64,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", i = "Glide Hebrew", a = "glide-card-fonts";
-function o(e = document) {
-	if (e.getElementById(a)) return;
+}, s = {
+	id: "terminal",
+	name: "Terminal",
+	version: "1.0.0",
+	description: "Retro CRT: phosphor green on black, monospace, inverse when on",
+	preview: {
+		background: "#05080a",
+		surface: "#071a10",
+		accent: "#39ff88"
+	},
+	tokens: {
+		base: {
+			"--gc-font": "'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace",
+			"--gc-font-meta": "var(--gc-font)",
+			"--gc-meta-transform": "uppercase",
+			"--gc-meta-spacing": "0.08em",
+			"--gc-radius": "3px",
+			"--gc-radius-control": "2px",
+			"--gc-fill-strength": "26%"
+		},
+		dark: {
+			"--gc-text": "#39ff88",
+			"--gc-text-dim": "#5fa37e",
+			"--gc-accent": "#39ff88",
+			"--gc-on-accent": "#03140a",
+			"--gc-surface": "#0c1317",
+			"--gc-surface-on": "#0b2416",
+			"--gc-surface-solid": "#0a1a12",
+			"--gc-border": "#1f6b43",
+			"--gc-shadow": "0 0 14px rgba(57,255,136,.12)",
+			"--gc-sheet-bg": "#040806",
+			"--gc-scrim": "rgba(0,0,0,.7)",
+			"--gc-glow": "0 0 6px rgba(57,255,136,.55)",
+			"--gc-scan": "rgba(0,0,0,.28)",
+			"--gc-light": "#39ff88",
+			"--gc-fan": "#39ff88",
+			"--gc-cover": "#39ff88",
+			"--gc-media": "#39ff88",
+			"--gc-heat": "#ffb000",
+			"--gc-cool": "#4de8ff"
+		},
+		light: {
+			"--gc-text": "#0f3d22",
+			"--gc-text-dim": "#4f7a5f",
+			"--gc-accent": "#127a3e",
+			"--gc-on-accent": "#eaf5e4",
+			"--gc-surface": "#eaf2e3",
+			"--gc-surface-on": "#cfe8c8",
+			"--gc-surface-solid": "#dce9d3",
+			"--gc-border": "rgba(18,122,62,.55)",
+			"--gc-sheet-bg": "#eef5e8",
+			"--gc-scrim": "rgba(10,40,20,.3)",
+			"--gc-glow": "none",
+			"--gc-scan": "rgba(18,122,62,.05)",
+			"--gc-light": "#127a3e",
+			"--gc-fan": "#127a3e",
+			"--gc-cover": "#127a3e",
+			"--gc-media": "#127a3e",
+			"--gc-heat": "#b86e00",
+			"--gc-cool": "#0f6f8a"
+		}
+	},
+	styles: {
+		all: ":host{text-shadow:var(--gc-glow)}.name,.title{text-transform:uppercase;letter-spacing:.12em;font-weight:700}.surface::after{content:\"\";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:repeating-linear-gradient(to bottom,transparent 0 2px,var(--gc-scan) 2px 3px)}",
+		button: ".surface.on:not(.cover){background:var(--domain);color:var(--gc-on-accent);text-shadow:none}.surface.on:not(.cover) .meta,.surface.on:not(.cover) .icon{color:var(--gc-on-accent)}.surface.on:not(.cover) .icon{background:transparent;border-color:var(--gc-on-accent)}.surface.on:not(.cover) .badge{border-color:var(--gc-on-accent)}.icon{border-radius:2px}.fill{background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--domain) 40%,transparent) 0 6px,transparent 6px 8px)}",
+		nav: ".ind{background:var(--gc-accent);border-color:var(--gc-accent)}button.active:has(.ind){color:var(--gc-on-accent);text-shadow:none}",
+		chips: ".chip{border:1px solid var(--gc-border)}",
+		climate: ".round,.modes button{border-radius:2px}"
+	},
+	defaults: { buttonLayout: "tile" }
+}, c = "data:font/woff2;base64,d09GMgABAAAAACSIABQAAAAAVjgAACQTAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGoFyG7J0HIJeP0hWQVKCQz9NVkFSMwZgP1NUQVSBHCcqAIJIL1wRCAquPKViC4E6ADCpDgE2AiQDgnAEIAWFSgeHFxvGT6MDsdsB8V7912pU1OxFKiSKCsrO7D8cmCLDZh7S6R/AiSAd7RCtDDuOQiCSmjIad0i4GovQdtrsbi5zmT2oJ4nLFN5OG+/nDtH7P6l7+H73nY/Q2Ce59jw/Zz/n3vs0L+FFCMFCoJAECBYChQTaEKRdSg1vS8WprlpC2zWTrhhrWpU1r69Y9/8ND/HjoN78FdmUwLROoGfBhJDYlNd30fXSlSYNgd1GeJsjtSbb/58n/c1IKh28QkrapopH4nb8sdVKZ/9n+aG91KG8qhooWUs/HqRcnfSD+FowAyHUdNyVdH4eT3u/8U81CHeuDnA76EAkzYQeQHdOV4rh/blEUD4egptIqGudh09XCnNGX55sC0/LY7YApcbv/1S12vkYfkaLS5hOCavlW2MzN/SUqt1yi9bXXRUSNRAIDsEhSEqkBNKBcKYzJYfEsyBtgMKmdCGmSpBXF3Iu7/W2qytTt929a5q7vk5FXR/8f9z/Xuu/FOO/+W7mnJ2dyTK898+YZxSA5fIA5Pn/7dfqSLj748YNEfFQONS0om/4577B3iCeaGahECKpkj0UWgc0pI3mXsA7bIgPccthaWfJ99i6WBa6IougFd04CG+I46POpe+7jE19RHMiN8CK/9EgnAMAAEFAL4YjMaRJE6bNAI4wgBtgYEivAQDDtZsMmGYaTY8eOgLcgAH8AJOCEOBSl7ncHe7yoIctARBc9viJZ15+5fW3yLr6lraO7t4+imZYThAlkKxqumFa/SnH9YIwjaI4kxAjSIpmvkYp96fK/jP18PTyDgwKDpVwXvfzen8Aiaeo+feXRXn9gVA2X6oMecBQnBuQoPu+CGnZhFJQ2SnWGxDbvUfsg/sA0xBBfeQvD6cMfAQA6QQHCJLpj/ryGVhAx3j58GJxCJ0dTdCmQuTBakHoaC9pWh0mMvBZL3OgxBxB+BfFKEOz+/N63tBkTESSSWYiOkKGDCGdDEJEmRw67vQOk7RO6ID5CdyGDi3aHOiAeQnc6e0D84l+DnCj7QOtTb4BArS5oE0GbSRohf/jlgBERV5kEIY5ENKECExCWBFH5w65vrO/y15wPzcVOgBYlMAjDkAHEJ4A90MI6ABgTqiHqSC1nVg3xwxUwiKoVRn+4Rd4pfwDXH1gXtvKpB4zD3BtqA8At8E1ZjIH2h4U37Z6TnkPknILBmIFjwCUuwCAcpUNXfDSWc1UmBSA0qlYlTLFl5nzgkwF8jEA+QeV/Jm8UR7NXL9znbxEHtebg00X0EOaTpN7aZK2ymWu4cebQlXlHQOQvsIYaav0gTQa90FJT0jrpCXovUSaSnXag5SPMutSgpJHUsl/AOIbqMRe8ZF4I/MpZYNYIDIzTztAkwUyJtUh4uQW4cPrJkcm5ByyhQ+K/8T38o9oS2/wA3xb7z18ES/c0gifSgxf8CKiQMQAeMdBOw/zIN6Jl9sIEs8X+z37APvqBe9mG9kogK1/2V7HlrBiNlsx3EUrCp0Ry38CFsBjKSB3BV6tI4FKhakZQxhhWxSSfaQ97ko9Y2M2II6AereSEMes2WFp4fUkmmo/tu0RwEtzev8OQevzYxSzeg4uBNh6c40zBFyGmDT7OgGA317lKhsjHZcX88xa1pUvP3QUjFO0LoQxvLapxpwBquwkXC9cYOxSd+PXnuuNh7jrFmlKJfILNNWTcbxd4TAhn64k1THx5NACEuZPlFXM/IE0xZxnSCzm3Eqaos4dI97XgU4gz+sulfLv3xTj18CpRa/V1NBgwJzEJErU8kg46qNsaST8psk4x5kALEiPESXNqEe1cDyqr4pqOt4qcCV5fRAg5Y/4Km0qyFcxHLFihlqJUrTrZhFfYuGgmEWEpkvqHr/6LQdaJFHVH7GRvnepaY2NoIblculia0U9pyJkL84NGfDK3C0BwOS+tqVA70gkNCSJmPk6lDDHhkM1Vo3OoRraHmqVMiKehdEd3AmjU0voHWnWiIeSpwxPSRIQ6yNpzsx5JqGoFcA0UyvQVaySZuA1BaYa2kqqhqyvepevAii33heWlHBkNrRiyGevY+ZM62s+nR66U3KFpSPqdpOKLfPQB+OtPSxJD4euE+0g2UV10VsF/EPfu8p3xxpCBVLbuGjnKxAZmF1ub4qfZFldnBiqAQosb2ej0D2eISQW+GG4A5jvMPsxOzGbMe9hXt3AM8p7hIfMO7YyucK8iGsDZwArYcHRbtzp40DC5jbsg5d5m6pyirVGs4CZbarLcfeZBEVhpFcc+hO8Ylt/ACqrjZhlvZoVAv2RmkBbCgBYeC5VAiCMiBS1XRlCrpIVdysA9sXaDAA0KqafzmfOhUFtYDuByB7lBwKQFm3RfheIMDKXOJshHEkYQ2YpceyCEG693ohCM3dc8foXYB3l+C/SnP/VfAJGxbrcAx3rbOoDZWbnZ2AyNGXMrwGUkx+7AoC0SD2Url1R9yR8WdhAupsA6RbyKtIW7roxYAsMP2mEW24IIM3juoQ94QrSamgUvjo+0rUgXHQGgLTDOZRwnZA8AiDdz15/JQDW0dAgSnnPwedEJ5V8mnrPgeGpux6s7sTg0krLMhyNudOU9iXQH+d30l6mDCHpuo9pVFPpSNwXGyXuLJXmkDijotJBYv+XcK3QH2jkWKZxQwCVorW0Sjn60bUpnSlhRSHdJKcJTgC5rRWDYirdCcZ1aqhS/wqaMj4K0inVnnG0sET/2uabQgPpPnIQ5zuNMYz+On1wRqYyAU4BmnIhXpVq+ETEFEtICAH6EoB4ApCbAJQnANUJQGcC0JgADCUA0QRgSgJQnAA0JAAnJADNCUAoARiXAGQnAJEEYCAByEogqhiZTKEQBEIAALCwIByn0wmCSsUwhBCAQrJbPLS0ZKI5w5IO8b0Sxk6lkegsZAYrxsklg1sWziObTY5cTJ58Cq8CqkJFNMVK6PwCuHIhFpWqWEU0IlExhoQEgVTqAzg6nSINdRadT/FUJyDu+4CfwyPN7T+b9SMOIh0dre0aX+O+DypVIaxJM51aZiKscAo1K/oyylgJLVSMklVhCa2AEy7kIPcl0JIAVHS+6bGgAiD2YNBI9PmelUEL7QLeW11Od+k9AABoJHo9VxFNxkJiW+OVHJgMQqa4F4SGgSGLJC9nldyYfKKPzUKgCMUooV+KAbDUsHzIEDEcYBSIhWYVg2kDiVVFQ9Y5gEH1fM0hENOkyx57wmi2HeMeegK0GLHlpeyiMGQQMou7DDWEMGSh5JWuhjBNPuhjsxAoQjFK6JdiACw1LB8yRAwHGAVi0rwG9rQriWLSQJNYG6tSZufdexJ1ZcziQc2KXu2yKLSQNEtnRNgHKmO94zegICGXAQCNl7FaOOES93qk7SEMWcScAHMheeuKRl4y+XTZCwB7KkMB6BdgAAwGUI5QqFAanEy1YY1BBHWox1g0oDElZtbHZpiA+gSgpItl3r9Pmhf75Pm02EoAQBdaUMHfRM0mvRCTa6CFxFhFs8ugleCECznITZU0WQuraB8oTCv5uujxY9ZpWX0KgwEIJzBFp+ENb6jI3kvJDNXIZWjhhCu6J08Fs8CcAHMR8yaPBPNBP5sBoBwhVqAkyk+V+14CdQlAsIulPvA3RkVUjAkAvNxo7aoTF13X4y6gm2Llp1tiQwzFhrUa3hK2XU3vAXz3wgEPrq7rGX3C5GK9B/TPXhkf1M/qtytDinjY0D4z3aIM2bB/ZfIoVU6GPPev0LSi/ZcBTIyLvMLXOBoO5nKkF2O/HaY0GcdLGcD46cypDqQSmgB5fsxwPxxd39/LvfoUANgKriYAe3CIT1aLHjDBCRxsarcWboacQUtla0UgyzqvnMkO0lleQiFVfeH5AhcomXmQIyeAO/JHlxXTxodmnCUXeTYO9ab/SEi5dq/zms98Ec2l/v0BBM4xmUUoABD27geLu4bk5BWVBENV4aY4EUqkMrkG2x3ygrhzFxAOQfFNMw7H+vQlVLT27JDmDhLAALi9xPoGCX4k2moKkYA9ZIMAJvUfmLYhHA2aG6sr4wCG/ds6vxR4i++f/fzhtAxiemz3AX9RgXVlowB8OJprNuDi4kAxdn5pR8YAfD+/HxNTQUx5Qhq0mWbIMAIA9ggthYMsrgHkLiQAqAP9vl3ZkQ16O4VXduY+0eVD/ycSFhoAQXZU/RoJcEv9lYHMTUvg6/px3uNTUbdJP7U1sDRMlwDrZRERM7TQ/94NPhVa3OPtYFwVT52QTknnpA+lA9LvU377dyFahTagTWgr2oH2JyMApsxQe+CsvFX6VZmHFqE1yha0He363vJBZnKzv+qthQHHbzwOAcevAABf3irxpIjv4gbQA6KgPtO74d0tABb8Oxm23EpAn15tugkqncHG5JTJzSNHHi+fQmMU8wsqVa5CpWphEVFNxouTyBQaC6sMdi5ZsuXKV6BEQJmQKjVqNYpxIICJIS4KdRaQECOtOONBKIAhb8Aj6AC/ko7arOSdMnxSOgN8rOgS91MnVIkMADAEAF4GDID8CVB+AehngCYCAI6Vk3hpF162IZSzYeSGxHS/xVyLSIPB05vcdg8AZBwzo1dGQS2zuj+M5Zg/GTbDIIhAnulwDfP11JgerVZjeutrfSLDNHalwNSqcl2aHCMQ80eUEb+/VhvmE+7qE6BTXJWmN1DZ9LgbYbWWu97yk9aazxIjWlQFoJN6f9X4oTOmTc2/CYlZGbdu5vmCGz3SbkC4AeP8mzwt01IL1k6CqqDq6vHh5cHV0LAbc6JcCCFxT9t+x8tvNQPqhAH1N5Dfk8qAqjubQRm5U0WIu93pAmdXC2CXNQMG+4bJT3fXikZP5m+cPWA58tGK6/T8gcUvHY/avoMc5z28s/lWHyLEPbglfydg95aGg09wNRNCqgEWqUmQ9EbgkaKk2yWmU96lWtwFVcI+2OHp/fJ3O/7cu/DL95y+dZeIHu3GLntvxvWHDk2vzS9lav+NpOD+wDOdDsU7JFw3fK70GJx9L+VbucuodSfp/cBlrE8awgdlOL6nLSulUAHJ5hkrCpnszGxZFPvXz8wjIjD+Bkrl1nua+bxSbt3sEbHwRvfE69VM5iI0KtsEK61aM687m/7dNbU2SstVHoVTRSanRM+8rtquk/tTEr5sa8uicsrecmhPpnDzpunfZmZSFYRnI3QLbwVIPuCp3/TGoyyqosrC/HMD1XsBkNST1acENYJls4lZYkGzmRvjvrbNzz/a4Zl+s5d5k3INUD6Rz64C9gxWGx50o5E+01J7g/6klfMAE1rJVN1ncF4Z8PB2Y8v08rvKnt3NHpJeWX/onoC9Z124C7fQnw6v2NnZ0FIwDyetybduTtGwV8Jo1ADBNQZNQfWPvRllP1vKqGAEnh1PkotHYEZfsNDk9c7tTYd8MPt8M/m5mOVzsfBOM4s6zgcke+wqFxByxeH6ziUJKrOlNzmda0bcRtU9mj5iEJwJk/1n1EisEGNW3/yftCw8ubCe/nltPnPjLPA5gyYucM9Y4P4++Q6WN076+4sPR1+jaRBf+JpKefzvrcarA4qMjxt7lUzq6Fh3/TZn09ULpp+db9NHfFt2+1J4qt/aJozdx15ouemPRjY2ihb1V7FKP66vLtP20ndxM0/frWoTctvBGdzekbxP746xwV1mZywsd+3ibIMe4mqdWEudmUQzNNE9zNy3REaGp29YLg5z9XvZTXTH8rpP3lJC/3YiYh0NoSEzgk2iPs+xO8Md/p710S4s196+EXqm24J+octLIvrYOiHV7Z5uyW05e+JibwfT6Y/UasNYbHpW4GBdiMfG5x17k5MPyRrxeTPIEC7PCiwHNMIlfVR4xHVwML4y9Mfu6+ubIyMjkCUXb4WTfvdDXDu2ui9s09+KfmaGrlRSBSzPTa+jU1q3uNOhyj1to27lAk4rj9Y3W1TVA7Eop4tw1KXOcFuH+d/3RUzKnl3wVEuhQDMX8bvm9w2MkRHxF9IarORdVvHiND02Ty+TWJJF85fWNUdGYmFqg0xdGq7qmvvgqjLyI5at3nF/ydndhmBqKLC2P7l+wpr1Nxs11NNUTmigtYvsbaFtV9VVngf4VX2pp5FJzXKfsXfXCFP7pNke6MGXEGM/NJVtkVEBkXD8f3eP1MaAmVA5QbtD6yyP7SCY7U7vTr8UHdKw7NySKEBgzxp0GHxZLkZ/UVfi5dnuughuWpqqtYytO9eH94a4Zt87okVnTTx8llF/Tf/ex+gqh4wJc6pKjro0HOZ0MyzLckX/Q28p5ShpQCH6kSM5TUPn+us92Mp1t27ef318q8V96uPIC6sN1YOz0Q9OGHf++OjZbf8zujqb2f4HLsPU8sCiS8cdtupM/b2Df3zsbKu9I4q2EsjVRGHL9iRo8ceoUV6XJ+sGZvXK5yJDEdZ8pv3tZXPNSCysNtioS71VO6X2xv6nr50cpsfm1VttlNSdDkPbw7hP5bVhQOc1fn7K7RL55dmFsJj+ahe/rG9isH+yHrDv4LbbFuUcLZOkkDnjizWY7GJ/QPzdKvPt5PpZ2it13X/eVZnEOXXK69p/6tKQYYfFz8OwN0IEUuz5mMtfbJn4tp/Ddaztd2Kv0DOnRS4G8+raILWucoBnPvQX9x8fMZBC9XXPtloXWKIjg2beFycaDdClyGdvB/tg+VqFHbdcknQXRQ39FRvOxmG2Mx2+ym08dI7ifASKd6o2Din+I+wEXyuwiZx/d/Z06PqMOoKdc+bSp4xaytn0ZGPZWMtjFtjBmXXx4Zzp8Byldrtv3rfDXFs/zY1I4BZjIxrtkr24rhW2EZ9Evcn6VX1zX2vIwiuhwqfDNFejeTro104en2d/9iNgQjptMLdPZJrFfHpvqPDiEcKSO8DWL1z0KXctVYSppsb8ZbomC/PO85U7rzt9+veQ++Q9PsWFXx4pcHrS7Od1Bh+wJ+lMcOjYa3qkPjqDja9sg/45WcUsKdSFulD9S8Sph4fMYtvaJPZ8NbjS6ca0jczt/BTDy98unK3zZ2/TNNwy1fvSkog8z+GD8q9D+P0UyJnf9NHv8KUxPwiAgkFcBJGcgUIqru2i5ZCgJwRlOj6kH0RVfpRmUacr0KAXArYYqcAkssdYyFNOZYtOnjRRuLWpJ+CRTJEDSu2YR0F4+fQ1FtL1WEz3o59asVIuSv+O1XQOJj1s/kXQSKqt3YBle2XdGxc88ADZYkjdHLdWQBmwiYg6ZMkAiscuWOUBVNuvbsOTviaBhtsRdtFbqz1fddGZvtlZMHYTm15PA3t50gA8wE7xk/r0FWioVxvYogAeAyUK9LsSLj8uUYJAf5PeMOsfLjWMayO62ze2txEowYry1HrgzEiLp0384FK1J9VrcSh4v+AP/45yYwP7ADFgPTpKNdBmPuUR3ixeuA9fK721dXqgCb45s7PCdhJ7Gx0ZTpwCDOqYRmDzNnX5Ieb41IXG3V3PVlsHXodW8lqajnYqhdsH8jLc//9/AhAG2GwIAGwHANUaxK1xhRvc6X2bg5NB1dEYi2k1XULX0+30Jn1EB1hRK28TWDc7nZ3PnmAvsqPsH57VoZvP4ifxO/lDfAvfy9kLmWwgHhJvpNXUY+mZ9K08Rg7JnXSSviovk9fJO+RD8mmFYtSMl+JVSpQEs585p6xXKgt1NlqtUuvVZnUqO2BvqavVvepZdZv6b5GVC9EqtFqtUZvJ9bkT2ibtmvZFHKJBkkDFAADagZ8lSRIryhs69oANS7AWa2CFCBEiBHnOs4bKCvM5EtZgFZaiBAv5gwgsS6UopEA1tgMlu53JYkiSaLzjCUyL1KC2xah5K4lAhQIgySrAstQ6hHg471j9sx2V1T2MT2O5Z3CwIq9ueeYc2Ctlz+4/vJTad9Vloe5OH1Fwg+Sozfz4jRVBvL/P/0H7EgxPpSiOZZyZXqPMCyPASJJp5v7PGsNtGR3sdOaBy90FQlR8zmZjupzKCEpV4fjJAd6SApcuA4yQAgUtx/4BKcpBWO4KEhy4ABOcYkXmIyErX9XvD3+tNXyprpNkCgXmRRS0TqW0pDR2nGL5/8p3ziwuqY6gpuTLj96IwI8fJ75ucSs2Fub719y6eXn05IUGwU+HLl8iTEfTj7TYTodujvkfNV9lwknWRM8z0/noTaU8SKm09afLrZTYKBr7aZiyPCGiZp1tui97t9BvkttrAyp1BMeNb+uFcVXfN0iu3t9CMdbbbVOxnbHjAn38fYCnRpjiW1d4Z1GWRI1Uro5yS0YfXbOdTNV6DheFqU5pMXnDin0F1del9FErXP3q5ZJrP7PngPz27IYmRIonSGfVn2hv2oZcOe6ULCS148m98ag7d2gX/9gE5SVF7MTdYIWEnHYhCdYk9E+lCJK6rMtIgBiXBzbjN4jjeEoAYs1MkKOwwFCm0Nwkm8QnlG73W7pHoZmDkcRbKRaGOoivqIJYqSBdZw2eZVDqtc/KyOFgjR6lFik3hBJPhFAnJ3dFlrRROxT2W+ntu9Bsb+6ftfvPx7dtT9v5Y9RyQ2tn83fcLuhqaNwj5UMUhRCpz4MSIkWwTHUE/TIqaLjQt0CzHaXt7V8n58ubv2DpKgWp0tA1vgKB7Xk5drsbvzaD+M0SqHSUH76n1c0LuyEXeSg6fNY85CZhdErCWK3RYvVgG8aG8pGTnJmvoHm0Jc3S0f/uL0tLbllVUkpJET6WoVs7hzW45WjiU0p7lLCJiaiBkKsKLd+ET9DnaDt31Lm7qbnj0/YRX8PDfdyQW/d5HTXOlRlHOtQO8MOysqfPOCS1e+pY2b1FfIGs7OoIKmWa7uBOJxYuqnocaemU6sdjWObUOrYVm/meVPPjNaptH4atDQvMLlrNG5saKa2OL/p1S11t5abautO50kUdyCGkynSRPnMOPm/Ps1qnpm2jrbfc7edzxNBmTw8frU7bj0gKabwyklECKw7xhdpS9uxy5qtbhr3K76U/PPp9Pg3R8+q2Km06XxblSZMG9YNVbb3vi8jSLUpPHERgw4rDziVY7Jq+R1Fiz96/v7/hG77LFDN0jotbayiBDUuxRJo95+B+mJKSrXpp8uzhEXpl3PlP1w8jC/0KrLp74+Zt2zesI4lFvS7sTOwHKJzZXidmS1zKML1R6jp6jzruYVeDgZ3pGZcryIq+yooSzVNRyQXzzshSpzU4DF1SKfae+EyZLLlJCX1+8WaGl6/YhdpuHr6eJKG60KUqnLCsePBvB5JRFXpDcwNdvVD13nsSH5J7GgR4PcmAGOMps1w392nUwoUX4jlP7JVvvetXwhgvrMnxO1nQ7ZiaqksVpgfpqOrUTNJhMZYU4XCulmr6GY1tMO/wB2XjYUrKVpOl4Wkz9uzOBDcqJMdQllEzWdxKfSgL08rBbcj6MZo0rcnrpTZV+xkam6ZtqtPQaDLpGm58YI1/a6vuDAUX4bT+Nmy53qDTmcodVRFZLcr7N4aiTNPzhCSRVOmt19ZIIDBwgeE4BogjRyF6KNIBmiJz5WBPLg1jhq4MdPozcNzIxYEhYeHhoSGXy4p9C5LB4SQK/tAi8mf/v3/jvqJL329oeFVgpyzdzuT8PwNFlePkcEkiiMr2/9dLDd+Ctt0nWdkFRMGNZkKk7d5nqGkHy0ldD2leQh8n9W139KoWOGq3Mau0ob76OvUNbs2VVxa66YIiwinuzyxY+r0Iuh2OIDC9vK7tUCL68IetydjlRKeW6qriGlwzNJ43NJNVT1zYElImbDscVBSMkTo6VP0Py1DXYdiQamm+BRVmIZMoqKLDSdVX/O9PyYSCoMDAkJrQsnTFdJw4A5Uqx2RAGiNlEESXrtGLbVKUyrD932el5j8aytznU8Gz6nKBHTqB2O9rXVgpYOZp+o/fdHexvMgXkJXtkIk8FKJAGxa+H3X4pZe9ILWnz4AVSyDIs/jF7N8H41IpmuZYCjkTuGQwadrig2EEtapQFNj2ijChi+RhhZNhwbSuxvzpw9au/u3A9lRsL1eGDOkpvd1yw1qle3T6mTmi3Vq4a3ESJlec0UmT9/JcmYCJQGuU6vihhzl2/DhRdjvzYMn4TwRFVThkbkRFWHfgDGwNnFkK1kL7MWkXiiR6EbFZwG/zVbAH4tV3fk3dml2cuAvmoRiFd36sVYzqQ4Gl596fujdvb4LKJMk8Qtu/wjg5P9y/2rsfjPhJeK7ujFxev6XeqKMJ8p7TvVGhdkFVjWfmwelvUq1wock7TwiMLGa2ygf2u/0f4iSJ49LOM/c52RErKfupp/cdw/dhfEoufKayMUeOoU1GE0Zi5kCq5vz3SHp2qyO6877h8P8Txzz66EuDN9g8FtJ7DUkjTsldWW9cyVLl9lvfIAnE2iFS7pzi9sdgpKTtI514r4AgGwvbzrmw6RW+7a9mzj2G+QdwKEAmBDZr5n4CctWZCcn+21CUMMzgFVEcZ+fgpJSkZYLjncOSOcH5ozyHtm06+Uiy84SYUZPJ5gMHsWz3T67uyoPbj+6Hxh2PgHoeVqfi8CK1bgDSu0riSEpyoHpeJ8f2dBtGAE49fW/4HfD7PWZ0p1pHe2qyd8H41YOSI51Ia9e2HE6smV+HtHpUu7V7dxCsyIcD6SxBMgM73tQGvOMQZfdqykup7b0ZDzKb65T6zSYIEyy/kHUzmAf4HbsscSiSXKAq/VkGjqUyjr92+swWD+WWx/3xjT1dCO5zlMaGhpxtNJnhLrZj9+GNKIAfsf6Oh3CYuqMYSo0ipCk5yuFDEotp+h54ju9xnFTqJBFBjRjeko1g+XnzMhqfjaxkC8zxzqR95eOaSFSUP1kwruRE7Mb+cODznzF2pV62elVmdZ3+hYGJQ/AMWTY31EtA9qTw+o2eCSl6R3MwGLUVzeeAsbne0Xz2Wa6yC5skVWVlzIe3I+efcJ1zl2M+/hqGo64qI5QYwSBzT5PgrwxD4C9MN+COU8IAntFTtyUvsInn45yTK3nF27dvK2QXblMVODlIi3RTuMTO1oeGQqHY+Fr5j0Mj5okqeXOT5exIC5OsJiwHiE5YK41Q0Z7skPkj6FgX7l0OPA0shTw4DmfBXj26pSXOLnKp2x0dWWSZSnceCXTjE799QNmFFu6TWSGS2UqA9dChJ3thawIO0b6Q4AoaMyL9cI3dJI5ZPsJeBdau3ZrBcj6SU3s7onUrnCBgaYfy85Cmb/fqwxJK2IodkXsPJJ6L1nh8p1cfllGSHialDaiH0IXbNHwbWItDPz5jxk7+2FocVRYtErWdUbKWu+No7H4gmdxUGOsdS2SfnvufBtkSXu4iw2kZs12SjLxZjaqGqstmniFFk9Cj2vtmNRd22OmGdX2/ole7/jXVF0HaxLVd64rYgsrmW6xsUw8c3PR9H1QAQAC2btOsnMp12zOafivk/CcA+Oql6fbf+NsNLaOtv1KsYxlAxgAAwZeMVuTxBVL0ShBz4VB7CdPaZfBs7t6gYalLdE08hfDaFhJcOg+9Ud+HS1XpjhE02YE2/3zjJEzFKrt0Xa9MFjUpWas/qaCDSTRmIAYmszMuRTXWtrMxhYe2PAppzMWdFZ+jKNKg0KxtC9CbdGta/hw6p3f0jQvRiFvFY+gKBqiwy/iYlT85fONHdHaQ0AXpTwV9cAF2iO2u+A74mujjiZvbYsr3aOgwhUUUibP4z7pyBBiygeIJSilM4X4xpwM46qgBuCsSJkXcEUoxtvCmuJBfvSKckkS9nJK53ZeyqbfyGjvdghMIMPTDS76J4xDKBnamBEzRlARVOCXDwZdSoHOnVBh0rvHZgG5fN2egbshPzuo+VhMO9XYPZbe42No47oxFm1OTGAOs4eF9oLkSdhazvkNbhyxE2/jJeBIrFVXubBKx+LAlO7BZfTjHn7dNJQoJSVA0sHq2yxzMYIhsf87QKlo76KhTuk1bi4xr90mKsW0HS2h6mWVHRGevDsU2AiSabYoSXjGcuYoTo6O8PcQBS6StpmFY8xTAuOJ47LbxnC5G87jpoShjctm80lU2qTQgYM1OfHOHZrmYh+XH2zQZLQ2YhjtUxHF2bTZG8zzTtRH273EIoNjngwlJVlRNN0zLdlyPnYOTSya3LB7ZcuTKk8+rgE+hImMUK+EXEFSqTLmQCpWqVKsRViuiTr2xGjSKijU2vmbjjG9WxHngCCQK4uXjFxAUEhZ5/qbEJSQXSct0Mbq17H+S4ayJymPVc0G/HuHaDuyaDkICXUQkJGRkHDhw6lTTpw9FCAkFGppwoGNgYGJiYYkFbOzAXtJQ0wMQEfUcsVGPjXpojVBQhBIqGlrAa9roMbHE4qKLoEAUd2rbIAA6YDNEs/Paks6tFfoEUM5FQsaBEwUVDR0DU9RYgnqqyxmspgexv+VHP6H6AWfUT5GZf+6HHef8VAAAAA==", l = "Glide Hebrew", u = "glide-card-fonts";
+function d(e = document) {
+	if (e.getElementById(u)) return;
 	let t = e.createElement("style");
-	t.id = a, t.textContent = `@font-face{font-family:"${i}";font-style:normal;font-weight:300 900;font-display:swap;src:url(${r}) format("woff2");unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}`, e.head.appendChild(t);
+	t.id = u, t.textContent = `@font-face{font-family:"${l}";font-style:normal;font-weight:300 900;font-display:swap;src:url(${c}) format("woff2");unicode-range:U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F}`, e.head.appendChild(t);
 }
-var s = (e) => `"${i}", ${e}`, c = "glass", l = /* @__PURE__ */ new Map(), u = /* @__PURE__ */ new Map(), d = {
+var f = (e) => `"${l}", ${e}`, p = "glass", m = /* @__PURE__ */ new Map(), h = /* @__PURE__ */ new Map(), g = {
 	"--gc-font": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
 	"--gc-font-meta": "var(--gc-font)",
 	"--gc-meta-transform": "none",
@@ -194,77 +542,82 @@ var s = (e) => `"${i}", ${e}`, c = "glass", l = /* @__PURE__ */ new Map(), u = /
 	"--gc-cover": "#a78bfa",
 	"--gc-media": "var(--gc-accent)"
 };
-function f(e) {
-	l.set(e.id, e);
-	for (let t of u.keys()) t.startsWith(`${e.id}|`) && u.delete(t);
+function _(e) {
+	m.set(e.id, e);
+	for (let t of h.keys()) t.startsWith(`${e.id}|`) && h.delete(t);
 }
-var p = (e) => e && l.get(e) || l.get("glass"), m = () => [...l.values()], h = (e) => Object.entries(e).map(([e, t]) => `${e}:${t};`).join("");
-function g(e, t, n) {
+var v = (e) => e && m.get(e) || m.get("glass"), y = () => [...m.values()], b = (e) => Object.entries(e).map(([e, t]) => `${e}:${t};`).join("");
+function ee(e, t, n) {
 	let r = {
-		...d,
+		...g,
 		...e.tokens.base,
 		...t ? e.tokens.dark : e.tokens.light
 	};
-	for (let e of ["--gc-font", "--gc-font-meta"]) r[e].startsWith("var(") || (r[e] = s(r[e]));
-	return `:host{${h(r)}}${e.styles?.all ?? ""}${e.styles?.[n] ?? ""}`;
+	for (let e of ["--gc-font", "--gc-font-meta"]) r[e].startsWith("var(") || (r[e] = f(r[e]));
+	return `:host{${b(r)}}${e.styles?.all ?? ""}${e.styles?.[n] ?? ""}`;
 }
-function _(e, t, n) {
-	let r = p(e), i = `${r.id}|${t ? "d" : "l"}|${n}`, a = u.get(i);
-	return a || (a = new CSSStyleSheet(), a.replaceSync(g(r, t, n)), u.set(i, a)), a;
+function te(e, t, n) {
+	let r = v(e), i = `${r.id}|${t ? "d" : "l"}|${n}`, a = h.get(i);
+	return a || (a = new CSSStyleSheet(), a.replaceSync(ee(r, t, n)), h.set(i, a)), a;
 }
-function v(e, t) {
-	if (e && l.has(e)) return e;
+function ne(e, t) {
+	if (e && m.has(e)) return e;
 	let n = getComputedStyle(t).getPropertyValue("--glide-theme").trim();
-	return l.has(n) ? n : c;
+	return m.has(n) ? n : p;
 }
-function y(e, t) {
+function re(e, t) {
 	return e === "dark" ? !0 : e === "light" ? !1 : t ?? matchMedia("(prefers-color-scheme: dark)").matches;
 }
 [
+	i,
+	n,
+	o,
+	r,
+	s,
 	t,
 	e,
-	n
-].forEach(f), window.glideCardThemes = {
-	register: f,
-	list: m
+	a
+].forEach(_), window.glideCardThemes = {
+	register: _,
+	list: y
 };
 //#endregion
 //#region node_modules/@lit/reactive-element/css-tag.js
-var b = globalThis, x = b.ShadowRoot && (b.ShadyCSS === void 0 || b.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, S = Symbol(), ee = /* @__PURE__ */ new WeakMap(), te = class {
+var ie = globalThis, ae = ie.ShadowRoot && (ie.ShadyCSS === void 0 || ie.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, oe = Symbol(), se = /* @__PURE__ */ new WeakMap(), ce = class {
 	constructor(e, t, n) {
-		if (this._$cssResult$ = !0, n !== S) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
+		if (this._$cssResult$ = !0, n !== oe) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
 		this.cssText = e, this.t = t;
 	}
 	get styleSheet() {
 		let e = this.o, t = this.t;
-		if (x && e === void 0) {
+		if (ae && e === void 0) {
 			let n = t !== void 0 && t.length === 1;
-			n && (e = ee.get(t)), e === void 0 && ((this.o = e = new CSSStyleSheet()).replaceSync(this.cssText), n && ee.set(t, e));
+			n && (e = se.get(t)), e === void 0 && ((this.o = e = new CSSStyleSheet()).replaceSync(this.cssText), n && se.set(t, e));
 		}
 		return e;
 	}
 	toString() {
 		return this.cssText;
 	}
-}, ne = (e) => new te(typeof e == "string" ? e : e + "", void 0, S), C = (e, ...t) => new te(e.length === 1 ? e[0] : t.reduce((t, n, r) => t + ((e) => {
+}, le = (e) => new ce(typeof e == "string" ? e : e + "", void 0, oe), x = (e, ...t) => new ce(e.length === 1 ? e[0] : t.reduce((t, n, r) => t + ((e) => {
 	if (!0 === e._$cssResult$) return e.cssText;
 	if (typeof e == "number") return e;
 	throw Error("Value passed to 'css' function must be a 'css' function result: " + e + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
-})(n) + e[r + 1], e[0]), e, S), re = (e, t) => {
-	if (x) e.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
+})(n) + e[r + 1], e[0]), e, oe), ue = (e, t) => {
+	if (ae) e.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
 	else for (let n of t) {
-		let t = document.createElement("style"), r = b.litNonce;
+		let t = document.createElement("style"), r = ie.litNonce;
 		r !== void 0 && t.setAttribute("nonce", r), t.textContent = n.cssText, e.appendChild(t);
 	}
-}, ie = x ? (e) => e : (e) => e instanceof CSSStyleSheet ? ((e) => {
+}, de = ae ? (e) => e : (e) => e instanceof CSSStyleSheet ? ((e) => {
 	let t = "";
 	for (let n of e.cssRules) t += n.cssText;
-	return ne(t);
-})(e) : e, { is: ae, defineProperty: oe, getOwnPropertyDescriptor: se, getOwnPropertyNames: ce, getOwnPropertySymbols: le, getPrototypeOf: ue } = Object, de = globalThis, fe = de.trustedTypes, pe = fe ? fe.emptyScript : "", me = de.reactiveElementPolyfillSupport, w = (e, t) => e, he = {
+	return le(t);
+})(e) : e, { is: fe, defineProperty: pe, getOwnPropertyDescriptor: me, getOwnPropertyNames: he, getOwnPropertySymbols: ge, getPrototypeOf: _e } = Object, ve = globalThis, ye = ve.trustedTypes, be = ye ? ye.emptyScript : "", xe = ve.reactiveElementPolyfillSupport, S = (e, t) => e, Se = {
 	toAttribute(e, t) {
 		switch (t) {
 			case Boolean:
-				e = e ? pe : null;
+				e = e ? be : null;
 				break;
 			case Object:
 			case Array: e = e == null ? e : JSON.stringify(e);
@@ -289,30 +642,30 @@ var b = globalThis, x = b.ShadowRoot && (b.ShadyCSS === void 0 || b.ShadyCSS.nat
 		}
 		return n;
 	}
-}, ge = (e, t) => !ae(e, t), _e = {
+}, Ce = (e, t) => !fe(e, t), we = {
 	attribute: !0,
 	type: String,
-	converter: he,
+	converter: Se,
 	reflect: !1,
 	useDefault: !1,
-	hasChanged: ge
+	hasChanged: Ce
 };
-Symbol.metadata ??= Symbol("metadata"), de.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
-var T = class extends HTMLElement {
+Symbol.metadata ??= Symbol("metadata"), ve.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
+var C = class extends HTMLElement {
 	static addInitializer(e) {
 		this._$Ei(), (this.l ??= []).push(e);
 	}
 	static get observedAttributes() {
 		return this.finalize(), this._$Eh && [...this._$Eh.keys()];
 	}
-	static createProperty(e, t = _e) {
+	static createProperty(e, t = we) {
 		if (t.state && (t.attribute = !1), this._$Ei(), this.prototype.hasOwnProperty(e) && ((t = Object.create(t)).wrapped = !0), this.elementProperties.set(e, t), !t.noAccessor) {
 			let n = Symbol(), r = this.getPropertyDescriptor(e, n, t);
-			r !== void 0 && oe(this.prototype, e, r);
+			r !== void 0 && pe(this.prototype, e, r);
 		}
 	}
 	static getPropertyDescriptor(e, t, n) {
-		let { get: r, set: i } = se(this.prototype, e) ?? {
+		let { get: r, set: i } = me(this.prototype, e) ?? {
 			get() {
 				return this[t];
 			},
@@ -331,17 +684,17 @@ var T = class extends HTMLElement {
 		};
 	}
 	static getPropertyOptions(e) {
-		return this.elementProperties.get(e) ?? _e;
+		return this.elementProperties.get(e) ?? we;
 	}
 	static _$Ei() {
-		if (this.hasOwnProperty(w("elementProperties"))) return;
-		let e = ue(this);
+		if (this.hasOwnProperty(S("elementProperties"))) return;
+		let e = _e(this);
 		e.finalize(), e.l !== void 0 && (this.l = [...e.l]), this.elementProperties = new Map(e.elementProperties);
 	}
 	static finalize() {
-		if (this.hasOwnProperty(w("finalized"))) return;
-		if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(w("properties"))) {
-			let e = this.properties, t = [...ce(e), ...le(e)];
+		if (this.hasOwnProperty(S("finalized"))) return;
+		if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(S("properties"))) {
+			let e = this.properties, t = [...he(e), ...ge(e)];
 			for (let n of t) this.createProperty(n, e[n]);
 		}
 		let e = this[Symbol.metadata];
@@ -360,8 +713,8 @@ var T = class extends HTMLElement {
 		let t = [];
 		if (Array.isArray(e)) {
 			let n = new Set(e.flat(1 / 0).reverse());
-			for (let e of n) t.unshift(ie(e));
-		} else e !== void 0 && t.push(ie(e));
+			for (let e of n) t.unshift(de(e));
+		} else e !== void 0 && t.push(de(e));
 		return t;
 	}
 	static _$Eu(e, t) {
@@ -387,7 +740,7 @@ var T = class extends HTMLElement {
 	}
 	createRenderRoot() {
 		let e = this.shadowRoot ?? this.attachShadow(this.constructor.shadowRootOptions);
-		return re(e, this.constructor.elementStyles), e;
+		return ue(e, this.constructor.elementStyles), e;
 	}
 	connectedCallback() {
 		this.renderRoot ??= this.createRenderRoot(), this.enableUpdating(!0), this._$EO?.forEach((e) => e.hostConnected?.());
@@ -402,14 +755,14 @@ var T = class extends HTMLElement {
 	_$ET(e, t) {
 		let n = this.constructor.elementProperties.get(e), r = this.constructor._$Eu(e, n);
 		if (r !== void 0 && !0 === n.reflect) {
-			let i = (n.converter?.toAttribute === void 0 ? he : n.converter).toAttribute(t, n.type);
+			let i = (n.converter?.toAttribute === void 0 ? Se : n.converter).toAttribute(t, n.type);
 			this._$Em = e, i == null ? this.removeAttribute(r) : this.setAttribute(r, i), this._$Em = null;
 		}
 	}
 	_$AK(e, t) {
 		let n = this.constructor, r = n._$Eh.get(e);
 		if (r !== void 0 && this._$Em !== r) {
-			let e = n.getPropertyOptions(r), i = typeof e.converter == "function" ? { fromAttribute: e.converter } : e.converter?.fromAttribute === void 0 ? he : e.converter;
+			let e = n.getPropertyOptions(r), i = typeof e.converter == "function" ? { fromAttribute: e.converter } : e.converter?.fromAttribute === void 0 ? Se : e.converter;
 			this._$Em = r;
 			let a = i.fromAttribute(t, e.type);
 			this[r] = a ?? this._$Ej?.get(r) ?? a, this._$Em = null;
@@ -418,7 +771,7 @@ var T = class extends HTMLElement {
 	requestUpdate(e, t, n, r = !1, i) {
 		if (e !== void 0) {
 			let a = this.constructor;
-			if (!1 === r && (i = this[e]), n ??= a.getPropertyOptions(e), !((n.hasChanged ?? ge)(i, t) || n.useDefault && n.reflect && i === this._$Ej?.get(e) && !this.hasAttribute(a._$Eu(e, n)))) return;
+			if (!1 === r && (i = this[e]), n ??= a.getPropertyOptions(e), !((n.hasChanged ?? Ce)(i, t) || n.useDefault && n.reflect && i === this._$Ej?.get(e) && !this.hasAttribute(a._$Eu(e, n)))) return;
 			this.C(e, t, n);
 		}
 		!1 === this.isUpdatePending && (this._$ES = this._$EP());
@@ -482,89 +835,89 @@ var T = class extends HTMLElement {
 	updated(e) {}
 	firstUpdated(e) {}
 };
-T.elementStyles = [], T.shadowRootOptions = { mode: "open" }, T[w("elementProperties")] = /* @__PURE__ */ new Map(), T[w("finalized")] = /* @__PURE__ */ new Map(), me?.({ ReactiveElement: T }), (de.reactiveElementVersions ??= []).push("2.1.2");
+C.elementStyles = [], C.shadowRootOptions = { mode: "open" }, C[S("elementProperties")] = /* @__PURE__ */ new Map(), C[S("finalized")] = /* @__PURE__ */ new Map(), xe?.({ ReactiveElement: C }), (ve.reactiveElementVersions ??= []).push("2.1.2");
 //#endregion
 //#region node_modules/lit-html/lit-html.js
-var ve = globalThis, ye = (e) => e, be = ve.trustedTypes, xe = be ? be.createPolicy("lit-html", { createHTML: (e) => e }) : void 0, Se = "$lit$", E = `lit$${Math.random().toFixed(9).slice(2)}$`, Ce = "?" + E, we = `<${Ce}>`, D = document, O = () => D.createComment(""), k = (e) => e === null || typeof e != "object" && typeof e != "function", Te = Array.isArray, Ee = (e) => Te(e) || typeof e?.[Symbol.iterator] == "function", De = "[ 	\n\f\r]", A = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, Oe = /-->/g, ke = />/g, j = RegExp(`>|${De}(?:([^\\s"'>=/]+)(${De}*=${De}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`, "g"), Ae = /'/g, je = /"/g, Me = /^(?:script|style|textarea|title)$/i, Ne = (e) => (t, ...n) => ({
+var Te = globalThis, Ee = (e) => e, De = Te.trustedTypes, Oe = De ? De.createPolicy("lit-html", { createHTML: (e) => e }) : void 0, ke = "$lit$", w = `lit$${Math.random().toFixed(9).slice(2)}$`, Ae = "?" + w, je = `<${Ae}>`, T = document, E = () => T.createComment(""), D = (e) => e === null || typeof e != "object" && typeof e != "function", Me = Array.isArray, Ne = (e) => Me(e) || typeof e?.[Symbol.iterator] == "function", Pe = "[ 	\n\f\r]", O = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, Fe = /-->/g, Ie = />/g, k = RegExp(`>|${Pe}(?:([^\\s"'>=/]+)(${Pe}*=${Pe}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`, "g"), Le = /'/g, Re = /"/g, ze = /^(?:script|style|textarea|title)$/i, Be = (e) => (t, ...n) => ({
 	_$litType$: e,
 	strings: t,
 	values: n
-}), M = Ne(1), N = Ne(2), P = Symbol.for("lit-noChange"), F = Symbol.for("lit-nothing"), Pe = /* @__PURE__ */ new WeakMap(), I = D.createTreeWalker(D, 129);
-function Fe(e, t) {
-	if (!Te(e) || !e.hasOwnProperty("raw")) throw Error("invalid template strings array");
-	return xe === void 0 ? t : xe.createHTML(t);
+}), A = Be(1), j = Be(2), M = Symbol.for("lit-noChange"), N = Symbol.for("lit-nothing"), Ve = /* @__PURE__ */ new WeakMap(), P = T.createTreeWalker(T, 129);
+function He(e, t) {
+	if (!Me(e) || !e.hasOwnProperty("raw")) throw Error("invalid template strings array");
+	return Oe === void 0 ? t : Oe.createHTML(t);
 }
-var Ie = (e, t) => {
-	let n = e.length - 1, r = [], i, a = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", o = A;
+var Ue = (e, t) => {
+	let n = e.length - 1, r = [], i, a = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", o = O;
 	for (let t = 0; t < n; t++) {
 		let n = e[t], s, c, l = -1, u = 0;
-		for (; u < n.length && (o.lastIndex = u, c = o.exec(n), c !== null);) u = o.lastIndex, o === A ? c[1] === "!--" ? o = Oe : c[1] === void 0 ? c[2] === void 0 ? c[3] !== void 0 && (o = j) : (Me.test(c[2]) && (i = RegExp("</" + c[2], "g")), o = j) : o = ke : o === j ? c[0] === ">" ? (o = i ?? A, l = -1) : c[1] === void 0 ? l = -2 : (l = o.lastIndex - c[2].length, s = c[1], o = c[3] === void 0 ? j : c[3] === "\"" ? je : Ae) : o === je || o === Ae ? o = j : o === Oe || o === ke ? o = A : (o = j, i = void 0);
-		let d = o === j && e[t + 1].startsWith("/>") ? " " : "";
-		a += o === A ? n + we : l >= 0 ? (r.push(s), n.slice(0, l) + Se + n.slice(l) + E + d) : n + E + (l === -2 ? t : d);
+		for (; u < n.length && (o.lastIndex = u, c = o.exec(n), c !== null);) u = o.lastIndex, o === O ? c[1] === "!--" ? o = Fe : c[1] === void 0 ? c[2] === void 0 ? c[3] !== void 0 && (o = k) : (ze.test(c[2]) && (i = RegExp("</" + c[2], "g")), o = k) : o = Ie : o === k ? c[0] === ">" ? (o = i ?? O, l = -1) : c[1] === void 0 ? l = -2 : (l = o.lastIndex - c[2].length, s = c[1], o = c[3] === void 0 ? k : c[3] === "\"" ? Re : Le) : o === Re || o === Le ? o = k : o === Fe || o === Ie ? o = O : (o = k, i = void 0);
+		let d = o === k && e[t + 1].startsWith("/>") ? " " : "";
+		a += o === O ? n + je : l >= 0 ? (r.push(s), n.slice(0, l) + ke + n.slice(l) + w + d) : n + w + (l === -2 ? t : d);
 	}
-	return [Fe(e, a + (e[n] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), r];
-}, Le = class e {
+	return [He(e, a + (e[n] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), r];
+}, We = class e {
 	constructor({ strings: t, _$litType$: n }, r) {
 		let i;
 		this.parts = [];
-		let a = 0, o = 0, s = t.length - 1, c = this.parts, [l, u] = Ie(t, n);
-		if (this.el = e.createElement(l, r), I.currentNode = this.el.content, n === 2 || n === 3) {
+		let a = 0, o = 0, s = t.length - 1, c = this.parts, [l, u] = Ue(t, n);
+		if (this.el = e.createElement(l, r), P.currentNode = this.el.content, n === 2 || n === 3) {
 			let e = this.el.content.firstChild;
 			e.replaceWith(...e.childNodes);
 		}
-		for (; (i = I.nextNode()) !== null && c.length < s;) {
+		for (; (i = P.nextNode()) !== null && c.length < s;) {
 			if (i.nodeType === 1) {
-				if (i.hasAttributes()) for (let e of i.getAttributeNames()) if (e.endsWith(Se)) {
-					let t = u[o++], n = i.getAttribute(e).split(E), r = /([.?@])?(.*)/.exec(t);
+				if (i.hasAttributes()) for (let e of i.getAttributeNames()) if (e.endsWith(ke)) {
+					let t = u[o++], n = i.getAttribute(e).split(w), r = /([.?@])?(.*)/.exec(t);
 					c.push({
 						type: 1,
 						index: a,
 						name: r[2],
 						strings: n,
-						ctor: r[1] === "." ? Ve : r[1] === "?" ? He : r[1] === "@" ? Ue : Be
+						ctor: r[1] === "." ? Je : r[1] === "?" ? Ye : r[1] === "@" ? Xe : qe
 					}), i.removeAttribute(e);
-				} else e.startsWith(E) && (c.push({
+				} else e.startsWith(w) && (c.push({
 					type: 6,
 					index: a
 				}), i.removeAttribute(e));
-				if (Me.test(i.tagName)) {
-					let e = i.textContent.split(E), t = e.length - 1;
+				if (ze.test(i.tagName)) {
+					let e = i.textContent.split(w), t = e.length - 1;
 					if (t > 0) {
-						i.textContent = be ? be.emptyScript : "";
-						for (let n = 0; n < t; n++) i.append(e[n], O()), I.nextNode(), c.push({
+						i.textContent = De ? De.emptyScript : "";
+						for (let n = 0; n < t; n++) i.append(e[n], E()), P.nextNode(), c.push({
 							type: 2,
 							index: ++a
 						});
-						i.append(e[t], O());
+						i.append(e[t], E());
 					}
 				}
 			} else if (i.nodeType === 8) {
-				if (i.data === Ce) c.push({
+				if (i.data === Ae) c.push({
 					type: 2,
 					index: a
 				});
 				else {
 					let e = -1;
-					for (; (e = i.data.indexOf(E, e + 1)) !== -1;) c.push({
+					for (; (e = i.data.indexOf(w, e + 1)) !== -1;) c.push({
 						type: 7,
 						index: a
-					}), e += E.length - 1;
+					}), e += w.length - 1;
 				}
 			}
 			a++;
 		}
 	}
 	static createElement(e, t) {
-		let n = D.createElement("template");
+		let n = T.createElement("template");
 		return n.innerHTML = e, n;
 	}
 };
-function L(e, t, n = e, r) {
-	if (t === P) return t;
-	let i = r === void 0 ? n._$Cl : n._$Co?.[r], a = k(t) ? void 0 : t._$litDirective$;
-	return i?.constructor !== a && (i?._$AO?.(!1), a === void 0 ? i = void 0 : (i = new a(e), i._$AT(e, n, r)), r === void 0 ? n._$Cl = i : (n._$Co ??= [])[r] = i), i !== void 0 && (t = L(e, i._$AS(e, t.values), i, r)), t;
+function F(e, t, n = e, r) {
+	if (t === M) return t;
+	let i = r === void 0 ? n._$Cl : n._$Co?.[r], a = D(t) ? void 0 : t._$litDirective$;
+	return i?.constructor !== a && (i?._$AO?.(!1), a === void 0 ? i = void 0 : (i = new a(e), i._$AT(e, n, r)), r === void 0 ? n._$Cl = i : (n._$Co ??= [])[r] = i), i !== void 0 && (t = F(e, i._$AS(e, t.values), i, r)), t;
 }
-var Re = class {
+var Ge = class {
 	constructor(e, t) {
 		this._$AV = [], this._$AN = void 0, this._$AD = e, this._$AM = t;
 	}
@@ -575,28 +928,28 @@ var Re = class {
 		return this._$AM._$AU;
 	}
 	u(e) {
-		let { el: { content: t }, parts: n } = this._$AD, r = (e?.creationScope ?? D).importNode(t, !0);
-		I.currentNode = r;
-		let i = I.nextNode(), a = 0, o = 0, s = n[0];
+		let { el: { content: t }, parts: n } = this._$AD, r = (e?.creationScope ?? T).importNode(t, !0);
+		P.currentNode = r;
+		let i = P.nextNode(), a = 0, o = 0, s = n[0];
 		for (; s !== void 0;) {
 			if (a === s.index) {
 				let t;
-				s.type === 2 ? t = new ze(i, i.nextSibling, this, e) : s.type === 1 ? t = new s.ctor(i, s.name, s.strings, this, e) : s.type === 6 && (t = new We(i, this, e)), this._$AV.push(t), s = n[++o];
+				s.type === 2 ? t = new Ke(i, i.nextSibling, this, e) : s.type === 1 ? t = new s.ctor(i, s.name, s.strings, this, e) : s.type === 6 && (t = new Ze(i, this, e)), this._$AV.push(t), s = n[++o];
 			}
-			a !== s?.index && (i = I.nextNode(), a++);
+			a !== s?.index && (i = P.nextNode(), a++);
 		}
-		return I.currentNode = D, r;
+		return P.currentNode = T, r;
 	}
 	p(e) {
 		let t = 0;
 		for (let n of this._$AV) n !== void 0 && (n.strings === void 0 ? n._$AI(e[t]) : (n._$AI(e, n, t), t += n.strings.length - 2)), t++;
 	}
-}, ze = class e {
+}, Ke = class e {
 	get _$AU() {
 		return this._$AM?._$AU ?? this._$Cv;
 	}
 	constructor(e, t, n, r) {
-		this.type = 2, this._$AH = F, this._$AN = void 0, this._$AA = e, this._$AB = t, this._$AM = n, this.options = r, this._$Cv = r?.isConnected ?? !0;
+		this.type = 2, this._$AH = N, this._$AN = void 0, this._$AA = e, this._$AB = t, this._$AM = n, this.options = r, this._$Cv = r?.isConnected ?? !0;
 	}
 	get parentNode() {
 		let e = this._$AA.parentNode, t = this._$AM;
@@ -609,7 +962,7 @@ var Re = class {
 		return this._$AB;
 	}
 	_$AI(e, t = this) {
-		e = L(this, e, t), k(e) ? e === F || e == null || e === "" ? (this._$AH !== F && this._$AR(), this._$AH = F) : e !== this._$AH && e !== P && this._(e) : e._$litType$ === void 0 ? e.nodeType === void 0 ? Ee(e) ? this.k(e) : this._(e) : this.T(e) : this.$(e);
+		e = F(this, e, t), D(e) ? e === N || e == null || e === "" ? (this._$AH !== N && this._$AR(), this._$AH = N) : e !== this._$AH && e !== M && this._(e) : e._$litType$ === void 0 ? e.nodeType === void 0 ? Ne(e) ? this.k(e) : this._(e) : this.T(e) : this.$(e);
 	}
 	O(e) {
 		return this._$AA.parentNode.insertBefore(e, this._$AB);
@@ -618,36 +971,36 @@ var Re = class {
 		this._$AH !== e && (this._$AR(), this._$AH = this.O(e));
 	}
 	_(e) {
-		this._$AH !== F && k(this._$AH) ? this._$AA.nextSibling.data = e : this.T(D.createTextNode(e)), this._$AH = e;
+		this._$AH !== N && D(this._$AH) ? this._$AA.nextSibling.data = e : this.T(T.createTextNode(e)), this._$AH = e;
 	}
 	$(e) {
-		let { values: t, _$litType$: n } = e, r = typeof n == "number" ? this._$AC(e) : (n.el === void 0 && (n.el = Le.createElement(Fe(n.h, n.h[0]), this.options)), n);
+		let { values: t, _$litType$: n } = e, r = typeof n == "number" ? this._$AC(e) : (n.el === void 0 && (n.el = We.createElement(He(n.h, n.h[0]), this.options)), n);
 		if (this._$AH?._$AD === r) this._$AH.p(t);
 		else {
-			let e = new Re(r, this), n = e.u(this.options);
+			let e = new Ge(r, this), n = e.u(this.options);
 			e.p(t), this.T(n), this._$AH = e;
 		}
 	}
 	_$AC(e) {
-		let t = Pe.get(e.strings);
-		return t === void 0 && Pe.set(e.strings, t = new Le(e)), t;
+		let t = Ve.get(e.strings);
+		return t === void 0 && Ve.set(e.strings, t = new We(e)), t;
 	}
 	k(t) {
-		Te(this._$AH) || (this._$AH = [], this._$AR());
+		Me(this._$AH) || (this._$AH = [], this._$AR());
 		let n = this._$AH, r, i = 0;
-		for (let a of t) i === n.length ? n.push(r = new e(this.O(O()), this.O(O()), this, this.options)) : r = n[i], r._$AI(a), i++;
+		for (let a of t) i === n.length ? n.push(r = new e(this.O(E()), this.O(E()), this, this.options)) : r = n[i], r._$AI(a), i++;
 		i < n.length && (this._$AR(r && r._$AB.nextSibling, i), n.length = i);
 	}
 	_$AR(e = this._$AA.nextSibling, t) {
 		for (this._$AP?.(!1, !0, t); e !== this._$AB;) {
-			let t = ye(e).nextSibling;
-			ye(e).remove(), e = t;
+			let t = Ee(e).nextSibling;
+			Ee(e).remove(), e = t;
 		}
 	}
 	setConnected(e) {
 		this._$AM === void 0 && (this._$Cv = e, this._$AP?.(e));
 	}
-}, Be = class {
+}, qe = class {
 	get tagName() {
 		return this.element.tagName;
 	}
@@ -655,47 +1008,47 @@ var Re = class {
 		return this._$AM._$AU;
 	}
 	constructor(e, t, n, r, i) {
-		this.type = 1, this._$AH = F, this._$AN = void 0, this.element = e, this.name = t, this._$AM = r, this.options = i, n.length > 2 || n[0] !== "" || n[1] !== "" ? (this._$AH = Array(n.length - 1).fill(/* @__PURE__ */ new String()), this.strings = n) : this._$AH = F;
+		this.type = 1, this._$AH = N, this._$AN = void 0, this.element = e, this.name = t, this._$AM = r, this.options = i, n.length > 2 || n[0] !== "" || n[1] !== "" ? (this._$AH = Array(n.length - 1).fill(/* @__PURE__ */ new String()), this.strings = n) : this._$AH = N;
 	}
 	_$AI(e, t = this, n, r) {
 		let i = this.strings, a = !1;
-		if (i === void 0) e = L(this, e, t, 0), a = !k(e) || e !== this._$AH && e !== P, a && (this._$AH = e);
+		if (i === void 0) e = F(this, e, t, 0), a = !D(e) || e !== this._$AH && e !== M, a && (this._$AH = e);
 		else {
 			let r = e, o, s;
-			for (e = i[0], o = 0; o < i.length - 1; o++) s = L(this, r[n + o], t, o), s === P && (s = this._$AH[o]), a ||= !k(s) || s !== this._$AH[o], s === F ? e = F : e !== F && (e += (s ?? "") + i[o + 1]), this._$AH[o] = s;
+			for (e = i[0], o = 0; o < i.length - 1; o++) s = F(this, r[n + o], t, o), s === M && (s = this._$AH[o]), a ||= !D(s) || s !== this._$AH[o], s === N ? e = N : e !== N && (e += (s ?? "") + i[o + 1]), this._$AH[o] = s;
 		}
 		a && !r && this.j(e);
 	}
 	j(e) {
-		e === F ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, e ?? "");
+		e === N ? this.element.removeAttribute(this.name) : this.element.setAttribute(this.name, e ?? "");
 	}
-}, Ve = class extends Be {
+}, Je = class extends qe {
 	constructor() {
 		super(...arguments), this.type = 3;
 	}
 	j(e) {
-		this.element[this.name] = e === F ? void 0 : e;
+		this.element[this.name] = e === N ? void 0 : e;
 	}
-}, He = class extends Be {
+}, Ye = class extends qe {
 	constructor() {
 		super(...arguments), this.type = 4;
 	}
 	j(e) {
-		this.element.toggleAttribute(this.name, !!e && e !== F);
+		this.element.toggleAttribute(this.name, !!e && e !== N);
 	}
-}, Ue = class extends Be {
+}, Xe = class extends qe {
 	constructor(e, t, n, r, i) {
 		super(e, t, n, r, i), this.type = 5;
 	}
 	_$AI(e, t = this) {
-		if ((e = L(this, e, t, 0) ?? F) === P) return;
-		let n = this._$AH, r = e === F && n !== F || e.capture !== n.capture || e.once !== n.once || e.passive !== n.passive, i = e !== F && (n === F || r);
+		if ((e = F(this, e, t, 0) ?? N) === M) return;
+		let n = this._$AH, r = e === N && n !== N || e.capture !== n.capture || e.once !== n.once || e.passive !== n.passive, i = e !== N && (n === N || r);
 		r && this.element.removeEventListener(this.name, this, n), i && this.element.addEventListener(this.name, this, e), this._$AH = e;
 	}
 	handleEvent(e) {
 		typeof this._$AH == "function" ? this._$AH.call(this.options?.host ?? this.element, e) : this._$AH.handleEvent(e);
 	}
-}, We = class {
+}, Ze = class {
 	constructor(e, t, n) {
 		this.element = e, this.type = 6, this._$AN = void 0, this._$AM = t, this.options = n;
 	}
@@ -703,18 +1056,18 @@ var Re = class {
 		return this._$AM._$AU;
 	}
 	_$AI(e) {
-		L(this, e);
+		F(this, e);
 	}
-}, Ge = ve.litHtmlPolyfillSupport;
-Ge?.(Le, ze), (ve.litHtmlVersions ??= []).push("3.3.3");
-var Ke = (e, t, n) => {
+}, Qe = Te.litHtmlPolyfillSupport;
+Qe?.(We, Ke), (Te.litHtmlVersions ??= []).push("3.3.3");
+var $e = (e, t, n) => {
 	let r = n?.renderBefore ?? t, i = r._$litPart$;
 	if (i === void 0) {
 		let e = n?.renderBefore ?? null;
-		r._$litPart$ = i = new ze(t.insertBefore(O(), e), e, void 0, n ?? {});
+		r._$litPart$ = i = new Ke(t.insertBefore(E(), e), e, void 0, n ?? {});
 	}
 	return i._$AI(e), i;
-}, qe = globalThis, R = class extends T {
+}, et = globalThis, I = class extends C {
 	constructor() {
 		super(...arguments), this.renderOptions = { host: this }, this._$Do = void 0;
 	}
@@ -724,7 +1077,7 @@ var Ke = (e, t, n) => {
 	}
 	update(e) {
 		let t = this.render();
-		this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(e), this._$Do = Ke(t, this.renderRoot, this.renderOptions);
+		this.hasUpdated || (this.renderOptions.isConnected = this.isConnected), super.update(e), this._$Do = $e(t, this.renderRoot, this.renderOptions);
 	}
 	connectedCallback() {
 		super.connectedCallback(), this._$Do?.setConnected(!0);
@@ -733,25 +1086,25 @@ var Ke = (e, t, n) => {
 		super.disconnectedCallback(), this._$Do?.setConnected(!1);
 	}
 	render() {
-		return P;
+		return M;
 	}
 };
-R._$litElement$ = !0, R.finalized = !0, qe.litElementHydrateSupport?.({ LitElement: R });
-var Je = qe.litElementPolyfillSupport;
-Je?.({ LitElement: R }), (qe.litElementVersions ??= []).push("4.2.2");
+I._$litElement$ = !0, I.finalized = !0, et.litElementHydrateSupport?.({ LitElement: I });
+var tt = et.litElementPolyfillSupport;
+tt?.({ LitElement: I }), (et.litElementVersions ??= []).push("4.2.2");
 //#endregion
 //#region node_modules/lit-html/directive.js
-var Ye = {
+var nt = {
 	ATTRIBUTE: 1,
 	CHILD: 2,
 	PROPERTY: 3,
 	BOOLEAN_ATTRIBUTE: 4,
 	EVENT: 5,
 	ELEMENT: 6
-}, Xe = (e) => (...t) => ({
+}, rt = (e) => (...t) => ({
 	_$litDirective$: e,
 	values: t
-}), Ze = class {
+}), it = class {
 	constructor(e) {}
 	get _$AU() {
 		return this._$AM._$AU;
@@ -765,9 +1118,9 @@ var Ye = {
 	update(e, t) {
 		return this.render(...t);
 	}
-}, Qe = "important", $e = " !" + Qe, et = Xe(class extends Ze {
+}, at = "important", ot = " !" + at, st = rt(class extends it {
 	constructor(e) {
-		if (super(e), e.type !== Ye.ATTRIBUTE || e.name !== "style" || e.strings?.length > 2) throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.");
+		if (super(e), e.type !== nt.ATTRIBUTE || e.name !== "style" || e.strings?.length > 2) throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.");
 	}
 	render(e) {
 		return Object.keys(e).reduce((t, n) => {
@@ -783,13 +1136,13 @@ var Ye = {
 			let r = t[e];
 			if (r != null) {
 				this.ft.add(e);
-				let t = typeof r == "string" && r.endsWith($e);
-				e.includes("-") || t ? n.setProperty(e, t ? r.slice(0, -11) : r, t ? Qe : "") : n[e] = r;
+				let t = typeof r == "string" && r.endsWith(ot);
+				e.includes("-") || t ? n.setProperty(e, t ? r.slice(0, -11) : r, t ? at : "") : n[e] = r;
 			}
 		}
-		return P;
+		return M;
 	}
-}), z = (e = "") => e.split(".")[0], tt = /* @__PURE__ */ new Set([
+}), L = (e = "") => e.split(".")[0], ct = /* @__PURE__ */ new Set([
 	"off",
 	"closed",
 	"idle",
@@ -799,7 +1152,7 @@ var Ye = {
 	"unknown",
 	"locked",
 	"docked"
-]), nt = (e) => !e || e.state === "unavailable" || e.state === "unknown", rt = (e) => !!e && !tt.has(e.state), it = {
+]), lt = (e) => !e || e.state === "unavailable" || e.state === "unknown", ut = (e) => !!e && !ct.has(e.state), dt = {
 	light: ["mdi:lightbulb", "mdi:lightbulb-outline"],
 	switch: ["mdi:toggle-switch-variant", "mdi:toggle-switch-variant-off"],
 	fan: ["mdi:fan", "mdi:fan-off"],
@@ -810,13 +1163,13 @@ var Ye = {
 	vacuum: ["mdi:robot-vacuum", "mdi:robot-vacuum"],
 	scene: ["mdi:palette", "mdi:palette"],
 	script: ["mdi:script-text-play", "mdi:script-text"]
-}, at = (e, t) => t ?? e?.attributes.icon ?? (it[z(e?.entity_id)]?.[+!rt(e)] || "mdi:help-circle-outline"), ot = (e, t) => t ?? e?.attributes.friendly_name ?? e?.entity_id ?? "", st = (e) => ({
+}, ft = (e, t) => t ?? e?.attributes.icon ?? (dt[L(e?.entity_id)]?.[+!ut(e)] || "mdi:help-circle-outline"), pt = (e, t) => t ?? e?.attributes.friendly_name ?? e?.entity_id ?? "", mt = (e) => ({
 	light: "var(--gc-light)",
 	fan: "var(--gc-fan)",
 	cover: "var(--gc-cover)",
 	climate: "var(--gc-heat)",
 	media_player: "var(--gc-media)"
-})[z(e?.entity_id)] ?? "var(--gc-accent)", ct = /* @__PURE__ */ new Set([
+})[L(e?.entity_id)] ?? "var(--gc-accent)", ht = /* @__PURE__ */ new Set([
 	"primary",
 	"accent",
 	"red",
@@ -841,8 +1194,8 @@ var Ye = {
 	"black",
 	"white",
 	"disabled"
-]), lt = (e) => e ? ct.has(e) ? `var(--${e}-color)` : e : void 0;
-function ut(e) {
+]), R = (e) => e ? ht.has(e) ? `var(--${e}-color)` : e : void 0;
+function gt(e) {
 	if (!e) return !1;
 	let t, n = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(e.trim());
 	if (n) {
@@ -863,11 +1216,11 @@ function ut(e) {
 	});
 	return .2126 * r + .7152 * i + .0722 * a > .5;
 }
-var dt = (e) => ut(e) ? `color-mix(in oklab, ${e} 40%, var(--gc-text))` : void 0;
-function ft(e) {
+var _t = (e) => gt(e) ? `color-mix(in oklab, ${e} 40%, var(--gc-text))` : void 0;
+function vt(e) {
 	if (!e) return;
 	let t = e.entity_id, n = e.attributes;
-	switch (z(t)) {
+	switch (L(t)) {
 		case "light": {
 			let r = n.supported_color_modes ?? [];
 			return r.length && r.every((e) => e === "onoff") ? void 0 : {
@@ -901,7 +1254,7 @@ function ft(e) {
 		};
 	}
 }
-var pt = /* @__PURE__ */ new Set([
+var yt = /* @__PURE__ */ new Set([
 	"light",
 	"switch",
 	"fan",
@@ -912,44 +1265,44 @@ var pt = /* @__PURE__ */ new Set([
 	"automation",
 	"siren"
 ]);
-function mt(e, t) {
-	let n = z(t.entity_id), r = t.entity_id;
-	return n === "cover" ? e.callService("cover", "toggle", { entity_id: r }) : n === "lock" ? e.callService("lock", t.state === "locked" ? "unlock" : "lock", { entity_id: r }) : n === "scene" || n === "script" ? e.callService(n, "turn_on", { entity_id: r }) : n === "button" || n === "input_button" ? e.callService(n, "press", { entity_id: r }) : pt.has(n) ? e.callService(n, "toggle", { entity_id: r }) : e.callService("homeassistant", "toggle", { entity_id: r });
+function bt(e, t) {
+	let n = L(t.entity_id), r = t.entity_id;
+	return n === "cover" ? e.callService("cover", "toggle", { entity_id: r }) : n === "lock" ? e.callService("lock", t.state === "locked" ? "unlock" : "lock", { entity_id: r }) : n === "scene" || n === "script" ? e.callService(n, "turn_on", { entity_id: r }) : n === "button" || n === "input_button" ? e.callService(n, "press", { entity_id: r }) : yt.has(n) ? e.callService(n, "toggle", { entity_id: r }) : e.callService("homeassistant", "toggle", { entity_id: r });
 }
 //#endregion
 //#region src/core/fire.ts
-function B(e, t, n) {
+function z(e, t, n) {
 	e.dispatchEvent(new CustomEvent(t, {
 		detail: n,
 		bubbles: !0,
 		composed: !0
 	}));
 }
-var V = (e = "light") => B(window, "haptic", e), ht;
-function gt(e, t) {
-	ht = t?.getBoundingClientRect();
+var B = (e = "light") => z(window, "haptic", e), xt;
+function St(e, t) {
+	xt = t?.getBoundingClientRect();
 	let n = e.startsWith("#") ? e : `#${e}`;
 	location.hash !== n && history.pushState({ glidePopup: !0 }, "", n), window.dispatchEvent(new CustomEvent("glide-hash"));
 }
-function _t(e, t) {
-	if (e.startsWith("#")) return gt(e, t);
-	history.pushState(null, "", e), B(window, "location-changed", { replace: !1 });
+function Ct(e, t) {
+	if (e.startsWith("#")) return St(e, t);
+	history.pushState(null, "", e), z(window, "location-changed", { replace: !1 });
 }
-function H(e, t, n, r) {
-	if (n && n.action !== "none") switch (V(n.action === "toggle" ? "light" : "selection"), n.action) {
+function V(e, t, n, r) {
+	if (n && n.action !== "none") switch (B(n.action === "toggle" ? "light" : "selection"), n.action) {
 		case "toggle": {
 			let e = r ? t.states[r] : void 0;
-			e && mt(t, e);
+			e && bt(t, e);
 			return;
 		}
 		case "more-info":
-			r && B(e, "hass-more-info", { entityId: r });
+			r && z(e, "hass-more-info", { entityId: r });
 			return;
 		case "popup":
 		case "navigate":
-			n.navigation_path && _t(n.navigation_path, e);
+			n.navigation_path && Ct(n.navigation_path, e);
 			return;
-		default: B(e, "hass-action", {
+		default: z(e, "hass-action", {
 			config: {
 				entity: r,
 				tap_action: n
@@ -960,14 +1313,14 @@ function H(e, t, n, r) {
 }
 //#endregion
 //#region src/core/spring.ts
-function vt(e = 170, t = 22, n = 1, r = 48) {
+function wt(e = 170, t = 22, n = 1, r = 48) {
 	let i = Math.sqrt(e / n), a = t / (2 * Math.sqrt(e * n)), o = i * Math.sqrt(Math.max(0, 1 - a * a)), s = (e) => a < 1 ? 1 - Math.exp(-a * i * e) * (Math.cos(o * e) + a * i / o * Math.sin(o * e)) : 1 - Math.exp(-i * e) * (1 + i * e), c = Math.min(1.2, Math.log(1e3) / (a * i)), l = Array.from({ length: r + 1 }, (e, t) => +s(t / r * c).toFixed(4));
 	return l[r] = 1, {
 		easing: `linear(${l.join(",")})`,
 		duration: Math.round(c * 1e3)
 	};
 }
-var U = () => matchMedia("(prefers-reduced-motion: reduce)").matches, yt = {
+var H = () => matchMedia("(prefers-reduced-motion: reduce)").matches, Tt = {
 	shine: "Glass shine",
 	random: "Random (different each tap)",
 	press: "Press (shrink only)",
@@ -987,24 +1340,24 @@ var U = () => matchMedia("(prefers-reduced-motion: reduce)").matches, yt = {
 	nudge: "Nudge",
 	"badge-pop": "Badge pop",
 	none: "None"
-}, bt = "shine", xt = (e) => typeof e == "string" && e in yt;
-function St(e, t) {
-	if (xt(e)) return e;
+}, Et = "shine", Dt = (e) => typeof e == "string" && e in Tt;
+function Ot(e, t) {
+	if (Dt(e)) return e;
 	let n = getComputedStyle(t).getPropertyValue("--glide-tap-animation").trim();
-	return xt(n) ? n : bt;
+	return Dt(n) ? n : Et;
 }
-var Ct = "cubic-bezier(.2,.8,.2,1)", W = "cubic-bezier(.2,.9,.3,1.25)", wt = /* @__PURE__ */ new WeakMap();
-function Tt(e, t) {
-	let n = wt.get(e), r = Object.keys(yt).filter((e) => e !== "random" && e !== "press" && e !== "none" && e !== n && (t.icon || e !== "icon-pop" && e !== "icon-flip") && (t.badge || e !== "badge-pop")), i = r[Math.floor(Math.random() * r.length)] ?? "shine";
-	return wt.set(e, i), i;
+var kt = "cubic-bezier(.2,.8,.2,1)", U = "cubic-bezier(.2,.9,.3,1.25)", At = /* @__PURE__ */ new WeakMap();
+function jt(e, t) {
+	let n = At.get(e), r = Object.keys(Tt).filter((e) => e !== "random" && e !== "press" && e !== "none" && e !== n && (t.icon || e !== "icon-pop" && e !== "icon-flip") && (t.badge || e !== "badge-pop")), i = r[Math.floor(Math.random() * r.length)] ?? "shine";
+	return At.set(e, i), i;
 }
-var Et = /* @__PURE__ */ new WeakMap(), G = (e, t) => `color-mix(in srgb, ${e} ${t}%, transparent)`;
-function Dt(e, t, n) {
-	if (t === "none" || t === "press" || U()) return;
-	t === "random" && (t = Tt(e, n)), Ot(e);
+var Mt = /* @__PURE__ */ new WeakMap(), W = (e, t) => `color-mix(in srgb, ${e} ${t}%, transparent)`;
+function Nt(e, t, n) {
+	if (t === "none" || t === "press" || H()) return;
+	t === "random" && (t = jt(e, n)), Pt(e);
 	let r = e.offsetWidth || e.getBoundingClientRect().width, i = e.offsetHeight || e.getBoundingClientRect().height, a = n.x ?? r / 2, o = n.y ?? i / 2, s = { anims: [] };
-	Et.set(e, s);
-	let c = (e, t, n, r = Ct) => {
+	Mt.set(e, s);
+	let c = (e, t, n, r = kt) => {
 		let i = e.animate(t, {
 			duration: n,
 			easing: r
@@ -1017,7 +1370,7 @@ function Dt(e, t, n) {
 			offset: .3
 		},
 		{ transform: "scale(1)" }
-	], n, W), u = () => {
+	], n, U), u = () => {
 		if (s.layer) return s.layer;
 		getComputedStyle(e).position === "static" && (e.style.position = "relative");
 		let t = document.createElement("span");
@@ -1050,7 +1403,7 @@ function Dt(e, t, n) {
 			break;
 		case "ripple": {
 			let e = Math.hypot(r, i);
-			c(d(`left:${a - e}px;top:${o - e}px;width:${e * 2}px;height:${e * 2}px;border-radius:50%;background:${G(n.color, 35)}`), [{
+			c(d(`left:${a - e}px;top:${o - e}px;width:${e * 2}px;height:${e * 2}px;border-radius:50%;background:${W(n.color, 35)}`), [{
 				transform: "scale(0)",
 				opacity: .9
 			}, {
@@ -1061,7 +1414,7 @@ function Dt(e, t, n) {
 		}
 		case "glow": {
 			let t = getComputedStyle(e).boxShadow, r = t && t !== "none" ? `${t}, ` : "";
-			c(e, [{ boxShadow: `${r}0 0 0 0 ${G(n.color, 70)}` }, { boxShadow: `${r}0 0 0 14px ${G(n.color, 0)}` }], 700, "ease-out");
+			c(e, [{ boxShadow: `${r}0 0 0 0 ${W(n.color, 70)}` }, { boxShadow: `${r}0 0 0 14px ${W(n.color, 0)}` }], 700, "ease-out");
 			break;
 		}
 		case "jelly":
@@ -1090,7 +1443,7 @@ function Dt(e, t, n) {
 					offset: .3
 				},
 				{ transform: "perspective(600px) rotateX(0) rotateY(0) scale(1)" }
-			], 550, W);
+			], 550, U);
 			break;
 		case "icon-pop":
 			f(n.icon, [
@@ -1124,11 +1477,11 @@ function Dt(e, t, n) {
 					offset: .35
 				},
 				{ transform: "translateY(0) scale(1)" }
-			], 480, W);
+			], 480, U);
 			break;
 		case "bloom": {
 			let e = Math.hypot(r, i);
-			c(d(`left:${a - e}px;top:${o - e}px;width:${e * 2}px;height:${e * 2}px;border-radius:50%;background:radial-gradient(circle,${G(n.color, 60)},${G(n.color, 20)} 60%,transparent 70%)`), [
+			c(d(`left:${a - e}px;top:${o - e}px;width:${e * 2}px;height:${e * 2}px;border-radius:50%;background:radial-gradient(circle,${W(n.color, 60)},${W(n.color, 20)} 60%,transparent 70%)`), [
 				{
 					transform: "scale(0)",
 					opacity: 1
@@ -1164,7 +1517,7 @@ function Dt(e, t, n) {
 					offset: .3
 				},
 				{ transform: "scale(1)" }
-			], 400, W) : l(.98, 300);
+			], 400, U) : l(.98, 300);
 			for (let e = 0; e < 10; e++) {
 				let t = e / 10 * Math.PI * 2 + Math.random() * .3, r = 30 + Math.random() * 22;
 				c(d(`left:${i - 3}px;top:${s - 3}px;width:6px;height:6px;border-radius:50%;background:${n.color}`), [{
@@ -1223,30 +1576,30 @@ function Dt(e, t, n) {
 				offset: .4
 			},
 			{ transform: "scale(1)" }
-		], 450, W);
+		], 450, U);
 	}
-	Promise.all(s.anims.map((e) => e.finished)).then(() => Et.get(e) === s && Ot(e), () => {});
+	Promise.all(s.anims.map((e) => e.finished)).then(() => Mt.get(e) === s && Pt(e), () => {});
 }
-function Ot(e) {
-	let t = Et.get(e);
-	t && (Et.delete(e), t.anims.forEach((e) => e.cancel()), t.layer?.remove());
+function Pt(e) {
+	let t = Mt.get(e);
+	t && (Mt.delete(e), t.anims.forEach((e) => e.cancel()), t.layer?.remove());
 }
 //#endregion
 //#region src/core/base-card.ts
-var kt = [
+var Ft = [
 	"full",
 	"compact",
 	"slim"
-], At = (e) => kt.includes(e);
-function jt(e, t) {
-	if (At(e)) return e;
+], It = (e) => Ft.includes(e);
+function Lt(e, t) {
+	if (It(e)) return e;
 	for (let e of [t, document.documentElement]) {
 		let t = getComputedStyle(e).getPropertyValue("--glide-size").trim();
-		if (At(t)) return t;
+		if (It(t)) return t;
 	}
 	return "full";
 }
-var K = C`
+var G = x`
   :host {
     display: block;
     font-family: var(--gc-font);
@@ -1297,7 +1650,7 @@ var K = C`
     }
   }
 `;
-function Mt(e) {
+function Rt(e) {
 	if (e !== void 0) return e;
 	try {
 		let e = localStorage.getItem("glide-card-lite");
@@ -1306,7 +1659,7 @@ function Mt(e) {
 	let t = navigator.deviceMemory;
 	return t !== void 0 && t <= 2;
 }
-var Nt = [
+var zt = [
 	"100% 100%",
 	"0% 100%",
 	"100% 0%",
@@ -1314,17 +1667,17 @@ var Nt = [
 	"85% 110%",
 	"0% 30%"
 ];
-function Pt(e) {
+function Bt(e) {
 	let t = e, n = t.entity ?? t.name ?? t.title ?? JSON.stringify(e), r = 2166136261;
 	for (let e = 0; e < n.length; e++) r = Math.imul(r ^ n.charCodeAt(e), 16777619) >>> 0;
 	return {
 		tint: r % 5 + 1,
-		glowAt: Nt[(r >>> 8) % Nt.length]
+		glowAt: zt[(r >>> 8) % zt.length]
 	};
 }
-var q = class extends R {
+var K = class extends I {
 	constructor(...e) {
-		super(...e), this.editMode = !1, this.theme = p(), this.themeKey = "";
+		super(...e), this.editMode = !1, this.theme = v(), this.themeKey = "";
 	}
 	static {
 		this.properties = {
@@ -1341,8 +1694,8 @@ var q = class extends R {
 	}
 	setConfig(e) {
 		this.config = e;
-		let t = Pt(e);
-		this.style.setProperty("--gc-tint", `var(--gc-tint-${t.tint})`), this.style.setProperty("--gc-glow-at", t.glowAt), this.theme = p(e.theme);
+		let t = Bt(e);
+		this.style.setProperty("--gc-tint", `var(--gc-tint-${t.tint})`), this.style.setProperty("--gc-glow-at", t.glowAt), this.theme = v(e.theme);
 	}
 	shouldUpdate(e) {
 		if (e.size > 1 || !e.has("hass")) return !0;
@@ -1354,20 +1707,20 @@ var q = class extends R {
 	}
 	applyTheme() {
 		if (!this.config) return;
-		let e = v(this.config.theme, this), t = y(this.config.mode, this.hass?.themes?.darkMode), n = `${e}|${t}|${this.config.accent ?? ""}|${this.config.lite}|${this.config.tap_animation ?? ""}|${this.config.size ?? ""}`;
+		let e = ne(this.config.theme, this), t = re(this.config.mode, this.hass?.themes?.darkMode), n = `${e}|${t}|${this.config.accent ?? ""}|${this.config.lite}|${this.config.tap_animation ?? ""}|${this.config.size ?? ""}`;
 		if (n === this.themeKey) return;
-		this.themeKey = n, this.theme = p(e), this.toggleAttribute("dark", t), this.toggleAttribute("lite", Mt(this.config.lite)), this.dataset.theme = e, this.setAttribute("tap-fx", St(this.config.tap_animation, this)), this.setAttribute("size", this.size), this.config.accent ? this.style.setProperty("--gc-accent", this.config.accent) : this.style.removeProperty("--gc-accent");
+		this.themeKey = n, this.theme = v(e), this.toggleAttribute("dark", t), this.toggleAttribute("lite", Rt(this.config.lite)), this.dataset.theme = e, this.setAttribute("tap-fx", Ot(this.config.tap_animation, this)), this.setAttribute("size", this.size), this.config.accent ? this.style.setProperty("--gc-accent", this.config.accent) : this.style.removeProperty("--gc-accent");
 		let r = this.constructor.elementStyles.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
-		this.renderRoot.adoptedStyleSheets = [...r, _(e, t, this.cardType)];
+		this.renderRoot.adoptedStyleSheets = [...r, te(e, t, this.cardType)];
 	}
 	playTapFx(e, t, n = {}) {
-		let r = St(this.config.tap_animation, this), i = e.getBoundingClientRect(), a = getComputedStyle(e), o = [
+		let r = Ot(this.config.tap_animation, this), i = e.getBoundingClientRect(), a = getComputedStyle(e), o = [
 			"--domain",
 			"--chip",
 			"--c",
 			"--gc-accent"
 		].map((e) => a.getPropertyValue(e).trim()).find(Boolean) ?? "#ff9f43";
-		Dt(e, r, {
+		Nt(e, r, {
 			x: t && t.x - i.left,
 			y: t && t.y - i.top,
 			color: o,
@@ -1375,28 +1728,28 @@ var q = class extends R {
 		});
 	}
 	get size() {
-		return jt(this.config?.size, this);
+		return Lt(this.config?.size, this);
 	}
 	stateOf(e) {
 		return e ? this.hass?.states[e] : void 0;
 	}
-}, Ft = 500, It = 250, Lt = 250, Rt = 8, zt = (e) => e.composedPath().some((e) => e instanceof Element && e.hasAttribute("data-no-gesture"));
-function Bt(e, t) {
+}, Vt = 500, Ht = 250, Ut = 250, Wt = 8, Gt = (e) => e.composedPath().some((e) => e instanceof Element && e.hasAttribute("data-no-gesture"));
+function Kt(e, t) {
 	let n = 0, r = 0, i = 0, a = 0, o = 0, s = 0, c = 0, l = "x", u = 1, d = !1, f = "idle", p = () => {
 		clearTimeout(o), clearTimeout(c);
 	}, m = () => e.getBoundingClientRect().width || 1, h = () => e.getBoundingClientRect().height || 1, g = () => getComputedStyle(e).direction === "rtl", _ = (e) => {
-		if (e.button !== 0 || zt(e)) return;
+		if (e.button !== 0 || Gt(e)) return;
 		n = e.clientX, r = e.clientY, f = "down", p();
 		let i = t.axis?.() ?? "x";
 		l = i.endsWith("y") ? "y" : "x", u = i.startsWith("-") ? -1 : 1, d = l === "y" && e.pointerType !== "touch", l === "y" && !d && t.dragStart && (c = window.setTimeout(() => {
 			d = !0, t.arm?.();
-		}, Lt)), t.hold && (o = window.setTimeout(() => {
+		}, Ut)), t.hold && (o = window.setTimeout(() => {
 			f = "held", t.hold();
-		}, Ft));
+		}, Vt));
 	}, v = (o) => {
 		if (f === "down") {
 			let a = o.clientX - n, s = o.clientY - r;
-			if (Math.abs(a) < Rt && Math.abs(s) < Rt) return;
+			if (Math.abs(a) < Wt && Math.abs(s) < Wt) return;
 			p();
 			let c = l === "y" ? d && Math.abs(s) > Math.abs(a) : Math.abs(a) > Math.abs(s);
 			t.dragStart && c ? (f = "drag", i = t.dragStart(), e.setPointerCapture(o.pointerId)) : f = "cancel";
@@ -1415,7 +1768,7 @@ function Bt(e, t) {
 				};
 				s ? (clearTimeout(s), s = 0, t.doubleTap(e)) : s = window.setTimeout(() => {
 					s = 0, t.tap?.(e);
-				}, It);
+				}, Ht);
 			} else t.tap?.({
 				x: n,
 				y: r
@@ -1424,30 +1777,30 @@ function Bt(e, t) {
 		f = "idle";
 	}, b = () => {
 		p(), d = !1, f === "drag" && t.dragEnd?.(a), f = "idle";
-	}, x = (e) => {
-		t.hold && e.preventDefault();
-	}, S = (e) => {
-		d && (f === "down" || f === "drag") && e.preventDefault();
 	}, ee = (e) => {
-		zt(e) || (e.key === "Enter" || e.key === " ") && (e.preventDefault(), t.tap?.());
+		t.hold && e.preventDefault();
+	}, te = (e) => {
+		d && (f === "down" || f === "drag") && e.preventDefault();
+	}, ne = (e) => {
+		Gt(e) || (e.key === "Enter" || e.key === " ") && (e.preventDefault(), t.tap?.());
 	};
-	return e.addEventListener("pointerdown", _), e.addEventListener("pointermove", v), e.addEventListener("pointerup", y), e.addEventListener("pointercancel", b), e.addEventListener("contextmenu", x), e.addEventListener("keydown", ee), e.addEventListener("touchmove", S, { passive: !1 }), () => {
-		p(), clearTimeout(s), e.removeEventListener("pointerdown", _), e.removeEventListener("pointermove", v), e.removeEventListener("pointerup", y), e.removeEventListener("pointercancel", b), e.removeEventListener("contextmenu", x), e.removeEventListener("keydown", ee), e.removeEventListener("touchmove", S);
+	return e.addEventListener("pointerdown", _), e.addEventListener("pointermove", v), e.addEventListener("pointerup", y), e.addEventListener("pointercancel", b), e.addEventListener("contextmenu", ee), e.addEventListener("keydown", ne), e.addEventListener("touchmove", te, { passive: !1 }), () => {
+		p(), clearTimeout(s), e.removeEventListener("pointerdown", _), e.removeEventListener("pointermove", v), e.removeEventListener("pointerup", y), e.removeEventListener("pointercancel", b), e.removeEventListener("contextmenu", ee), e.removeEventListener("keydown", ne), e.removeEventListener("touchmove", te);
 	};
 }
 //#endregion
 //#region src/cards/cover-scenes.ts
-var Vt = [
+var qt = [
 	"garden",
 	"sky",
 	"city",
 	"sea"
-], Ht = (e) => Vt.includes(e), J = (e, t, n, r) => N`
+], Jt = (e) => qt.includes(e), q = (e, t, n, r) => j`
   <g class="cloud ${r}" transform="translate(${e} ${t}) scale(${n})">
     <ellipse cx="0" cy="4" rx="16" ry="6" />
     <circle cx="-6" cy="0" r="7" />
     <circle cx="5" cy="-2" r="9" />
-  </g>`, Ut = [
+  </g>`, Yt = [
 	[
 		18,
 		14,
@@ -1499,31 +1852,31 @@ var Vt = [
 		.6
 	]
 ];
-function Wt(e) {
-	return e ? N`
-      <g class="stars">${Ut.map(([e, t, n], r) => N`<circle class="star" style="animation-delay:${r % 5 * .7}s" cx=${e} cy=${t} r=${n} />`)}</g>
+function Xt(e) {
+	return e ? j`
+      <g class="stars">${Yt.map(([e, t, n], r) => j`<circle class="star" style="animation-delay:${r % 5 * .7}s" cx=${e} cy=${t} r=${n} />`)}</g>
       <circle class="moon" cx="150" cy="50" r="10" />
-      <circle class="moon-cut" cx="155" cy="46" r="9" />` : N`
+      <circle class="moon-cut" cx="155" cy="46" r="9" />` : j`
       <circle class="halo" cx="150" cy="50" r="18" />
       <circle class="sun" cx="150" cy="50" r="10" />
-      ${J(42, 24, 1, "c1")}
-      ${J(112, 16, .75, "c2")}`;
+      ${q(42, 24, 1, "c1")}
+      ${q(112, 16, .75, "c2")}`;
 }
-var Gt = (e, t, n) => N`
+var Zt = (e, t, n) => j`
   <g transform="translate(${e} ${t}) scale(${n})">
     <rect class="trunk" x="-1.5" y="-4" width="3" height="10" />
     <circle class="leaf" cx="0" cy="-10" r="9" />
-  </g>`, Kt = (e, t, n) => N`
+  </g>`, Qt = (e, t, n) => j`
   <g transform="translate(${e} ${t}) scale(${n})">
     <rect class="trunk" x="-1.5" y="-3" width="3" height="8" />
     <polygon class="pine" points="0,-26 9,-2 -9,-2" />
-  </g>`, qt = {
-	sky: () => N`${J(70, 62, 1.1, "c3")}${J(168, 74, .8, "c1")}${J(18, 88, .9, "c2")}`,
-	garden: () => N`
+  </g>`, $t = {
+	sky: () => j`${q(70, 62, 1.1, "c3")}${q(168, 74, .8, "c1")}${q(18, 88, .9, "c2")}`,
+	garden: () => j`
     <path class="hill-back" d="M0 90 Q50 68 100 84 T200 78 V120 H0Z" />
-    ${Kt(150, 86, 1)}${Gt(172, 88, .9)}${Kt(34, 92, .8)}
+    ${Qt(150, 86, 1)}${Zt(172, 88, .9)}${Qt(34, 92, .8)}
     <path class="hill" d="M0 102 Q60 86 120 98 T200 94 V120 H0Z" />
-    ${Gt(62, 100, 1.1)}${Kt(88, 100, .9)}`,
+    ${Zt(62, 100, 1.1)}${Qt(88, 100, .9)}`,
 	city: (e) => {
 		let t = [
 			[
@@ -1597,13 +1950,13 @@ var Gt = (e, t, n) => N`
 				86,
 				28
 			]
-		], r = n.flatMap(([e, t, n], r) => Array.from({ length: Math.floor((120 - t - 6) / 9) }, (i, a) => [0, 1].map((i) => (r + a + i) % 3 == 0 ? N`<rect class="win" x=${e + 4 + i * (n - 12)} y=${t + 6 + a * 9} width="4" height="4" />` : null)));
-		return N`
-      ${t.map(([e, t, n]) => N`<rect class="bld-back" x=${e} y=${t} width=${n} height=${120 - t} />`)}
-      ${n.map(([e, t, n]) => N`<rect class="bld" x=${e} y=${t} width=${n} height=${120 - t} />`)}
+		], r = n.flatMap(([e, t, n], r) => Array.from({ length: Math.floor((120 - t - 6) / 9) }, (i, a) => [0, 1].map((i) => (r + a + i) % 3 == 0 ? j`<rect class="win" x=${e + 4 + i * (n - 12)} y=${t + 6 + a * 9} width="4" height="4" />` : null)));
+		return j`
+      ${t.map(([e, t, n]) => j`<rect class="bld-back" x=${e} y=${t} width=${n} height=${120 - t} />`)}
+      ${n.map(([e, t, n]) => j`<rect class="bld" x=${e} y=${t} width=${n} height=${120 - t} />`)}
       ${e ? r : null}`;
 	},
-	sea: () => N`
+	sea: () => j`
     <rect class="water" x="0" y="82" width="200" height="38" />
     <path class="wave" d="M10 92 q6 -3 12 0 t12 0 M70 100 q6 -3 12 0 t12 0 M140 90 q6 -3 12 0 t12 0 M120 108 q6 -3 12 0 t12 0 M30 112 q6 -3 12 0 t12 0" />
     <g class="boat" transform="translate(58 82)">
@@ -1611,12 +1964,12 @@ var Gt = (e, t, n) => N`
       <path class="hull" d="M-8 -1 H14 L10 3 H-4Z" />
     </g>`
 };
-function Jt(e, t) {
-	return M`<svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">${Wt(t)}${qt[e](t)}</svg>`;
+function en(e, t) {
+	return A`<svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">${Xt(t)}${$t[e](t)}</svg>`;
 }
 //#endregion
 //#region src/core/i18n.ts
-var Yt = {
+var tn = {
 	on: "On",
 	off: "Off",
 	open: "Open",
@@ -1641,8 +1994,8 @@ var Yt = {
 	open_cover: "Open",
 	close_cover: "Close",
 	stop_cover: "Stop"
-}, Xt = {
-	en: Yt,
+}, nn = {
+	en: tn,
 	he: {
 		on: "פועל",
 		off: "כבוי",
@@ -1670,18 +2023,18 @@ var Yt = {
 		stop_cover: "עצירה"
 	}
 };
-function Y(e, t) {
-	return (Xt[(e?.locale?.language ?? e?.language ?? "en").split("-")[0]] ?? Yt)[t] ?? Yt[t];
+function J(e, t) {
+	return (nn[(e?.locale?.language ?? e?.language ?? "en").split("-")[0]] ?? tn)[t] ?? tn[t];
 }
-function Zt(e, t) {
+function rn(e, t) {
 	let n = e.states[t];
-	if (!n) return Y(e, "unavailable");
+	if (!n) return J(e, "unavailable");
 	let r = e.formatEntityState;
-	return r ? r(n) : (Y(e, n.state) ?? n.state) || n.state;
+	return r ? r(n) : (J(e, n.state) ?? n.state) || n.state;
 }
 //#endregion
 //#region src/core/templates.ts
-var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
+var an = (e) => typeof e == "string" && /\{\{|\{%/.test(e), on = class {
 	constructor(e, t, n, r = () => e.requestUpdate()) {
 		this.fields = t, this.ctx = n, this.onChange = r, this.values = {}, this.subs = /* @__PURE__ */ new Map(), this.warned = /* @__PURE__ */ new Set(), e.addController(this);
 	}
@@ -1696,7 +2049,7 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 	}
 	get(e, t) {
 		let n = this.fields()[e];
-		return Qt(n) ? e in this.values ? this.values[e] : t : typeof n == "string" ? n : t;
+		return an(n) ? e in this.values ? this.values[e] : t : typeof n == "string" ? n : t;
 	}
 	sync() {
 		let { hass: e, config: t, entity: n } = this.ctx(), r = e?.connection;
@@ -1704,7 +2057,7 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 			r !== this.conn && (this.clear(), this.conn = r);
 			for (let [i, a] of Object.entries(this.fields())) {
 				let o = this.subs.get(i);
-				if (!Qt(a)) {
+				if (!an(a)) {
 					o && this.drop(i);
 					continue;
 				}
@@ -1741,12 +2094,12 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 		for (let e of [...this.subs.keys()]) this.drop(e);
 		this.conn = void 0;
 	}
-}, en = (e) => e && /^[\w-]+:[\w-]+$/.test(e.trim()) ? e.trim() : void 0, tn = /* @__PURE__ */ new Set([
+}, sn = (e) => e && /^[\w-]+:[\w-]+$/.test(e.trim()) ? e.trim() : void 0, cn = /* @__PURE__ */ new Set([
 	"scene",
 	"script",
 	"button",
 	"input_button"
-]), nn = 1, rn = 2, an = 8, on = {
+]), ln = 1, un = 2, dn = 8, fn = {
 	blind: "down",
 	roman: "down",
 	venetian: "down",
@@ -1755,14 +2108,14 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 	curtain: "split",
 	curtain_side: "side",
 	vertical: "side"
-}, sn = /* @__PURE__ */ new Set([
+}, pn = /* @__PURE__ */ new Set([
 	"curtain",
 	"curtain_side",
 	"roman"
-]), cn = 1e3, ln = 250, un = 4e3, dn = (e) => {
+]), mn = 1e3, hn = 250, gn = 4e3, _n = (e) => {
 	let t = typeof e == "number" ? Math.abs(e - 50) / 50 : .5;
 	return Math.round((2.5 + 5.5 * t) * 10) / 10;
-}, fn = (e) => e?.state === "opening" || e?.state === "closing", pn = /* @__PURE__ */ new Set([
+}, vn = (e) => e?.state === "opening" || e?.state === "closing", yn = /* @__PURE__ */ new Set([
 	"light",
 	"switch",
 	"fan",
@@ -1775,9 +2128,9 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 	"input_button",
 	"siren",
 	"humidifier"
-]), mn = class extends q {
+]), bn = class extends K {
 	constructor(...e) {
-		super(...e), this.cardType = "button", this.templateRev = 0, this.moveMs = cn, this.tpl = new $t(this, () => {
+		super(...e), this.cardType = "button", this.templateRev = 0, this.moveMs = mn, this.tpl = new on(this, () => {
 			let e = this.config ?? {};
 			return {
 				name: e.name,
@@ -1794,7 +2147,7 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 	}
 	static {
 		this.properties = {
-			...q.properties,
+			...K.properties,
 			dragValue: { state: !0 },
 			templateRev: { state: !0 }
 		};
@@ -1824,7 +2177,7 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 		let t = this.config[`${e}_action`];
 		if (t) return t;
 		let n = this.config.entity;
-		if (e === "tap") return { action: n && pn.has(z(n)) ? "toggle" : "more-info" };
+		if (e === "tap") return { action: n && yn.has(L(n)) ? "toggle" : "more-info" };
 		if (e === "hold") return { action: "more-info" };
 	}
 	willUpdate(e) {
@@ -1837,8 +2190,8 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 	trackMotion() {
 		let e = this.stateOf(this.config.entity), t = e?.attributes.current_position;
 		if (typeof t != "number" || t === this.lastPos?.value) return;
-		let n = performance.now(), r = fn(e);
-		r && (this.moveMs = this.lastPos?.moving ? Math.min(un, Math.max(ln, n - this.lastPos.at)) : cn), this.lastPos = {
+		let n = performance.now(), r = vn(e);
+		r && (this.moveMs = this.lastPos?.moving ? Math.min(gn, Math.max(hn, n - this.lastPos.at)) : mn), this.lastPos = {
 			value: t,
 			at: n,
 			moving: r
@@ -1846,21 +2199,21 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 	}
 	firstUpdated() {
 		let e = this.renderRoot.querySelector(".surface"), t = -1;
-		this.detach = Bt(e, {
+		this.detach = Kt(e, {
 			axis: () => this.dragAxis,
-			arm: () => V("selection"),
+			arm: () => B("selection"),
 			tap: (t) => {
 				this.playTapFx(e, t, {
 					icon: e.querySelector(".icon"),
 					badge: e.querySelector(".badge")
-				}), this.hass && H(this, this.hass, this.action("tap"), this.config.entity);
+				}), this.hass && V(this, this.hass, this.action("tap"), this.config.entity);
 			},
-			hold: () => this.hass && H(this, this.hass, this.action("hold"), this.config.entity),
+			hold: () => this.hass && V(this, this.hass, this.action("hold"), this.config.entity),
 			doubleTap: this.config.double_tap_action ? (t) => {
 				this.playTapFx(e, t, {
 					icon: e.querySelector(".icon"),
 					badge: e.querySelector(".badge")
-				}), this.hass && H(this, this.hass, this.action("double_tap"), this.config.entity);
+				}), this.hass && V(this, this.hass, this.action("double_tap"), this.config.entity);
 			} : void 0,
 			dragStart: () => {
 				let e = this.slider;
@@ -1870,7 +2223,7 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 				if (!this.slider) return;
 				this.dragValue = e;
 				let n = Math.floor(e / 10);
-				n !== t && (t = n, V("selection"));
+				n !== t && (t = n, B("selection"));
 			},
 			dragEnd: (e) => {
 				let t = this.slider;
@@ -1885,21 +2238,21 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 		super.connectedCallback(), this.hasUpdated && !this.detach && this.firstUpdated();
 	}
 	get slider() {
-		return this.config.slider === !1 ? void 0 : ft(this.stateOf(this.config.entity));
+		return this.config.slider === !1 ? void 0 : vt(this.stateOf(this.config.entity));
 	}
 	get isCover() {
-		return z(this.config.entity) === "cover" && !!this.slider;
+		return L(this.config.entity) === "cover" && !!this.slider;
 	}
 	get coverStyle() {
 		if (!this.isCover) return;
 		let e = this.config.cover_style;
-		if (e && e in on) return e;
+		if (e && e in fn) return e;
 		let t = this.stateOf(this.config.entity)?.attributes.device_class;
 		return t === "curtain" ? "curtain" : t === "shutter" ? "shutter" : "blind";
 	}
 	get motion() {
 		let e = this.coverStyle;
-		return e ? on[e] : void 0;
+		return e ? fn[e] : void 0;
 	}
 	get horizontal() {
 		return this.motion === "split" || this.motion === "side";
@@ -1922,26 +2275,26 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 		if (e !== "color") return e === void 0 && this.config.view_image ? "image" : "scene";
 	}
 	get coverButtons() {
-		return z(this.config.entity) === "cover" && !!this.config.cover_buttons;
+		return L(this.config.entity) === "cover" && !!this.config.cover_buttons;
 	}
 	renderCoverButtons(e) {
-		let t = this.config.entity, n = e?.attributes ?? {}, r = n.supported_features ?? 11, i = n.current_position, a = fn(e), o = !e || nt(e), s = !a && (i === void 0 ? e?.state === "open" : i >= 100), c = !a && (i === void 0 ? e?.state === "closed" : i <= 0), [l, u] = {
+		let t = this.config.entity, n = e?.attributes ?? {}, r = n.supported_features ?? 11, i = n.current_position, a = vn(e), o = !e || lt(e), s = !a && (i === void 0 ? e?.state === "open" : i >= 100), c = !a && (i === void 0 ? e?.state === "closed" : i <= 0), [l, u] = {
 			down: ["mdi:arrow-up", "mdi:arrow-down"],
 			up: ["mdi:arrow-down", "mdi:arrow-up"],
 			split: ["mdi:arrow-split-vertical", "mdi:arrow-collapse-horizontal"],
 			side: this.side === "start" ? ["mdi:arrow-left", "mdi:arrow-right"] : ["mdi:arrow-right", "mdi:arrow-left"]
-		}[this.motion ?? "down"], d = this.motion === "side" ? "mirror" : "", f = (e, n, r, i, a = "") => M`
+		}[this.motion ?? "down"], d = this.motion === "side" ? "mirror" : "", f = (e, n, r, i, a = "") => A`
       <button class="round ${a}" aria-label=${r} title=${r} ?disabled=${o || i}
         @click=${(n) => {
-			n.stopPropagation(), V("light"), this.hass?.callService("cover", e, { entity_id: t });
+			n.stopPropagation(), B("light"), this.hass?.callService("cover", e, { entity_id: t });
 		}}>
         <ha-icon .icon=${n}></ha-icon>
       </button>`;
-		return M`
+		return A`
       <div class="cover-btns" data-no-gesture>
-        ${r & nn ? f("open_cover", l, Y(this.hass, "open_cover"), s, d) : F}
-        ${r & an ? f("stop_cover", "mdi:stop", Y(this.hass, "stop_cover"), !a, a ? "stop live" : "stop") : F}
-        ${r & rn ? f("close_cover", u, Y(this.hass, "close_cover"), c, d) : F}
+        ${r & ln ? f("open_cover", l, J(this.hass, "open_cover"), s, d) : N}
+        ${r & dn ? f("stop_cover", "mdi:stop", J(this.hass, "stop_cover"), !a, a ? "stop live" : "stop") : N}
+        ${r & un ? f("close_cover", u, J(this.hass, "close_cover"), c, d) : N}
       </div>
     `;
 	}
@@ -1949,53 +2302,53 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
 		return this.view ? [...super.watched(), "sun.sun"] : super.watched();
 	}
 	renderView() {
-		let e = this.hass?.states["sun.sun"]?.state === "below_horizon", t = Ht(this.config.view) ? this.config.view : "garden";
-		return M`
+		let e = this.hass?.states["sun.sun"]?.state === "below_horizon", t = Jt(this.config.view) ? this.config.view : "garden";
+		return A`
       <div class="view ${e ? "night" : "day"} ${this.view === "image" ? "photo" : t}">
-        ${this.view === "image" ? M`<img src=${this.config.view_image} alt="" draggable="false" />` : Jt(t, e)}
+        ${this.view === "image" ? A`<img src=${this.config.view_image} alt="" draggable="false" />` : en(t, e)}
       </div>
     `;
 	}
 	renderPanel(e) {
 		let t = this.dragValue === void 0 ? "" : "dragging";
-		switch (on[e]) {
-			case "split": return M`<div class="rod"></div>${["start", "end"].map((e) => M`<div class="drape ${e} ${t}"></div>`)}`;
-			case "side": return M`<div class="rod"></div><div class="drape single ${this.side} ${t}"></div>`;
-			default: return M`<div class="fill ${t}"></div>${e === "shutter" ? M`<div class="box"></div>` : F}`;
+		switch (fn[e]) {
+			case "split": return A`<div class="rod"></div>${["start", "end"].map((e) => A`<div class="drape ${e} ${t}"></div>`)}`;
+			case "side": return A`<div class="rod"></div><div class="drape single ${this.side} ${t}"></div>`;
+			default: return A`<div class="fill ${t}"></div>${e === "shutter" ? A`<div class="box"></div>` : N}`;
 		}
 	}
 	render() {
-		let e = this.stateOf(this.config.entity), t = this.slider, n = this.dragValue ?? t?.value, r = this.isCover, i = this.view, a = this.coverStyle, o = this.horizontal, s = !r && (this.dragValue === void 0 ? rt(e) : this.dragValue > 0), c = this.hass && this.config.entity && e ? Zt(this.hass, this.config.entity) : "", l = tn.has(z(this.config.entity)), u = ot(e, this.tpl.get("name") || void 0), d = (this.config.badge === void 0 ? void 0 : this.tpl.get("badge") ?? "") ?? (l ? "" : r ? `${n}%` : c), f = this.config.secondary === void 0 ? r ? `${n}% ${c}` : this.coverButtons ? c : t && s && n !== void 0 ? `${n}%` : "" : this.tpl.get("secondary") ?? "", p = i && !o ? 100 - (n ?? 0) : t ? n ?? 0 : s ? 100 : 0, m = this.tpl.get("color")?.trim(), h = this.coverButtons, g = r && this.dragValue === void 0 && fn(e);
-		return M`
+		let e = this.stateOf(this.config.entity), t = this.slider, n = this.dragValue ?? t?.value, r = this.isCover, i = this.view, a = this.coverStyle, o = this.horizontal, s = !r && (this.dragValue === void 0 ? ut(e) : this.dragValue > 0), c = this.hass && this.config.entity && e ? rn(this.hass, this.config.entity) : "", l = cn.has(L(this.config.entity)), u = pt(e, this.tpl.get("name") || void 0), d = (this.config.badge === void 0 ? void 0 : this.tpl.get("badge") ?? "") ?? (l ? "" : r ? `${n}%` : c), f = this.config.secondary === void 0 ? r ? `${n}% ${c}` : this.coverButtons ? c : t && s && n !== void 0 ? `${n}%` : "" : this.tpl.get("secondary") ?? "", p = i && !o ? 100 - (n ?? 0) : t ? n ?? 0 : s ? 100 : 0, m = this.tpl.get("color")?.trim(), h = this.coverButtons, g = r && this.dragValue === void 0 && vn(e);
+		return A`
       <div
-        class="surface ${this.layout} ${s ? "on" : ""} ${r ? "cover" : ""} ${i ? "window" : ""} ${a ? `style-${a} side-${this.side}` : ""} ${a === "curtain" ? "curtain" : ""} ${a && sn.has(a) ? "fabric" : ""} ${g ? "moving" : ""} ${h ? "has-btns" : ""} ${this.config.fill === !1 ? "nofill" : ""} ${nt(e) && this.config.entity ? "unavailable" : ""}"
-        style=${et({
-			"--domain": lt(m) ?? st(e),
-			"--gc-icon-on": dt(m),
+        class="surface ${this.layout} ${s ? "on" : ""} ${r ? "cover" : ""} ${i ? "window" : ""} ${a ? `style-${a} side-${this.side}` : ""} ${a === "curtain" ? "curtain" : ""} ${a && pn.has(a) ? "fabric" : ""} ${g ? "moving" : ""} ${h ? "has-btns" : ""} ${this.config.fill === !1 ? "nofill" : ""} ${lt(e) && this.config.entity ? "unavailable" : ""}"
+        style=${st({
+			"--domain": R(m) ?? mt(e),
+			"--gc-icon-on": _t(m),
 			"--fill": `${p}%`,
 			"--closed": `${(100 - (n ?? 0)) / 100}`,
-			"--gc-fabric": a && sn.has(a) ? lt(m) : void 0,
-			"--slat": a === "venetian" ? `${dn(e?.attributes.current_tilt_position)}px` : void 0,
+			"--gc-fabric": a && pn.has(a) ? R(m) : void 0,
+			"--slat": a === "venetian" ? `${_n(e?.attributes.current_tilt_position)}px` : void 0,
 			"--gc-move": g ? `${Math.round(this.moveMs)}ms` : void 0
 		})}
         role="button"
         tabindex="0"
         aria-label=${u}
       >
-        ${i ? this.renderView() : F}
-        ${i ? this.renderPanel(a) : M`<div class="fill ${this.dragValue === void 0 ? "" : "dragging"}"></div>`}
-        <div class="icon"><ha-icon .icon=${at(e, en(this.tpl.get("icon")))}></ha-icon></div>
+        ${i ? this.renderView() : N}
+        ${i ? this.renderPanel(a) : A`<div class="fill ${this.dragValue === void 0 ? "" : "dragging"}"></div>`}
+        <div class="icon"><ha-icon .icon=${ft(e, sn(this.tpl.get("icon")))}></ha-icon></div>
         <div class="text">
           <div class="name">${u}</div>
-          ${f ? M`<div class="meta">${f}</div>` : F}
+          ${f ? A`<div class="meta">${f}</div>` : N}
         </div>
-        ${d && !h ? M`<div class="badge meta">${d}</div>` : F}
-        ${h ? this.renderCoverButtons(e) : F}
+        ${d && !h ? A`<div class="badge meta">${d}</div>` : N}
+        ${h ? this.renderCoverButtons(e) : N}
       </div>
     `;
 	}
 	static {
-		this.styles = [K, C`
+		this.styles = [G, x`
       :host { height: 100%; container-type: inline-size; }
       .surface {
         height: 100%;
@@ -2397,24 +2750,24 @@ var Qt = (e) => typeof e == "string" && /\{\{|\{%/.test(e), $t = class {
     `];
 	}
 };
-customElements.define("glide-button", mn);
+customElements.define("glide-button", bn);
 //#endregion
 //#region src/cards/sheet.ts
-var hn = "(min-width: 768px)", gn = 120, _n = .6, vn = [
+var xn = "(min-width: 768px)", Sn = 120, Cn = .6, wn = [
 	"hass-more-info",
 	"show-dialog",
 	"hass-notification",
 	"hass-action",
 	"ll-custom"
-], yn = CSS.supports?.("animation-timing-function", "linear(0, 1)"), bn = (e, t) => yn ? vt(e, t) : {
+], Tn = CSS.supports?.("animation-timing-function", "linear(0, 1)"), En = (e, t) => Tn ? wt(e, t) : {
 	easing: "cubic-bezier(.2,.9,.25,1)",
 	duration: 420
-}, xn = 0, Sn = (e) => {
-	xn = Math.max(0, xn + (e ? 1 : -1)), document.documentElement.style.overflow = xn ? "hidden" : "";
-}, Cn = class extends q {
+}, Dn = 0, On = (e) => {
+	Dn = Math.max(0, Dn + (e ? 1 : -1)), document.documentElement.style.overflow = Dn ? "hidden" : "";
+}, kn = class extends K {
 	static {
 		this.properties = {
-			...q.properties,
+			...K.properties,
 			open: {
 				type: Boolean,
 				reflect: !0
@@ -2433,14 +2786,14 @@ var hn = "(min-width: 768px)", gn = 120, _n = .6, vn = [
 			});
 			n.__glideForwarded = !0, t.dispatchEvent(n);
 		};
-		for (let e of vn) this.addEventListener(e, this.forward);
+		for (let e of wn) this.addEventListener(e, this.forward);
 		this.addEventListener("keydown", (e) => e.key === "Escape" && this.requestClose());
 	}
 	disconnectedCallback() {
 		super.disconnectedCallback(), this.lock(!1);
 	}
 	lock(e) {
-		this.locked === e || e && !this.isConnected || (this.locked = e, Sn(e));
+		this.locked === e || e && !this.isConnected || (this.locked = e, On(e));
 	}
 	setHass(e) {
 		this.hass = e;
@@ -2463,10 +2816,10 @@ var hn = "(min-width: 768px)", gn = 120, _n = .6, vn = [
 		}), this.requestUpdate());
 	}
 	requestClose() {
-		this.open && (V("light"), history.state?.glidePopup ? history.back() : (history.replaceState(history.state, "", location.pathname + location.search), window.dispatchEvent(new CustomEvent("glide-hash"))));
+		this.open && (B("light"), history.state?.glidePopup ? history.back() : (history.replaceState(history.state, "", location.pathname + location.search), window.dispatchEvent(new CustomEvent("glide-hash"))));
 	}
 	updated(e) {
-		super.updated(e), e.has("open") && (e.get("open") !== void 0 || this.open) && (this.open ? (this.build(), this.origin = ht, this.lock(!0), this.animateOpen()) : (this.lock(!1), this.animateClose()));
+		super.updated(e), e.has("open") && (e.get("open") !== void 0 || this.open) && (this.open ? (this.build(), this.origin = xt, this.lock(!0), this.animateOpen()) : (this.lock(!1), this.animateClose()));
 	}
 	get panel() {
 		return this.renderRoot.querySelector(".panel");
@@ -2480,8 +2833,8 @@ var hn = "(min-width: 768px)", gn = 120, _n = .6, vn = [
 		if (e.getAnimations().forEach((e) => e.cancel()), e.style.transform = "", e.focus({ preventScroll: !0 }), this.scrim.animate([{ opacity: 0 }, { opacity: 1 }], {
 			duration: 250,
 			fill: "backwards"
-		}), U()) return;
-		let { easing: t, duration: n } = bn(), r = this.origin, i = e.getBoundingClientRect();
+		}), H()) return;
+		let { easing: t, duration: n } = En(), r = this.origin, i = e.getBoundingClientRect();
 		if (r && r.width && r.bottom > 0 && r.top < innerHeight) {
 			let a = `translate(${r.left - i.left}px, ${r.top - i.top}px) scale(${r.width / i.width}, ${r.height / i.height})`;
 			e.style.transformOrigin = "0 0", e.animate([{
@@ -2505,7 +2858,7 @@ var hn = "(min-width: 768px)", gn = 120, _n = .6, vn = [
 				duration: n,
 				fill: "backwards"
 			});
-		} else matchMedia(hn).matches ? e.animate([{
+		} else matchMedia(xn).matches ? e.animate([{
 			transform: "scale(.92)",
 			opacity: 0
 		}, {
@@ -2522,13 +2875,13 @@ var hn = "(min-width: 768px)", gn = 120, _n = .6, vn = [
 		});
 	}
 	animateClose() {
-		let e = this.panel, t = e.style.transform || "none", n = matchMedia(hn).matches ? {
+		let e = this.panel, t = e.style.transform || "none", n = matchMedia(xn).matches ? {
 			transform: "scale(.94)",
 			opacity: 0
 		} : {
 			transform: "translateY(100%)",
 			opacity: 1
-		}, r = U() ? 0 : 260;
+		}, r = H() ? 0 : 260;
 		this.scrim.animate([{ opacity: getComputedStyle(this.scrim).opacity }, { opacity: 0 }], {
 			duration: r,
 			fill: "forwards"
@@ -2544,7 +2897,7 @@ var hn = "(min-width: 768px)", gn = 120, _n = .6, vn = [
 		}).catch(() => {});
 	}
 	onDragStart(e) {
-		if (matchMedia(hn).matches || e.button !== 0 || e.target.closest("button")) return;
+		if (matchMedia(xn).matches || e.button !== 0 || e.target.closest("button")) return;
 		let t = this.panel, n = e.currentTarget, r = e.clientY, i = {
 			y: r,
 			t: e.timeStamp
@@ -2560,8 +2913,8 @@ var hn = "(min-width: 768px)", gn = 120, _n = .6, vn = [
 			let s = o > 0 ? o : o * .2;
 			t.style.transform = `translateY(${s}px)`, this.scrim.style.opacity = String(1 - Math.max(0, o) / t.offsetHeight);
 		}, c = () => {
-			if (n.removeEventListener("pointermove", s), n.removeEventListener("pointerup", c), n.removeEventListener("pointercancel", c), this.scrim.style.opacity = "", o > gn || a > _n) return this.requestClose();
-			let { easing: e, duration: r } = bn(260, 24), i = t.style.transform;
+			if (n.removeEventListener("pointermove", s), n.removeEventListener("pointerup", c), n.removeEventListener("pointercancel", c), this.scrim.style.opacity = "", o > Sn || a > Cn) return this.requestClose();
+			let { easing: e, duration: r } = En(260, 24), i = t.style.transform;
 			t.style.transform = "", t.animate([{ transform: i }, { transform: "none" }], {
 				duration: r,
 				easing: e
@@ -2570,20 +2923,20 @@ var hn = "(min-width: 768px)", gn = 120, _n = .6, vn = [
 		n.addEventListener("pointermove", s), n.addEventListener("pointerup", c), n.addEventListener("pointercancel", c);
 	}
 	render() {
-		if (!this.config) return F;
+		if (!this.config) return N;
 		let e = this.config, t = this.stateOf(e.entity);
-		return M`
+		return A`
       <div class="scrim" @click=${() => this.requestClose()}></div>
       <div class="panel surface" role="dialog" aria-modal="true" aria-label=${e.title ?? ""} tabindex="-1">
         <div class="handle" @pointerdown=${(e) => this.onDragStart(e)}>
           <div class="grabber"></div>
           <header>
-            ${e.icon || t ? M`<div class="icon"><ha-icon .icon=${e.icon ?? at(t)}></ha-icon></div>` : F}
+            ${e.icon || t ? A`<div class="icon"><ha-icon .icon=${e.icon ?? ft(t)}></ha-icon></div>` : N}
             <div class="titles">
               <div class="title">${e.title ?? ""}</div>
-              ${t && this.hass ? M`<div class="meta">${Zt(this.hass, e.entity)}</div>` : F}
+              ${t && this.hass ? A`<div class="meta">${rn(this.hass, e.entity)}</div>` : N}
             </div>
-            <button class="close" aria-label=${Y(this.hass, "close")} @click=${() => this.requestClose()}>
+            <button class="close" aria-label=${J(this.hass, "close")} @click=${() => this.requestClose()}>
               <ha-icon icon="mdi:close" .icon=${"mdi:close"}></ha-icon>
             </button>
           </header>
@@ -2593,7 +2946,7 @@ var hn = "(min-width: 768px)", gn = 120, _n = .6, vn = [
     `;
 	}
 	static {
-		this.styles = [K, C`
+		this.styles = [G, x`
       :host {
         position: fixed;
         inset: 0;
@@ -2697,62 +3050,62 @@ var hn = "(min-width: 768px)", gn = 120, _n = .6, vn = [
     `];
 	}
 };
-customElements.define("glide-sheet", Cn);
-var X = /* @__PURE__ */ new Map(), wn, Tn = (e) => e.startsWith("#") ? e : `#${e}`, En = () => document.querySelector("home-assistant")?.shadowRoot ?? document.body;
-function Dn(e, t) {
-	let n = Tn(e.hash), r = X.get(n);
+customElements.define("glide-sheet", kn);
+var Y = /* @__PURE__ */ new Map(), An, jn = (e) => e.startsWith("#") ? e : `#${e}`, Mn = () => document.querySelector("home-assistant")?.shadowRoot ?? document.body;
+function Nn(e, t) {
+	let n = jn(e.hash), r = Y.get(n);
 	if (!r) {
 		let e = document.createElement("glide-sheet");
-		En().appendChild(e), X.set(n, r = {
+		Mn().appendChild(e), Y.set(n, r = {
 			el: e,
 			owners: /* @__PURE__ */ new Set()
 		});
 	}
-	r.owners.add(t), r.el.setConfig(e), wn && r.el.setHass(wn), An();
+	r.owners.add(t), r.el.setConfig(e), An && r.el.setHass(An), In();
 }
-function On(e, t) {
-	let n = X.get(Tn(e));
-	n && n.owners.delete(t) && !n.owners.size && (n.el.remove(), X.delete(Tn(e)));
+function Pn(e, t) {
+	let n = Y.get(jn(e));
+	n && n.owners.delete(t) && !n.owners.size && (n.el.remove(), Y.delete(jn(e)));
 }
-function kn(e) {
-	wn = e, X.forEach(({ el: t }) => t.setHass(e));
+function Fn(e) {
+	An = e, Y.forEach(({ el: t }) => t.setHass(e));
 }
-function An() {
+function In() {
 	let e = decodeURIComponent(location.hash);
-	X.forEach(({ el: t }, n) => t.open = n === e);
+	Y.forEach(({ el: t }, n) => t.open = n === e);
 }
 for (let e of [
 	"popstate",
 	"hashchange",
 	"glide-hash",
 	"location-changed"
-]) window.addEventListener(e, An);
+]) window.addEventListener(e, In);
 //#endregion
 //#region src/cards/popup.ts
-var jn = class extends q {
+var Ln = class extends K {
 	constructor(...e) {
 		super(...e), this.cardType = "popup";
 	}
 	setConfig(e) {
 		if (!e.hash) throw Error("Pop-up needs a `hash`, e.g. #living-room");
 		if (!Array.isArray(e.cards)) throw Error("Pop-up needs a `cards` list");
-		super.setConfig(e), this.isConnected && Dn(e, this);
+		super.setConfig(e), this.isConnected && Nn(e, this);
 	}
 	shouldUpdate(e) {
-		return e.has("hass") && this.hass && kn(this.hass), e.has("editMode") || e.has("config") || super.shouldUpdate(e);
+		return e.has("hass") && this.hass && Fn(this.hass), e.has("editMode") || e.has("config") || super.shouldUpdate(e);
 	}
 	connectedCallback() {
-		super.connectedCallback(), this.config && Dn(this.config, this);
+		super.connectedCallback(), this.config && Nn(this.config, this);
 	}
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		let e = this.config?.hash;
-		setTimeout(() => !this.isConnected && e && On(e, this), 1e3);
+		setTimeout(() => !this.isConnected && e && Pn(e, this), 1e3);
 	}
 	updated(e) {
 		if (super.updated(e), e.has("editMode")) {
 			let e = this.parentElement;
-			e && (e.style.display = this.editMode ? "block" : "none"), B(this, "card-visibility-changed", { value: this.editMode });
+			e && (e.style.display = this.editMode ? "block" : "none"), z(this, "card-visibility-changed", { value: this.editMode });
 		}
 	}
 	getGridOptions() {
@@ -2765,21 +3118,21 @@ var jn = class extends q {
 		return +!!this.editMode;
 	}
 	render() {
-		if (!this.editMode) return M``;
+		if (!this.editMode) return A``;
 		let e = this.config;
-		return M`
+		return A`
       <div class="surface">
         <ha-icon .icon=${e.icon ?? "mdi:card-outline"}></ha-icon>
         <div class="text">
-          <div class="name">${e.title ?? Y(this.hass, "popup_placeholder")}</div>
+          <div class="name">${e.title ?? J(this.hass, "popup_placeholder")}</div>
           <div class="meta">${e.hash} · ${e.cards.length} cards</div>
         </div>
-        <button @click=${(t) => gt(e.hash, t.currentTarget)}>Preview</button>
+        <button @click=${(t) => St(e.hash, t.currentTarget)}>Preview</button>
       </div>
     `;
 	}
 	static {
-		this.styles = [K, C`
+		this.styles = [G, x`
       .surface {
         display: flex;
         align-items: center;
@@ -2802,20 +3155,20 @@ var jn = class extends q {
     `];
 	}
 };
-customElements.define("glide-popup", jn);
+customElements.define("glide-popup", Ln);
 //#endregion
 //#region src/cards/nav.ts
-var Mn = [
+var Rn = [
 	"popstate",
 	"location-changed",
 	"glide-hash"
-], Nn = () => location.pathname + location.hash, Pn = CSS.supports?.("animation-timing-function", "linear(0, 1)") ? vt(260, 26) : {
+], zn = () => location.pathname + location.hash, Bn = CSS.supports?.("animation-timing-function", "linear(0, 1)") ? wt(260, 26) : {
 	easing: "cubic-bezier(.3,1.3,.4,1)",
 	duration: 450
-}, Fn, In = 1e3, Ln = 450, Rn = (e) => 1 - (1 - e) ** 3, zn = 12, Bn = (e) => !!e && e.width > 0 && e.height > 0, Z = 8, Vn = CSS.supports?.("animation-timing-function", "linear(0, 1)") ? vt(320, 28) : {
+}, Vn, Hn = 1e3, Un = 450, Wn = (e) => 1 - (1 - e) ** 3, Gn = 12, Kn = (e) => !!e && e.width > 0 && e.height > 0, X = 8, qn = CSS.supports?.("animation-timing-function", "linear(0, 1)") ? wt(320, 28) : {
 	easing: "cubic-bezier(.2,.9,.25,1.1)",
 	duration: 320
-}, Hn = (e) => e.startsWith("#") ? decodeURIComponent(location.hash) === e : !location.hash && (location.pathname === e || location.pathname === e.replace(/\/$/, "")), Un = class extends q {
+}, Jn = (e) => e.startsWith("#") ? decodeURIComponent(location.hash) === e : !location.hash && (location.pathname === e || location.pathname === e.replace(/\/$/, "")), Yn = class extends K {
 	constructor(...e) {
 		super(...e), this.cardType = "nav", this.onRoute = () => {
 			this.closeMenu(), this.requestUpdate();
@@ -2831,7 +3184,7 @@ var Mn = [
 			if (e.key !== "Escape") return;
 			let t = this.menuAnchor;
 			this.closeMenu(), t?.focus();
-		}, this.on = (e) => !!e && rt(this.stateOf(e));
+		}, this.on = (e) => !!e && ut(this.stateOf(e));
 	}
 	setConfig(e) {
 		if (!Array.isArray(e.items) || !e.items.length) throw Error("Nav needs an `items` list");
@@ -2856,25 +3209,25 @@ var Mn = [
 					y: i
 				}, this.requestUpdate(), await this.updateComplete, e = this.renderRoot.querySelector(".menu"), !e)) return;
 			}
-			n && e.querySelector("button")?.focus(), !U() && e.animate([{
+			n && e.querySelector("button")?.focus(), !H() && e.animate([{
 				opacity: 0,
-				transform: `translateY(${Z}px) scale(.92)`
+				transform: `translateY(${X}px) scale(.92)`
 			}, {
 				opacity: 1,
 				transform: "none"
-			}], Vn);
+			}], qn);
 		});
 	}
 	menuTarget() {
 		let e = this.menuAnchor?.getBoundingClientRect();
 		if (!e) return;
-		let t = this.renderRoot.querySelector("nav")?.getBoundingClientRect(), n = t && t.width ? t.left + t.width / 2 : innerWidth / 2, r = Math.min(innerHeight - Z, e.top - Z);
+		let t = this.renderRoot.querySelector("nav")?.getBoundingClientRect(), n = t && t.width ? t.left + t.width / 2 : innerWidth / 2, r = Math.min(innerHeight - X, e.top - X);
 		return e.left + e.width / 2 > n ? {
 			bottom: r,
-			right: Math.min(innerWidth - Z, e.right)
+			right: Math.min(innerWidth - X, e.right)
 		} : {
 			bottom: r,
-			left: Math.max(Z, e.left)
+			left: Math.max(X, e.left)
 		};
 	}
 	menuPosition() {
@@ -2884,12 +3237,12 @@ var Mn = [
 		return e.right === void 0 ? `${r} left: ${e.left + t}px; transform-origin: bottom left;` : `${r} right: ${innerWidth - e.right + t}px; transform-origin: bottom right;`;
 	}
 	connectedCallback() {
-		super.connectedCallback(), this.observe(), Mn.forEach((e) => window.addEventListener(e, this.onRoute)), this.rendered !== void 0 && this.rendered !== Nn() && (this.stale = !0, this.requestUpdate());
+		super.connectedCallback(), this.observe(), Rn.forEach((e) => window.addEventListener(e, this.onRoute)), this.rendered !== void 0 && this.rendered !== zn() && (this.stale = !0, this.requestUpdate());
 	}
 	disconnectedCallback() {
 		super.disconnectedCallback(), this.closeMenu(), this.resizer?.disconnect();
 		let e = this.scroller();
-		e && this.stopGlide(e), Mn.forEach((e) => window.removeEventListener(e, this.onRoute));
+		e && this.stopGlide(e), Rn.forEach((e) => window.removeEventListener(e, this.onRoute));
 	}
 	getGridOptions() {
 		return {
@@ -2901,7 +3254,7 @@ var Mn = [
 		return 1;
 	}
 	isCurrent(e) {
-		return e.items ? !this.config.items.some((e) => !e.items && Hn(e.navigation_path)) && e.items.some((e) => Hn(e.navigation_path)) : Hn(e.navigation_path);
+		return e.items ? !this.config.items.some((e) => !e.items && Jn(e.navigation_path)) && e.items.some((e) => Jn(e.navigation_path)) : Jn(e.navigation_path);
 	}
 	indRect() {
 		return this.renderRoot.querySelector(".ind")?.getBoundingClientRect();
@@ -2917,12 +3270,12 @@ var Mn = [
 		let t = e.querySelector("button.active");
 		if (!t || !e.classList.contains("overflow")) return !0;
 		let n = e.getBoundingClientRect(), r = t.getBoundingClientRect();
-		return r.left >= n.left + zn - 2 && r.right <= n.right - zn + 2;
+		return r.left >= n.left + Gn - 2 && r.right <= n.right - Gn + 2;
 	}
 	reveal(e) {
 		let t = this.scroller();
 		if (!t || t.clientWidth <= 0) return;
-		this.markOverflow(t), this.pending && (this.pending.scroll !== void 0 && (t.scrollLeft = this.pending.scroll), this.slide(this.pending.rect), this.pending = void 0, e = !0), e &&= !U(), this.centred = Nn(), this.touched = !1, this.stopGlide(t);
+		this.markOverflow(t), this.pending && (this.pending.scroll !== void 0 && (t.scrollLeft = this.pending.scroll), this.slide(this.pending.rect), this.pending = void 0, e = !0), e &&= !H(), this.centred = zn(), this.touched = !1, this.stopGlide(t);
 		let n = t.querySelector("button.active");
 		if (!n) return;
 		let r = t.getBoundingClientRect(), i = n.getBoundingClientRect(), a = t.scrollLeft;
@@ -2932,8 +3285,8 @@ var Mn = [
 		t.scrollLeft = a, t.style.scrollSnapType = "none";
 		let s = performance.now(), c = (e) => {
 			if (this.touched) return this.stopGlide(t);
-			let n = Math.min(1, (e - s) / Ln);
-			t.scrollLeft = a + (o - a) * Rn(n), n < 1 ? this.glide = requestAnimationFrame(c) : (this.stopGlide(t), this.recheck());
+			let n = Math.min(1, (e - s) / Un);
+			t.scrollLeft = a + (o - a) * Wn(n), n < 1 ? this.glide = requestAnimationFrame(c) : (this.stopGlide(t), this.recheck());
 		};
 		this.glide = requestAnimationFrame(c);
 	}
@@ -2942,17 +3295,17 @@ var Mn = [
 	}
 	recheck() {
 		let e = this.scroller();
-		e && (this.markOverflow(e), this.centred === Nn() ? !this.touched && (this.glide !== void 0 || !this.inView(e)) && this.reveal(!0) : this.reveal(!1));
+		e && (this.markOverflow(e), this.centred === zn() ? !this.touched && (this.glide !== void 0 || !this.inView(e)) && this.reveal(!0) : this.reveal(!1));
 	}
 	slide(e) {
 		let t = this.renderRoot.querySelector(".ind"), n = t?.getBoundingClientRect();
-		t && Bn(e) && Bn(n) && !U() && (Math.abs(e.left - n.left) + Math.abs(e.width - n.width) <= 1 || t.animate([{
+		t && Kn(e) && Kn(n) && !H() && (Math.abs(e.left - n.left) + Math.abs(e.width - n.width) <= 1 || t.animate([{
 			transform: `translateX(${e.left - n.left}px)`,
 			width: `${e.width}px`
 		}, {
 			transform: "none",
 			width: "100%"
-		}], Pn));
+		}], Bn));
 	}
 	observe() {
 		let e = this.scroller();
@@ -2973,12 +3326,12 @@ var Mn = [
 		super.willUpdate(e), this.from = this.stale ? void 0 : this.indRect();
 	}
 	updated() {
-		let e = Nn(), t = this.rendered === void 0, n = !t && this.rendered !== e;
+		let e = zn(), t = this.rendered === void 0, n = !t && this.rendered !== e;
 		this.rendered = e, this.stale = !1;
 		let r = this.scroller();
 		if (!r) return;
 		this.markOverflow(r);
-		let i = Fn && performance.now() - Fn.at < In ? Fn : void 0, a = n ? this.from : void 0, o = !a && (n || t) ? i : void 0, s = a ?? o?.rect;
+		let i = Vn && performance.now() - Vn.at < Hn ? Vn : void 0, a = n ? this.from : void 0, o = !a && (n || t) ? i : void 0, s = a ?? o?.rect;
 		if (n || t) {
 			let e = r.clientWidth > 0;
 			this.pending = e || !s && !o ? void 0 : {
@@ -2990,14 +3343,14 @@ var Mn = [
 	}
 	go(e, t) {
 		let n = this.indRect(), r = this.scroller()?.scrollLeft ?? 0;
-		Fn = Bn(n) ? {
+		Vn = Kn(n) ? {
 			rect: n,
 			scroll: r,
 			at: performance.now()
-		} : void 0, _t(e, t);
+		} : void 0, Ct(e, t);
 	}
 	tapFx(e) {
-		V("selection");
+		B("selection");
 		let t = e.currentTarget;
 		this.playTapFx(t, e instanceof MouseEvent && e.detail ? {
 			x: e.clientX,
@@ -3006,12 +3359,12 @@ var Mn = [
 	}
 	item(e) {
 		let t = this.isCurrent(e), n = this.menuFor === e;
-		return M`
+		return A`
       <button
         class="${t ? "active" : ""} ${n ? "open" : ""}"
         aria-current=${t ? "page" : "false"}
-        aria-haspopup=${e.items ? "menu" : F}
-        aria-expanded=${e.items ? String(n) : F}
+        aria-haspopup=${e.items ? "menu" : N}
+        aria-expanded=${e.items ? String(n) : N}
         @click=${(t) => {
 			this.tapFx(t);
 			let r = t.currentTarget;
@@ -3019,16 +3372,16 @@ var Mn = [
 			n ? this.closeMenu() : this.openMenu(e, r, t instanceof MouseEvent && !t.detail);
 		}}
       >
-        ${t ? M`<span class="ind"></span>` : F}
+        ${t ? A`<span class="ind"></span>` : N}
         <ha-icon .icon=${e.icon}></ha-icon>
         <span class="meta">${e.name}</span>
-        ${this.on(e.entity) || e.items?.some((e) => this.on(e.entity)) ? M`<i class="dot"></i>` : F}
+        ${this.on(e.entity) || e.items?.some((e) => this.on(e.entity)) ? A`<i class="dot"></i>` : N}
       </button>
     `;
 	}
 	menuItem(e) {
-		let t = Hn(e.navigation_path);
-		return M`
+		let t = Jn(e.navigation_path);
+		return A`
       <button
         role="menuitem"
         class=${t ? "active" : ""}
@@ -3041,24 +3394,24 @@ var Mn = [
       >
         <ha-icon .icon=${e.icon}></ha-icon>
         <span class="label">${e.name}</span>
-        ${this.on(e.entity) ? M`<i class="dot"></i>` : F}
+        ${this.on(e.entity) ? A`<i class="dot"></i>` : N}
       </button>
     `;
 	}
 	render() {
 		let e = this.config.items.filter((e) => e.pinned);
-		return M`
+		return A`
       <nav class="surface ${this.editMode ? "inline" : "floating"}">
         <div class="scroller">${this.config.items.filter((e) => !e.pinned).map((e) => this.item(e))}</div>
-        ${e.length ? M`<div class="pinned">${e.map((e) => this.item(e))}</div>` : F}
+        ${e.length ? A`<div class="pinned">${e.map((e) => this.item(e))}</div>` : N}
       </nav>
-      ${this.menuFor?.items ? M`<div class="menu surface" role="menu" aria-label=${this.menuFor.name} style=${this.menuPosition()}>
+      ${this.menuFor?.items ? A`<div class="menu surface" role="menu" aria-label=${this.menuFor.name} style=${this.menuPosition()}>
             ${this.menuFor.items.map((e) => this.menuItem(e))}
-          </div>` : F}
+          </div>` : N}
     `;
 	}
 	static {
-		this.styles = [K, C`
+		this.styles = [G, x`
       nav {
         display: flex;
         padding: 4px;
@@ -3085,7 +3438,7 @@ var Mn = [
       }
       .scroller::-webkit-scrollbar { display: none; }
       .scroller.overflow {
-        padding-inline: ${zn}px;
+        padding-inline: ${Gn}px;
         mask-image: linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 18px), transparent);
       }
       .pinned {
@@ -3187,10 +3540,10 @@ var Mn = [
     `];
 	}
 };
-customElements.define("glide-nav", Un);
+customElements.define("glide-nav", Yn);
 //#endregion
 //#region src/cards/climate.ts
-var Wn = {
+var Xn = {
 	heat: "mdi:fire",
 	cool: "mdi:snowflake",
 	heat_cool: "mdi:alpha-a-circle-outline",
@@ -3198,19 +3551,19 @@ var Wn = {
 	dry: "mdi:water-percent",
 	fan_only: "mdi:fan",
 	off: "mdi:power"
-}, Q = 270, $ = 135, Gn = 80, Kn = 700, qn = (e) => `\u2066${e}°\u2069`, Jn = (e) => {
+}, Z = 270, Q = 135, Zn = 80, Qn = 700, $n = (e) => `\u2066${e}°\u2069`, $ = (e) => {
 	let t = e * Math.PI / 180;
-	return [100 + Gn * Math.cos(t), 100 + Gn * Math.sin(t)];
-}, Yn = (e, t) => {
-	let [n, r] = Jn(e), [i, a] = Jn(t);
-	return `M ${n} ${r} A ${Gn} ${Gn} 0 ${+(t - e > 180)} 1 ${i} ${a}`;
-}, Xn = class extends q {
+	return [100 + Zn * Math.cos(t), 100 + Zn * Math.sin(t)];
+}, er = (e, t) => {
+	let [n, r] = $(e), [i, a] = $(t);
+	return `M ${n} ${r} A ${Zn} ${Zn} 0 ${+(t - e > 180)} 1 ${i} ${a}`;
+}, tr = class extends K {
 	constructor(...e) {
 		super(...e), this.cardType = "climate", this.timer = 0;
 	}
 	static {
 		this.properties = {
-			...q.properties,
+			...K.properties,
 			pending: { state: !0 }
 		};
 	}
@@ -3255,12 +3608,12 @@ var Wn = {
 	setTarget(e) {
 		if (this.off) return;
 		let { min: t, max: n, step: r } = this.range, i = Math.min(n, Math.max(t, Math.round(e / r) * r));
-		i !== this.target && (this.pending = i, V("selection"), clearTimeout(this.timer), this.timer = window.setTimeout(() => {
+		i !== this.target && (this.pending = i, B("selection"), clearTimeout(this.timer), this.timer = window.setTimeout(() => {
 			this.timer = 0, this.hass?.callService("climate", "set_temperature", {
 				entity_id: this.config.entity,
 				temperature: this.pending
 			});
-		}, Kn));
+		}, Qn));
 	}
 	get target() {
 		return this.pending ?? this.s?.attributes.temperature;
@@ -3270,10 +3623,10 @@ var Wn = {
 		if (this.target === void 0 || this.off) return;
 		t.setPointerCapture(e.pointerId);
 		let n = (e) => {
-			let n = t.getBoundingClientRect(), r = (Math.atan2(e.clientY - (n.top + n.height / 2), e.clientX - (n.left + n.width / 2)) * 180 / Math.PI - $ + 720) % 360;
-			r > Q && (r = r - Q < 45 ? Q : 0);
+			let n = t.getBoundingClientRect(), r = (Math.atan2(e.clientY - (n.top + n.height / 2), e.clientX - (n.left + n.width / 2)) * 180 / Math.PI - Q + 720) % 360;
+			r > Z && (r = r - Z < 45 ? Z : 0);
 			let { min: i, max: a } = this.range;
-			this.setTarget(i + r / Q * (a - i));
+			this.setTarget(i + r / Z * (a - i));
 		};
 		n(e);
 		let r = () => {
@@ -3286,66 +3639,66 @@ var Wn = {
 	}
 	render() {
 		let e = this.s;
-		if (!e) return M`<div class="surface empty">${this.config.entity}</div>`;
-		let t = e.attributes, { min: n, max: r, step: i } = this.range, a = this.target, o = e.state === "off", s = this.modeColor(e.state), c = $ + (a === void 0 ? 0 : (a - n) / (r - n)) * Q, [l, u] = Jn($), [d, f] = Jn(c), p = Number(t.current_temperature), m = t.current_temperature != null && Number.isFinite(p), [h, g] = Jn($ + Math.min(1, Math.max(0, (p - n) / (r - n))) * Q), _ = t.hvac_action, v = +(i < 1), y = a === void 0 ? "" : qn(a.toFixed(v)), b = (e) => /[-־]$/.test(e) ? e : `${e} `, x = o || _ === "off" ? Y(this.hass, "off") : _ === "heating" ? b(Y(this.hass, "heating")) + y : _ === "cooling" ? b(Y(this.hass, "cooling")) + y : [Y(this.hass, _ === "idle" ? "idle" : e.state) ?? e.state, y].filter(Boolean).join(" · "), S = !o && [
+		if (!e) return A`<div class="surface empty">${this.config.entity}</div>`;
+		let t = e.attributes, { min: n, max: r, step: i } = this.range, a = this.target, o = e.state === "off", s = this.modeColor(e.state), c = Q + (a === void 0 ? 0 : (a - n) / (r - n)) * Z, [l, u] = $(Q), [d, f] = $(c), p = Number(t.current_temperature), m = t.current_temperature != null && Number.isFinite(p), [h, g] = $(Q + Math.min(1, Math.max(0, (p - n) / (r - n))) * Z), _ = t.hvac_action, v = +(i < 1), y = a === void 0 ? "" : $n(a.toFixed(v)), b = (e) => /[-־]$/.test(e) ? e : `${e} `, ee = o || _ === "off" ? J(this.hass, "off") : _ === "heating" ? b(J(this.hass, "heating")) + y : _ === "cooling" ? b(J(this.hass, "cooling")) + y : [J(this.hass, _ === "idle" ? "idle" : e.state) ?? e.state, y].filter(Boolean).join(" · "), te = !o && [
 			"heating",
 			"cooling",
 			"drying",
 			"fan"
 		].includes(_ ?? "");
-		return M`
+		return A`
       <div class="surface ${o ? "off" : ""}" style="--mode:${s}">
         <header>
-          <div class="icon"><ha-icon .icon=${Wn[e.state] ?? "mdi:thermostat"}></ha-icon></div>
+          <div class="icon"><ha-icon .icon=${Xn[e.state] ?? "mdi:thermostat"}></ha-icon></div>
           <div class="titles">
-            <div class="name">${ot(e, this.config.name)}</div>
-            <div class="meta mode-text">${x}</div>
+            <div class="name">${pt(e, this.config.name)}</div>
+            <div class="meta mode-text">${ee}</div>
           </div>
-          ${S ? M`<div class="chip meta"><i></i>${Y(this.hass, "active")}</div>` : F}
+          ${te ? A`<div class="chip meta"><i></i>${J(this.hass, "active")}</div>` : N}
         </header>
 
         <div class="dial">
           <div class="ring">
             <svg class=${o ? "off" : ""} viewBox="0 0 200 200" @pointerdown=${(e) => this.onDial(e)} role="slider"
               aria-valuemin=${n} aria-valuemax=${r} aria-valuenow=${a ?? ""}
-              aria-valuetext=${[a === void 0 ? "" : `${a.toFixed(v)}°`, m ? `${Y(this.hass, "current")} ${p.toFixed(v)}°` : ""].filter(Boolean).join(", ")} aria-label=${Y(this.hass, "target")} aria-disabled=${o ? "true" : "false"}>
-              ${N`
+              aria-valuetext=${[a === void 0 ? "" : `${a.toFixed(v)}°`, m ? `${J(this.hass, "current")} ${p.toFixed(v)}°` : ""].filter(Boolean).join(", ")} aria-label=${J(this.hass, "target")} aria-disabled=${o ? "true" : "false"}>
+              ${j`
                 <defs>
                   <linearGradient id="arc" gradientUnits="userSpaceOnUse" x1=${l} y1=${u} x2=${d} y2=${f}>
                     <stop offset="0" style="stop-color:var(--mode);stop-opacity:.45" />
                     <stop offset="1" style="stop-color:var(--mode)" />
                   </linearGradient>
                 </defs>
-                <path class="track" d=${Yn($, 405)} />`}
-              ${a === void 0 ? F : N`<path class="value" d=${Yn($, Math.max(135.5, c))} />`}
-              ${m ? N`<circle class="room" cx=${h} cy=${g} r="4" />` : F}
-              ${a === void 0 ? F : N`<circle class="knob" cx=${d} cy=${f} r="9" />`}
+                <path class="track" d=${er(Q, 405)} />`}
+              ${a === void 0 ? N : j`<path class="value" d=${er(Q, Math.max(135.5, c))} />`}
+              ${m ? j`<circle class="room" cx=${h} cy=${g} r="4" />` : N}
+              ${a === void 0 ? N : j`<circle class="knob" cx=${d} cy=${f} r="9" />`}
             </svg>
             <div class="readout">
               <div class="target ${o ? "dim" : ""}">${a === void 0 ? "--" : a.toFixed(v)}<sup>°</sup></div>
-              <div class="meta label">${Y(this.hass, o ? "off" : "target")}</div>
-              ${t.current_temperature === void 0 ? F : M`<div class="meta current">${Y(this.hass, "current")} ${qn(typeof t.current_temperature == "number" ? t.current_temperature.toFixed(v) : t.current_temperature)}</div>`}
+              <div class="meta label">${J(this.hass, o ? "off" : "target")}</div>
+              ${t.current_temperature === void 0 ? N : A`<div class="meta current">${J(this.hass, "current")} ${$n(typeof t.current_temperature == "number" ? t.current_temperature.toFixed(v) : t.current_temperature)}</div>`}
             </div>
           </div>
         </div>
 
         <div class="steppers">
           <button class="round" aria-label="-" ?disabled=${o} @click=${() => a !== void 0 && this.setTarget(a - i)}><ha-icon icon="mdi:minus" .icon=${"mdi:minus"}></ha-icon></button>
-          <span class="meta">${o ? "" : M`${Y(this.hass, "step")}: ${qn(i)}`}</span>
+          <span class="meta">${o ? "" : A`${J(this.hass, "step")}: ${$n(i)}`}</span>
           <button class="round" aria-label="+" ?disabled=${o} @click=${() => a !== void 0 && this.setTarget(a + i)}><ha-icon icon="mdi:plus" .icon=${"mdi:plus"}></ha-icon></button>
         </div>
 
         <div class="modes">
-          ${(t.hvac_modes ?? []).map((t) => M`
+          ${(t.hvac_modes ?? []).map((t) => A`
               <button class=${t === e.state ? "on" : ""} style="--c:${this.modeColor(t)}" aria-pressed=${t === e.state ? "true" : "false"}
                 @click=${() => {
-			V("light"), this.hass?.callService("climate", "set_hvac_mode", {
+			B("light"), this.hass?.callService("climate", "set_hvac_mode", {
 				entity_id: e.entity_id,
 				hvac_mode: t
 			});
 		}}>
-                <ha-icon .icon=${Wn[t] ?? "mdi:thermostat"}></ha-icon>
-                <span class="meta">${Y(this.hass, t) ?? t}</span>
+                <ha-icon .icon=${Xn[t] ?? "mdi:thermostat"}></ha-icon>
+                <span class="meta">${J(this.hass, t) ?? t}</span>
               </button>
             `)}
         </div>
@@ -3353,7 +3706,7 @@ var Wn = {
     `;
 	}
 	static {
-		this.styles = [K, C`
+		this.styles = [G, x`
       :host { height: 100%; }
       .surface {
         position: relative; overflow: hidden; box-sizing: border-box;
@@ -3461,22 +3814,22 @@ var Wn = {
     `];
 	}
 };
-customElements.define("glide-climate", Xn);
+customElements.define("glide-climate", tr);
 //#endregion
 //#region src/cards/media.ts
-var Zn = {
+var nr = {
 	PAUSE: 1,
 	VOLUME_SET: 4,
 	PREV: 16,
 	NEXT: 32,
 	PLAY: 16384
-}, Qn = (e) => `${Math.floor(e / 60)}:${String(Math.floor(e % 60)).padStart(2, "0")}`, $n = class extends q {
+}, rr = (e) => `${Math.floor(e / 60)}:${String(Math.floor(e % 60)).padStart(2, "0")}`, ir = class extends K {
 	constructor(...e) {
 		super(...e), this.cardType = "media", this.tick = 0;
 	}
 	static {
 		this.properties = {
-			...q.properties,
+			...K.properties,
 			volDrag: { state: !0 }
 		};
 	}
@@ -3513,7 +3866,7 @@ var Zn = {
 		t && !this.tick && (this.tick = window.setInterval(() => this.requestUpdate(), 1e3)), !t && this.tick && (clearInterval(this.tick), this.tick = 0);
 	}
 	call(e, t = {}) {
-		V("light"), this.hass?.callService("media_player", e, {
+		B("light"), this.hass?.callService("media_player", e, {
 			entity_id: this.config.entity,
 			...t
 		});
@@ -3539,34 +3892,34 @@ var Zn = {
 	}
 	render() {
 		let e = this.s;
-		if (!e) return M`<div class="surface empty">${this.config.entity}</div>`;
-		let t = e.attributes, n = nt(e) || e.state === "off" || e.state === "idle" || e.state === "standby" || !t.media_title, r = t.supported_features ?? 0, i = this.position(), a = t.media_duration, o = this.volDrag ?? Math.round((t.volume_level ?? 0) * 100), s = e.state === "playing", c = t.entity_picture;
-		return M`
+		if (!e) return A`<div class="surface empty">${this.config.entity}</div>`;
+		let t = e.attributes, n = lt(e) || e.state === "off" || e.state === "idle" || e.state === "standby" || !t.media_title, r = t.supported_features ?? 0, i = this.position(), a = t.media_duration, o = this.volDrag ?? Math.round((t.volume_level ?? 0) * 100), s = e.state === "playing", c = t.entity_picture;
+		return A`
       <div class="surface ${s ? "playing" : ""}">
-        ${c ? M`<div class="art-bg" style=${et({ backgroundImage: `url("${c}")` })}></div>` : F}
+        ${c ? A`<div class="art-bg" style=${st({ backgroundImage: `url("${c}")` })}></div>` : N}
         <div class="top">
-          <div class="art">${c ? M`<img src=${c} alt="" loading="lazy" />` : M`<ha-icon icon="mdi:music" .icon=${"mdi:music"}></ha-icon>`}</div>
+          <div class="art">${c ? A`<img src=${c} alt="" loading="lazy" />` : A`<ha-icon icon="mdi:music" .icon=${"mdi:music"}></ha-icon>`}</div>
           <div class="info">
-            <div class="meta source">${[t.app_name ?? t.source, ot(e, this.config.name)].filter(Boolean).join(" • ")}</div>
-            <div class="title">${n ? Y(this.hass, "nothing_playing") : t.media_title}</div>
-            ${!n && t.media_artist ? M`<div class="artist">${t.media_artist}</div>` : F}
+            <div class="meta source">${[t.app_name ?? t.source, pt(e, this.config.name)].filter(Boolean).join(" • ")}</div>
+            <div class="title">${n ? J(this.hass, "nothing_playing") : t.media_title}</div>
+            ${!n && t.media_artist ? A`<div class="artist">${t.media_artist}</div>` : N}
           </div>
         </div>
 
-        ${!n && i !== void 0 && a ? M`
+        ${!n && i !== void 0 && a ? A`
               <div class="progress"><div style="width:${i / a * 100}%"></div></div>
-              <div class="times meta"><span>${Qn(i)}</span><span>${Qn(a)}</span></div>
-            ` : F}
+              <div class="times meta"><span>${rr(i)}</span><span>${rr(a)}</span></div>
+            ` : N}
 
         <div class="controls">
-          ${r & Zn.PREV ? M`<button aria-label="previous" @click=${() => this.call("media_previous_track")}><ha-icon icon="mdi:skip-previous" .icon=${"mdi:skip-previous"}></ha-icon></button>` : F}
+          ${r & nr.PREV ? A`<button aria-label="previous" @click=${() => this.call("media_previous_track")}><ha-icon icon="mdi:skip-previous" .icon=${"mdi:skip-previous"}></ha-icon></button>` : N}
           <button class="play" aria-label=${s ? "pause" : "play"} @click=${() => this.call("media_play_pause")}>
             <ha-icon .icon=${s ? "mdi:pause" : "mdi:play"}></ha-icon>
           </button>
-          ${r & Zn.NEXT ? M`<button aria-label="next" @click=${() => this.call("media_next_track")}><ha-icon icon="mdi:skip-next" .icon=${"mdi:skip-next"}></ha-icon></button>` : F}
+          ${r & nr.NEXT ? A`<button aria-label="next" @click=${() => this.call("media_next_track")}><ha-icon icon="mdi:skip-next" .icon=${"mdi:skip-next"}></ha-icon></button>` : N}
         </div>
 
-        ${r & Zn.VOLUME_SET ? M`
+        ${r & nr.VOLUME_SET ? A`
               <div class="volume">
                 <ha-icon icon="mdi:volume-low" .icon=${"mdi:volume-low"}></ha-icon>
                 <div class="track" role="slider" aria-label="volume" aria-valuenow=${o} aria-valuemin="0" aria-valuemax="100"
@@ -3575,12 +3928,12 @@ var Zn = {
                 </div>
                 <ha-icon icon="mdi:volume-high" .icon=${"mdi:volume-high"}></ha-icon>
               </div>
-            ` : F}
+            ` : N}
       </div>
     `;
 	}
 	static {
-		this.styles = [K, C`
+		this.styles = [G, x`
       :host { height: 100%; }
       .surface { height: 100%; padding: 18px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
       .art-bg {
@@ -3648,51 +4001,51 @@ var Zn = {
     `];
 	}
 };
-customElements.define("glide-media", $n);
+customElements.define("glide-media", ir);
 //#endregion
 //#region src/core/conditions.ts
-var er = (e) => (Array.isArray(e) ? e : [e]).map(String);
-function tr(e, t) {
+var ar = (e) => (Array.isArray(e) ? e : [e]).map(String);
+function or(e, t) {
 	switch (t.condition) {
 		case "state": {
 			let n = e.states[t.entity]?.state ?? "unavailable";
-			return !(t.state !== void 0 && !er(t.state).includes(n) || t.state_not !== void 0 && er(t.state_not).includes(n));
+			return !(t.state !== void 0 && !ar(t.state).includes(n) || t.state_not !== void 0 && ar(t.state_not).includes(n));
 		}
 		case "numeric_state": {
 			let n = Number(e.states[t.entity]?.state);
 			return !(Number.isNaN(n) || t.above !== void 0 && !(n > t.above) || t.below !== void 0 && !(n < t.below));
 		}
-		case "and": return t.conditions.every((t) => tr(e, t));
-		case "or": return t.conditions.some((t) => tr(e, t));
+		case "and": return t.conditions.every((t) => or(e, t));
+		case "or": return t.conditions.some((t) => or(e, t));
 		default: return !0;
 	}
 }
-var nr = (e, t) => !t?.length || !!e && t.every((t) => tr(e, t));
-function rr(e) {
-	return (e ?? []).flatMap((e) => e.condition === "and" || e.condition === "or" ? rr(e.conditions) : [e.entity]);
+var sr = (e, t) => !t?.length || !!e && t.every((t) => or(e, t));
+function cr(e) {
+	return (e ?? []).flatMap((e) => e.condition === "and" || e.condition === "or" ? cr(e.conditions) : [e.entity]);
 }
 //#endregion
 //#region src/core/format.ts
-var ir = (e) => e.locale?.language ?? e.language ?? "en", ar = (e) => e.attributes.device_class === "timestamp" || /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(e.state), or = (e, t = "en") => new Intl.DateTimeFormat(t, {
+var lr = (e) => e.locale?.language ?? e.language ?? "en", ur = (e) => e.attributes.device_class === "timestamp" || /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(e.state), dr = (e, t = "en") => new Intl.DateTimeFormat(t, {
 	hour: "2-digit",
 	minute: "2-digit",
 	hourCycle: "h23"
 }).format(new Date(e));
-function sr(e, t, n) {
+function fr(e, t, n) {
 	let r = e;
 	if (n) {
 		let i = t.attributes[n];
-		return i === void 0 ? "" : typeof i == "string" && /^\d{4}-\d{2}-\d{2}T/.test(i) ? or(i, ir(e)) : r.formatEntityAttributeValue?.(t, n) ?? String(i);
+		return i === void 0 ? "" : typeof i == "string" && /^\d{4}-\d{2}-\d{2}T/.test(i) ? dr(i, lr(e)) : r.formatEntityAttributeValue?.(t, n) ?? String(i);
 	}
-	if (z(t.entity_id) === "weather") {
-		let n = t.attributes.temperature, r = Zt(e, t.entity_id);
+	if (L(t.entity_id) === "weather") {
+		let n = t.attributes.temperature, r = rn(e, t.entity_id);
 		return n === void 0 ? r : `${r} · ${n} ${t.attributes.temperature_unit ?? "°C"}`;
 	}
-	return ar(t) && !Number.isNaN(Date.parse(t.state)) ? or(t.state, ir(e)) : Zt(e, t.entity_id);
+	return ur(t) && !Number.isNaN(Date.parse(t.state)) ? dr(t.state, lr(e)) : rn(e, t.entity_id);
 }
 //#endregion
 //#region src/cards/chips.ts
-var cr = class extends q {
+var pr = class extends K {
 	constructor(...e) {
 		super(...e), this.cardType = "chips", this.detachers = [], this.shown = [], this.boundKey = "";
 	}
@@ -3701,7 +4054,7 @@ var cr = class extends q {
 		super.setConfig(e);
 	}
 	watched() {
-		return this.config.chips.flatMap((e) => [e.entity, ...rr(e.visibility)]);
+		return this.config.chips.flatMap((e) => [e.entity, ...cr(e.visibility)]);
 	}
 	getGridOptions() {
 		return {
@@ -3713,7 +4066,7 @@ var cr = class extends q {
 		return 1;
 	}
 	willUpdate(e) {
-		super.willUpdate(e), this.shown = this.config.chips.flatMap((e, t) => nr(this.hass, e.visibility) ? [t] : []);
+		super.willUpdate(e), this.shown = this.config.chips.flatMap((e, t) => sr(this.hass, e.visibility) ? [t] : []);
 	}
 	updated(e) {
 		super.updated(e), (e.has("config") || this.shown.join() !== this.boundKey) && this.bind();
@@ -3731,9 +4084,9 @@ var cr = class extends q {
 		this.unbind(), this.boundKey = this.shown.join(), this.renderRoot.querySelectorAll(".chip").forEach((e, t) => {
 			let n = this.config.chips[this.shown[t]], r = (t) => {
 				let r = n[`${t}_action`] ?? { action: "more-info" };
-				this.hass && H(e, this.hass, r, n.entity);
+				this.hass && V(e, this.hass, r, n.entity);
 			};
-			this.detachers.push(Bt(e, {
+			this.detachers.push(Kt(e, {
 				tap: (t) => {
 					this.playTapFx(e, t, { icon: e.querySelector("ha-icon") }), r("tap");
 				},
@@ -3742,22 +4095,22 @@ var cr = class extends q {
 		});
 	}
 	renderChip(e) {
-		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? sr(this.hass, t, e.attribute) : "");
-		return M`
-      <div class="chip surface" role="button" tabindex="0" style="--chip:${lt(e.color) ?? (t ? st(t) : "var(--gc-accent)")}">
-        <ha-icon .icon=${at(t, e.icon)}></ha-icon>
+		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? fr(this.hass, t, e.attribute) : "");
+		return A`
+      <div class="chip surface" role="button" tabindex="0" style="--chip:${R(e.color) ?? (t ? mt(t) : "var(--gc-accent)")}">
+        <ha-icon .icon=${ft(t, e.icon)}></ha-icon>
         <div class="text">
-          ${e.name === "" ? F : M`<div class="label">${ot(t, e.name)}</div>`}
+          ${e.name === "" ? N : A`<div class="label">${pt(t, e.name)}</div>`}
           <div class="value">${n}</div>
         </div>
       </div>
     `;
 	}
 	render() {
-		return M`<div class="row ${this.config.align === "start" ? "start" : ""}">${this.shown.map((e) => this.renderChip(this.config.chips[e]))}</div>`;
+		return A`<div class="row ${this.config.align === "start" ? "start" : ""}">${this.shown.map((e) => this.renderChip(this.config.chips[e]))}</div>`;
 	}
 	static {
-		this.styles = [K, C`
+		this.styles = [G, x`
       .row {
         display: flex;
         gap: 10px;
@@ -3806,10 +4159,10 @@ var cr = class extends q {
     `];
 	}
 };
-customElements.define("glide-chips", cr);
+customElements.define("glide-chips", pr);
 //#endregion
 //#region src/cards/title.ts
-var lr = class extends q {
+var mr = class extends K {
 	constructor(...e) {
 		super(...e), this.cardType = "title";
 	}
@@ -3828,15 +4181,15 @@ var lr = class extends q {
 	}
 	render() {
 		let e = this.config;
-		return M`
+		return A`
       <div class="wrap ${e.align === "start" ? "start" : ""}">
-        ${e.title ? M`<h1>${e.icon ? M`<ha-icon .icon=${e.icon}></ha-icon>` : F}${e.title}</h1>` : F}
-        ${e.subtitle ? M`<p>${e.subtitle}</p>` : F}
+        ${e.title ? A`<h1>${e.icon ? A`<ha-icon .icon=${e.icon}></ha-icon>` : N}${e.title}</h1>` : N}
+        ${e.subtitle ? A`<p>${e.subtitle}</p>` : N}
       </div>
     `;
 	}
 	static {
-		this.styles = C`
+		this.styles = x`
     :host { display: block; font-family: var(--gc-font); color: var(--gc-text); }
     .wrap { padding: 12px 4px 4px; text-align: center; }
     .wrap.start { text-align: start; }
@@ -3859,13 +4212,13 @@ var lr = class extends q {
   `;
 	}
 };
-customElements.define("glide-title", lr);
+customElements.define("glide-title", mr);
 //#endregion
 //#region src/cards/heading.ts
-var ur = (e) => e instanceof MouseEvent && e.detail ? {
+var hr = (e) => e instanceof MouseEvent && e.detail ? {
 	x: e.clientX,
 	y: e.clientY
-} : void 0, dr = class extends q {
+} : void 0, gr = class extends K {
 	constructor(...e) {
 		super(...e), this.cardType = "heading";
 	}
@@ -3887,41 +4240,41 @@ var ur = (e) => e instanceof MouseEvent && e.detail ? {
 	}
 	tap(e) {
 		let t = this.config.tap_action, n = e.currentTarget;
-		this.playTapFx(n, ur(e), { icon: n.querySelector(".icon") }), t && this.hass && H(e.currentTarget, this.hass, t);
+		this.playTapFx(n, hr(e), { icon: n.querySelector(".icon") }), t && this.hass && V(e.currentTarget, this.hass, t);
 	}
 	badge(e) {
-		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? sr(this.hass, t, e.attribute) : "");
-		return M`
+		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? fr(this.hass, t, e.attribute) : "");
+		return A`
       <button
         class="badge surface"
-        style="--c:${lt(e.color) ?? (t ? st(t) : "var(--gc-accent)")}"
+        style="--c:${R(e.color) ?? (t ? mt(t) : "var(--gc-accent)")}"
         @click=${(t) => {
 			t.stopPropagation();
 			let n = t.currentTarget;
-			this.playTapFx(n, ur(t), { icon: n.querySelector("ha-icon") }), this.hass && H(t.currentTarget, this.hass, e.tap_action ?? { action: "more-info" }, e.entity);
+			this.playTapFx(n, hr(t), { icon: n.querySelector("ha-icon") }), this.hass && V(t.currentTarget, this.hass, e.tap_action ?? { action: "more-info" }, e.entity);
 		}}
       >
-        ${e.icon || t ? M`<ha-icon .icon=${at(t, e.icon)}></ha-icon>` : F}
+        ${e.icon || t ? A`<ha-icon .icon=${ft(t, e.icon)}></ha-icon>` : N}
         <span>${n}</span>
       </button>
     `;
 	}
 	render() {
 		let e = this.config, t = !!e.tap_action && e.tap_action.action !== "none";
-		return M`
+		return A`
       <div class="row ${e.style === "subtitle" ? "small" : ""} ${t ? "linked" : ""}" @click=${t ? this.tap : void 0}
         role=${t ? "link" : "heading"} tabindex=${t ? "0" : "-1"}>
-        ${e.icon ? M`<span class="icon" style="--c:${lt(e.color) ?? "var(--gc-accent)"}"><ha-icon .icon=${e.icon}></ha-icon></span>` : F}
+        ${e.icon ? A`<span class="icon" style="--c:${R(e.color) ?? "var(--gc-accent)"}"><ha-icon .icon=${e.icon}></ha-icon></span>` : N}
         <span class="title">${e.title}</span>
-        ${e.subtitle ? M`<span class="sub">${e.subtitle}</span>` : F}
-        ${t ? M`<ha-icon class="chev" icon="mdi:chevron-right" .icon=${"mdi:chevron-right"}></ha-icon>` : F}
+        ${e.subtitle ? A`<span class="sub">${e.subtitle}</span>` : N}
+        ${t ? A`<ha-icon class="chev" icon="mdi:chevron-right" .icon=${"mdi:chevron-right"}></ha-icon>` : N}
         <span class="line"></span>
         ${(e.badges ?? []).map((e) => this.badge(e))}
       </div>
     `;
 	}
 	static {
-		this.styles = [K, C`
+		this.styles = [G, x`
       :host { height: 100%; }
       .row {
         height: 100%;
@@ -4026,10 +4379,10 @@ var ur = (e) => e instanceof MouseEvent && e.detail ? {
     `];
 	}
 };
-customElements.define("glide-heading", dr);
+customElements.define("glide-heading", gr);
 //#endregion
 //#region src/editor/editor.ts
-var fr = [
+var _r = [
 	{
 		id: "button",
 		icon: "mdi:gesture-tap-button",
@@ -4070,7 +4423,7 @@ var fr = [
 		icon: "mdi:format-header-pound",
 		label: "Heading"
 	}
-], pr = [
+], vr = [
 	"#ff9f43",
 	"#d4ff00",
 	"#006a60",
@@ -4079,7 +4432,7 @@ var fr = [
 	"#ff5c8a",
 	"#34c759",
 	"#ffd60a"
-], mr = {
+], yr = {
 	type: "expandable",
 	title: "Interactions",
 	icon: "mdi:gesture-tap",
@@ -4097,22 +4450,22 @@ var fr = [
 			selector: { ui_action: {} }
 		}
 	]
-}, hr = /* @__PURE__ */ new Set([
+}, br = /* @__PURE__ */ new Set([
 	"button",
 	"chips",
 	"heading",
 	"nav",
 	"popup"
-]), gr = {
+]), xr = {
 	name: "tap_animation",
 	selector: { select: {
 		mode: "dropdown",
-		options: Object.entries(yt).map(([e, t]) => ({
+		options: Object.entries(Tt).map(([e, t]) => ({
 			value: e,
 			label: t
 		}))
 	} }
-}, _r = {
+}, Sr = {
 	type: "expandable",
 	title: "Templates",
 	icon: "mdi:code-braces",
@@ -4127,26 +4480,26 @@ var fr = [
 		selector: { template: {} }
 	}))
 };
-function vr(e) {
-	let t = br[e.card_type];
+function Cr(e) {
+	let t = Tr[e.card_type];
 	if (e.card_type === "button") {
 		let n = e, r = (e) => !(e.name && [
 			"name",
 			"icon",
 			"color"
-		].includes(e.name) && Qt(n[e.name]));
+		].includes(e.name) && an(n[e.name]));
 		t = t.map((e) => e.type === "grid" ? {
 			...e,
 			schema: e.schema.filter(r)
 		} : e), t = [
 			...t.slice(0, -1),
-			_r,
+			Sr,
 			t[t.length - 1]
 		];
 	}
-	return hr.has(e.card_type) ? [...t, gr] : t;
+	return br.has(e.card_type) ? [...t, xr] : t;
 }
-var yr = { select: {
+var wr = { select: {
 	mode: "dropdown",
 	options: [{
 		value: "center",
@@ -4155,7 +4508,7 @@ var yr = { select: {
 		value: "start",
 		label: "Start"
 	}]
-} }, br = {
+} }, Tr = {
 	heading: [
 		{
 			name: "title",
@@ -4228,7 +4581,7 @@ var yr = { select: {
 		} }
 	}, {
 		name: "align",
-		selector: yr
+		selector: wr
 	}],
 	title: [
 		{
@@ -4247,7 +4600,7 @@ var yr = { select: {
 				selector: { icon: {} }
 			}, {
 				name: "align",
-				selector: yr
+				selector: wr
 			}]
 		}
 	],
@@ -4389,7 +4742,7 @@ var yr = { select: {
 				}
 			]
 		},
-		mr
+		yr
 	],
 	popup: [
 		{
@@ -4468,7 +4821,7 @@ var yr = { select: {
 		name: "name",
 		selector: { text: {} }
 	}]
-}, xr = {
+}, Er = {
 	hash: "Hash (e.g. #living-room)",
 	slider: "Swipe to adjust (brightness / position)",
 	layout: "Layout (empty = theme default)",
@@ -4484,13 +4837,13 @@ var yr = { select: {
 	cover_side: "One-sided covers stack at (empty = start)",
 	cover_buttons: "Open / stop / close buttons (covers)"
 };
-async function Sr() {
+async function Dr() {
 	customElements.get("ha-form") || await (await (await window.loadCardHelpers?.())?.createCardElement({
 		type: "entities",
 		entities: []
 	}))?.constructor?.getConfigElement?.();
 }
-var Cr = class extends R {
+var Or = class extends I {
 	constructor(...e) {
 		super(...e), this.ready = !1;
 	}
@@ -4508,7 +4861,7 @@ var Cr = class extends R {
 		};
 	}
 	connectedCallback() {
-		super.connectedCallback(), Sr().finally(() => this.ready = !0);
+		super.connectedCallback(), Dr().finally(() => this.ready = !0);
 	}
 	update_(e) {
 		let t = {
@@ -4516,7 +4869,7 @@ var Cr = class extends R {
 			...e
 		};
 		for (let [e, n] of Object.entries(t)) (n === "" || n == null) && delete t[e];
-		this.config = t, B(this, "config-changed", { config: this.config });
+		this.config = t, z(this, "config-changed", { config: this.config });
 	}
 	setType(e) {
 		if (e === this.config.card_type) return;
@@ -4540,13 +4893,13 @@ var Cr = class extends R {
 		}] }), this.config = {}, this.update_(s);
 	}
 	render() {
-		if (!this.config) return F;
-		let e = this.config, t = m();
-		return M`
+		if (!this.config) return N;
+		let e = this.config, t = y();
+		return A`
       <div class="section">
         <div class="label">Card type</div>
         <div class="types">
-          ${fr.map((t) => M`<button class=${e.card_type === t.id ? "sel" : ""} @click=${() => this.setType(t.id)}>
+          ${_r.map((t) => A`<button class=${e.card_type === t.id ? "sel" : ""} @click=${() => this.setType(t.id)}>
               <ha-icon .icon=${t.icon}></ha-icon><span>${t.label}</span>
             </button>`)}
         </div>
@@ -4559,7 +4912,7 @@ var Cr = class extends R {
             <div class="swatch auto"><ha-icon icon="mdi:auto-fix" .icon=${"mdi:auto-fix"}></ha-icon></div>
             <span>Dashboard default</span>
           </button>
-          ${t.map((t) => M`<button class="theme ${e.theme === t.id ? "sel" : ""}" title=${t.description ?? ""} @click=${() => this.update_({ theme: t.id })}>
+          ${t.map((t) => A`<button class="theme ${e.theme === t.id ? "sel" : ""}" title=${t.description ?? ""} @click=${() => this.update_({ theme: t.id })}>
               <div class="swatch" style="background:${t.preview.background}">
                 <i style="background:${t.preview.surface}"></i><b style="background:${t.preview.accent}"></b>
               </div>
@@ -4572,11 +4925,11 @@ var Cr = class extends R {
 			"auto",
 			"dark",
 			"light"
-		].map((t) => M`<button class=${(e.mode ?? "auto") === t ? "sel" : ""} @click=${() => this.update_({ mode: t === "auto" ? void 0 : t })}>${t}</button>`)}
+		].map((t) => A`<button class=${(e.mode ?? "auto") === t ? "sel" : ""} @click=${() => this.update_({ mode: t === "auto" ? void 0 : t })}>${t}</button>`)}
           </div>
           <div class="accents">
             <button class="dot none ${e.accent ? "" : "sel"}" title="Theme accent" @click=${() => this.update_({ accent: void 0 })}></button>
-            ${pr.map((t) => M`<button class="dot ${e.accent === t ? "sel" : ""}" style="background:${t}" title=${t} @click=${() => this.update_({ accent: t })}></button>`)}
+            ${vr.map((t) => A`<button class="dot ${e.accent === t ? "sel" : ""}" style="background:${t}" title=${t} @click=${() => this.update_({ accent: t })}></button>`)}
             <label class="dot custom" title="Custom color">
               <input type="color" .value=${e.accent ?? "#ff9f43"} @input=${(e) => this.update_({ accent: e.target.value })} />
             </label>
@@ -4590,21 +4943,21 @@ var Cr = class extends R {
 			"full",
 			"compact",
 			"slim"
-		].map((t) => M`<button class=${(e.size ?? "auto") === t ? "sel" : ""} @click=${() => this.update_({ size: t === "auto" ? void 0 : t })}>${t === "auto" ? "dashboard" : t}</button>`)}
+		].map((t) => A`<button class=${(e.size ?? "auto") === t ? "sel" : ""} @click=${() => this.update_({ size: t === "auto" ? void 0 : t })}>${t === "auto" ? "dashboard" : t}</button>`)}
           </div>
         </div>
       </div>
 
-      ${this.ready ? M`<ha-form
+      ${this.ready ? A`<ha-form
             .hass=${this.hass}
             .data=${e}
-            .schema=${vr(e)}
-            .computeLabel=${(e) => xr[e.name]}
+            .schema=${Cr(e)}
+            .computeLabel=${(e) => Er[e.name]}
             @value-changed=${(e) => {
 			e.stopPropagation(), this.update_(e.detail.value);
 		}}
-          ></ha-form>` : F}
-      ${e.card_type === "popup" && this.ready ? M`<div class="section">
+          ></ha-form>` : N}
+      ${e.card_type === "popup" && this.ready ? A`<div class="section">
             <div class="label">Cards inside the pop-up (YAML)</div>
             <ha-yaml-editor
               .hass=${this.hass}
@@ -4613,11 +4966,11 @@ var Cr = class extends R {
 			e.stopPropagation(), e.detail.isValid !== !1 && Array.isArray(e.detail.value) && this.update_({ cards: e.detail.value });
 		}}
             ></ha-yaml-editor>
-          </div>` : F}
+          </div>` : N}
     `;
 	}
 	static {
-		this.styles = C`
+		this.styles = x`
     :host { display: block; }
     .section { margin-bottom: 16px; }
     .label { font-weight: 500; margin-bottom: 8px; color: var(--primary-text-color); }
@@ -4649,10 +5002,10 @@ var Cr = class extends R {
   `;
 	}
 };
-customElements.define("glide-card-editor", Cr);
+customElements.define("glide-card-editor", Or);
 //#endregion
 //#region src/glide-card.ts
-var wr = "0.16.1", Tr = [
+var kr = "0.16.1", Ar = [
 	"button",
 	"popup",
 	"nav",
@@ -4661,13 +5014,13 @@ var wr = "0.16.1", Tr = [
 	"chips",
 	"title",
 	"heading"
-], Er = class extends HTMLElement {
+], jr = class extends HTMLElement {
 	constructor(...e) {
 		super(...e), this._editMode = !1;
 	}
 	setConfig(e) {
 		let t = e?.card_type ?? "button";
-		if (!Tr.includes(t)) throw Error(`Unknown card_type "${t}". Use one of: ${Tr.join(", ")}`);
+		if (!Ar.includes(t)) throw Error(`Unknown card_type "${t}". Use one of: ${Ar.join(", ")}`);
 		let n = `glide-${t}`;
 		if (!customElements.get(n)) throw Error(`card_type "${t}" is not available in this build`);
 		this.inner?.localName !== n && (this.inner?.remove(), this.inner = document.createElement(n), this.appendChild(this.inner)), this.inner.setConfig({
@@ -4703,11 +5056,11 @@ var wr = "0.16.1", Tr = [
 		return document.createElement("glide-card-editor");
 	}
 };
-o(), customElements.get("glide-card") || (customElements.define("glide-card", Er), window.customCards = window.customCards ?? [], window.customCards.push({
+d(), customElements.get("glide-card") || (customElements.define("glide-card", jr), window.customCards = window.customCards ?? [], window.customCards.push({
 	type: "glide-card",
 	name: "Glide Card",
 	description: "Themeable buttons, pop-up sheets, nav bar, climate and media cards",
 	preview: !0,
 	documentationURL: "https://github.com/yshaish1/glide-card"
-}), console.info(`%c GLIDE-CARD %c ${wr} `, "background:#ff9f43;color:#1c1206;border-radius:4px 0 0 4px", "background:#222;color:#fff;border-radius:0 4px 4px 0"));
+}), console.info(`%c GLIDE-CARD %c ${kr} `, "background:#ff9f43;color:#1c1206;border-radius:4px 0 0 4px", "background:#222;color:#fff;border-radius:0 4px 4px 0"));
 //#endregion
