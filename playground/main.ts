@@ -69,6 +69,7 @@ const cards: Cfg[] = [
         icon: "mdi:dots-horizontal",
         pinned: true,
         items: [
+          { name: "Climate", icon: "mdi:thermostat", navigation_path: "/climate" },
           { name: "Media", icon: "mdi:play-circle", navigation_path: "/media" },
           { name: "Cameras", icon: "mdi:cctv", navigation_path: "#cameras" },
           { name: "Settings", icon: "mdi:cog", navigation_path: "/settings" },

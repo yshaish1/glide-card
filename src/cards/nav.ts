@@ -169,9 +169,14 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     return 1;
   }
 
-  /** A menu item is current when any of its entries is. */
+  /**
+   * A menu item is current when one of its entries is, unless the bar already shows that page
+   * (menus often repeat bar pages): only one item is ever highlighted.
+   */
   private isCurrent(item: NavItem) {
-    return item.items ? item.items.some((c) => isCurrentPath(c.navigation_path)) : isCurrentPath(item.navigation_path!);
+    if (!item.items) return isCurrentPath(item.navigation_path!);
+    const inBar = this.config.items.some((i) => !i.items && isCurrentPath(i.navigation_path!));
+    return !inBar && item.items.some((c) => isCurrentPath(c.navigation_path));
   }
 
   private indRect() {

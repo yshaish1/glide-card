@@ -2739,7 +2739,7 @@ var kn = [
 		return 1;
 	}
 	isCurrent(e) {
-		return e.items ? e.items.some((e) => zn(e.navigation_path)) : zn(e.navigation_path);
+		return e.items ? !this.config.items.some((e) => !e.items && zn(e.navigation_path)) && e.items.some((e) => zn(e.navigation_path)) : zn(e.navigation_path);
 	}
 	indRect() {
 		return this.renderRoot.querySelector(".ind")?.getBoundingClientRect();
@@ -4449,7 +4449,7 @@ var br = class extends L {
 customElements.define("glide-card-editor", br);
 //#endregion
 //#region src/glide-card.ts
-var xr = "0.15.1", Sr = [
+var xr = "0.15.2", Sr = [
 	"button",
 	"popup",
 	"nav",

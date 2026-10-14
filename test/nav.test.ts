@@ -203,6 +203,22 @@ describe("nav menu", () => {
     nav.remove();
   });
 
+  it("a menu that repeats a bar page leaves the highlight on the bar item", async () => {
+    go("/d/main");
+    const nav = document.createElement("glide-nav") as any;
+    const dup = { ...more, items: [{ name: "main", icon: "mdi:home", navigation_path: "/d/main" }, ...more.items] };
+    nav.setConfig({ card_type: "nav", items: [...items, dup] });
+    nav.hass = hass;
+    document.body.append(nav);
+    await nav.updateComplete;
+    expect(activeOf(nav)).toEqual({ name: "main", inds: 1, own: true });
+    expect(moreBtn(nav).classList.contains("active")).toBe(false);
+    moreBtn(nav).click();
+    await nav.updateComplete;
+    expect(menu(nav).querySelector("button.active").textContent.trim()).toBe("main");
+    nav.remove();
+  });
+
   it("closes on an outside tap and on Escape, not on a tap inside", async () => {
     go("/d/main");
     const nav = await mountMenu();

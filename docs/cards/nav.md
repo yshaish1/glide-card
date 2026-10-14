@@ -16,7 +16,7 @@ A floating pill bar pinned to the bottom of the screen. A sliding indicator foll
 | `items[].navigation_path` | string | A dashboard path, or a `#hash` to open a [pop-up](popup.md). Not needed when the item has `items`. |
 | `items[].entity` | entity | Shows a dot while the entity is on. |
 | `items[].pinned` | boolean | Kept at the end, outside the scrolling part (for example "More"). |
-| `items[].items` | list | Turns the item into a small menu that opens above it (for example "More"). Each entry takes `name`, `icon`, `navigation_path` and `entity`, like a bar item. The item is highlighted while you're on one of its pages, and shows a dot while any entry's entity is on. |
+| `items[].items` | list | Turns the item into a small menu that opens above it (for example "More"). Each entry takes `name`, `icon`, `navigation_path` and `entity`, like a bar item. The item is highlighted while you're on one of its pages that isn't already in the bar (so a menu can list every page without a second highlight), and shows a dot while any entry's entity is on. |
 
 ## Example
 
