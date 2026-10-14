@@ -42,6 +42,20 @@ describe("attachGestures", () => {
     expect(dragEnd).toHaveBeenLastCalledWith(0);
   });
 
+  it("a leading minus flips which way raises the value, on both axes", () => {
+    const el = box(), dragEnd = vi.fn();
+    let axis: "-x" | "-y" = "-x";
+    attachGestures(el, { axis: () => axis, dragStart: () => 40, dragEnd });
+    ev(el, "pointerdown", 0, 50); ev(el, "pointermove", 50, 50); ev(el, "pointerup", 50, 50);
+    expect(dragEnd).toHaveBeenLastCalledWith(15);
+    el.style.direction = "rtl"; // still RTL aware: towards the start (right) now lowers it
+    ev(el, "pointerdown", 0, 50); ev(el, "pointermove", 50, 50); ev(el, "pointerup", 50, 50);
+    expect(dragEnd).toHaveBeenLastCalledWith(65);
+    axis = "-y";
+    ev(el, "pointerdown", 100, 80); ev(el, "pointermove", 100, 50); ev(el, "pointerup", 100, 50);
+    expect(dragEnd).toHaveBeenLastCalledWith(10);
+  });
+
   it("y axis: a horizontal move is not a drag", () => {
     const el = box(), dragEnd = vi.fn(), tap = vi.fn();
     attachGestures(el, { axis: () => "y", dragStart: () => 40, dragEnd, tap });

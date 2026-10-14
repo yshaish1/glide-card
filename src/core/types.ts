@@ -59,6 +59,9 @@ export interface BaseCardConfig {
   double_tap_action?: ActionConfig;
 }
 
+/** Top-down: blind, roman, venetian, shutter; bottom_up rises from the sill; the rest open sideways. */
+export type CoverStyle = "blind" | "bottom_up" | "roman" | "venetian" | "shutter" | "curtain" | "curtain_side" | "vertical";
+
 export interface ButtonCardConfig extends BaseCardConfig {
   card_type: "button";
   entity?: string;
@@ -70,8 +73,13 @@ export interface ButtonCardConfig extends BaseCardConfig {
   view?: "garden" | "sky" | "city" | "sea" | "color";
   /** Covers: your own photo for the view (e.g. `/local/yard.jpg`), used when `view` is not set. */
   view_image?: string;
-  /** Covers: `curtain` parts two drapes from the centre, `blind` drops from the top; unset follows the device class. */
-  cover_style?: "blind" | "curtain";
+  /**
+   * Covers: how the window opens; unset follows the device class (curtain → `curtain`,
+   * shutter → `shutter`, anything else → `blind`).
+   */
+  cover_style?: CoverStyle;
+  /** Covers: where a one-sided cover (`curtain_side`, `vertical`) stacks when open; `start` by default. */
+  cover_side?: "start" | "end";
   /** Covers: open, stop and close buttons on the card (each only when the cover supports it). */
   cover_buttons?: boolean;
   /** `false`: no solid colour fill when on; the glass gradient takes the colour instead. */

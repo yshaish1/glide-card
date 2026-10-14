@@ -142,7 +142,25 @@ const SCHEMAS: Record<CardType, unknown[]> = {
         { name: "view_image", selector: { text: {} } },
         {
           name: "cover_style",
-          selector: { select: { mode: "dropdown", options: [{ value: "blind", label: "Blind" }, { value: "curtain", label: "Curtain" }] } },
+          selector: {
+            select: {
+              mode: "dropdown",
+              options: [
+                { value: "blind", label: "Blind (top down)" },
+                { value: "bottom_up", label: "Shade (bottom up)" },
+                { value: "roman", label: "Roman shade" },
+                { value: "venetian", label: "Venetian blind" },
+                { value: "shutter", label: "Roller shutter" },
+                { value: "curtain", label: "Curtain (from the middle)" },
+                { value: "curtain_side", label: "Curtain (one side)" },
+                { value: "vertical", label: "Vertical blinds" },
+              ],
+            },
+          },
+        },
+        {
+          name: "cover_side",
+          selector: { select: { mode: "dropdown", options: [{ value: "start", label: "Start" }, { value: "end", label: "End" }] } },
         },
         { name: "cover_buttons", selector: { boolean: {} } },
       ],
@@ -217,6 +235,7 @@ const LABELS: Record<string, string> = {
   view: "Cover view (covers only, empty = garden)",
   view_image: "Cover view photo, e.g. /local/yard.jpg",
   cover_style: "Cover style (empty = auto from device class)",
+  cover_side: "One-sided covers stack at (empty = start)",
   cover_buttons: "Open / stop / close buttons (covers)",
 };
 

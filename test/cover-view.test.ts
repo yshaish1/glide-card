@@ -86,11 +86,15 @@ describe("cover window view", () => {
     expect(q(forced, ".surface")!.classList.contains("curtain")).toBe(true);
   });
 
-  it("curtains drag sideways, blinds drag up and down", async () => {
-    const curtain = await mount({ entity: "cover.c" });
-    const blind = await mount({ entity: "cover.b" });
-    expect(curtain.isCover && !curtain.isCurtain ? "y" : "x").toBe("x");
-    expect(blind.isCover && !blind.isCurtain ? "y" : "x").toBe("y");
+  it("drags the way the cover opens", async () => {
+    const axis = async (cfg: Record<string, unknown>) => (await mount(cfg)).dragAxis;
+    expect(await axis({ entity: "cover.c" })).toBe("x");
+    expect(await axis({ entity: "cover.b" })).toBe("y");
+    expect(await axis({ entity: "cover.b", cover_style: "roman" })).toBe("y");
+    expect(await axis({ entity: "cover.b", cover_style: "bottom_up" })).toBe("-y");
+    // One-sided: opening moves the edge towards the side it stacks at
+    expect(await axis({ entity: "cover.b", cover_style: "curtain_side" })).toBe("-x");
+    expect(await axis({ entity: "cover.b", cover_style: "vertical", cover_side: "end" })).toBe("x");
   });
 
   it("color tints the fabric", async () => {
@@ -144,5 +148,74 @@ describe("cover motion", () => {
     el.dragValue = 70;
     await el.updateComplete;
     expect(motion(el).moving).toBe(false);
+  });
+});
+
+describe("cover styles", () => {
+  const cls = (el: any) => q(el, ".surface")!.classList;
+  const hassDc = (dc: string, attrs: Record<string, unknown> = {}) => {
+    const h = hassWith();
+    h.states["cover.x"] = st("cover.x", "open", { current_position: 40, device_class: dc, ...attrs }) as any;
+    return h;
+  };
+
+  it("follows the device class unless cover_style says otherwise", async () => {
+    expect(cls(await mount({ entity: "cover.c" })).contains("style-curtain")).toBe(true);
+    expect(cls(await mount({ entity: "cover.x" }, hassDc("shutter"))).contains("style-shutter")).toBe(true);
+    expect(cls(await mount({ entity: "cover.x" }, hassDc("shade"))).contains("style-blind")).toBe(true);
+    expect(cls(await mount({ entity: "cover.c", cover_style: "venetian" })).contains("style-venetian")).toBe(true);
+    expect(cls(await mount({ entity: "cover.b", cover_style: "nope" })).contains("style-blind")).toBe(true);
+  });
+
+  it("draws the right panel for each style", async () => {
+    const parts = async (cover_style: string, extra = {}) => {
+      const el = await mount({ entity: "cover.b", cover_style, ...extra });
+      return { drapes: el.shadowRoot.querySelectorAll(".drape").length, fill: !!q(el, ".fill"), box: !!q(el, ".box"), rod: !!q(el, ".rod") };
+    };
+    expect(await parts("curtain")).toEqual({ drapes: 2, fill: false, box: false, rod: true });
+    expect(await parts("curtain_side")).toEqual({ drapes: 1, fill: false, box: false, rod: true });
+    expect(await parts("vertical")).toEqual({ drapes: 1, fill: false, box: false, rod: true });
+    expect(await parts("shutter")).toEqual({ drapes: 0, fill: true, box: true, rod: false });
+    for (const style of ["blind", "bottom_up", "roman", "venetian"]) {
+      expect(await parts(style)).toEqual({ drapes: 0, fill: true, box: false, rod: false });
+    }
+    // Top-down and bottom-up panels cover the closed part; drapes size from --closed
+    expect(q(await mount({ entity: "cover.b", cover_style: "bottom_up" }), ".surface")!.style.getPropertyValue("--fill")).toBe("60%");
+  });
+
+  it("a one-sided cover stacks at the chosen side", async () => {
+    const el = await mount({ entity: "cover.b", cover_style: "curtain_side", cover_side: "end" });
+    expect(q(el, ".drape")!.classList.contains("end")).toBe(true);
+    expect(cls(el).contains("side-end")).toBe(true);
+    expect(q(await mount({ entity: "cover.b", cover_style: "curtain_side" }), ".drape")!.classList.contains("start")).toBe(true);
+  });
+
+  it("venetian slats follow the tilt: thin when open, solid when shut, half without a tilt", async () => {
+    const slat = async (tilt?: number) =>
+      q(await mount({ entity: "cover.x", cover_style: "venetian" }, hassDc("blind", tilt === undefined ? {} : { current_tilt_position: tilt })), ".surface")!
+        .style.getPropertyValue("--slat");
+    expect(await slat(50)).toBe("2.5px");
+    expect(await slat(0)).toBe("8px");
+    expect(await slat(100)).toBe("8px");
+    expect(await slat()).toBe("5.3px");
+  });
+
+  it("fabric styles take the colour, others don't", async () => {
+    const fabric = async (cover_style: string) =>
+      q(await mount({ entity: "cover.b", cover_style, color: "#b38b6d" }), ".surface")!.style.getPropertyValue("--gc-fabric");
+    expect(await fabric("roman")).toBe("#b38b6d");
+    expect(await fabric("curtain_side")).toBe("#b38b6d");
+    expect(await fabric("shutter")).toBe("");
+  });
+
+  it("cover buttons point the way the cover moves", async () => {
+    const icons = async (cover_style: string, extra = {}) => {
+      const el = await mount({ entity: "cover.b", cover_style, cover_buttons: true, ...extra });
+      return [...el.shadowRoot.querySelectorAll(".round ha-icon")].map((i: any) => i.icon);
+    };
+    expect(await icons("blind")).toEqual(["mdi:arrow-up", "mdi:stop", "mdi:arrow-down"]);
+    expect(await icons("bottom_up")).toEqual(["mdi:arrow-down", "mdi:stop", "mdi:arrow-up"]);
+    expect(await icons("curtain_side")).toEqual(["mdi:arrow-left", "mdi:stop", "mdi:arrow-right"]);
+    expect(await icons("vertical", { cover_side: "end" })).toEqual(["mdi:arrow-right", "mdi:stop", "mdi:arrow-left"]);
   });
 });

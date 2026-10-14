@@ -8,7 +8,7 @@ import { attachGestures } from "../core/gestures";
 import { isScene, sceneSvg } from "./cover-scenes";
 import { formatState, t } from "../core/i18n";
 import { TemplateController } from "../core/templates";
-import type { ActionConfig, ButtonCardConfig, HassEntity } from "../core/types";
+import type { ActionConfig, ButtonCardConfig, CoverStyle, HassEntity } from "../core/types";
 
 /** A rendered icon template only counts when it looks like an icon ("mdi:..."), e.g. not "unknown". */
 const iconOrUndefined = (v?: string) => (v && /^[\w-]+:[\w-]+$/.test(v.trim()) ? v.trim() : undefined);
@@ -16,11 +16,26 @@ const iconOrUndefined = (v?: string) => (v && /^[\w-]+:[\w-]+$/.test(v.trim()) ?
 const STATELESS = new Set(["scene", "script", "button", "input_button"]);
 /** HA's CoverEntityFeature bits for the cover buttons. */
 const COVER_OPEN = 1, COVER_CLOSE = 2, COVER_STOP = 8;
+/** How each cover style moves: down from the top, up from the sill, apart from the middle, or to one side. */
+const COVER_MOTION: Record<CoverStyle, "down" | "up" | "split" | "side"> = {
+  blind: "down", roman: "down", venetian: "down", shutter: "down", bottom_up: "up",
+  curtain: "split", curtain_side: "side", vertical: "side",
+};
+/** Fabric styles take `color` as the fabric tint. */
+const FABRIC = new Set<CoverStyle>(["curtain", "curtain_side", "roman"]);
 /**
  * A moving cover reports its position every second or so. Each step glides linearly until the next
  * report is due, so the steps join into one motion; the first one is a guess, long gaps are capped.
  */
 const MOVE_FIRST_MS = 1000, MOVE_MIN_MS = 250, MOVE_MAX_MS = 4000;
+/**
+ * Venetian slats in an 8px pitch: thin with wide gaps at half tilt (open), solid at 0 or 100 (shut).
+ * Without a tilt they sit half shut.
+ */
+const slatPx = (tilt?: number) => {
+  const shut = typeof tilt === "number" ? Math.abs(tilt - 50) / 50 : 0.5;
+  return Math.round((2.5 + 5.5 * shut) * 10) / 10;
+};
 const isMoving = (s?: HassEntity) => s?.state === "opening" || s?.state === "closing";
 const TOGGLEABLE = new Set(["light", "switch", "fan", "input_boolean", "cover", "lock", "scene", "script", "button", "input_button", "siren", "humidifier"]);
 
@@ -99,7 +114,7 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     const el = this.renderRoot.querySelector<HTMLElement>(".surface")!;
     let lastStep = -1;
     this.detach = attachGestures(el, {
-      axis: () => (this.isCover && !this.isCurtain ? "y" : "x"),
+      axis: () => this.dragAxis,
       arm: () => haptic("selection"),
       tap: (p) => {
         this.playTapFx(el, p, { icon: el.querySelector(".icon"), badge: el.querySelector(".badge") });
@@ -150,11 +165,38 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     return domainOf(this.config.entity) === "cover" && !!this.slider;
   }
 
-  /** Curtains part from the centre and drag sideways: HA's `curtain` device class, or `cover_style` to force either look. */
-  private get isCurtain() {
-    if (!this.isCover) return false;
+  /** How the window opens: `cover_style`, or the device class (curtain and shutter have their own look). */
+  private get coverStyle(): CoverStyle | undefined {
+    if (!this.isCover) return undefined;
     const style = this.config.cover_style;
-    return style === "curtain" || (style !== "blind" && this.stateOf(this.config.entity)?.attributes.device_class === "curtain");
+    if (style && style in COVER_MOTION) return style;
+    const dc = this.stateOf(this.config.entity)?.attributes.device_class;
+    return dc === "curtain" ? "curtain" : dc === "shutter" ? "shutter" : "blind";
+  }
+
+  private get motion() {
+    const style = this.coverStyle;
+    return style ? COVER_MOTION[style] : undefined;
+  }
+
+  /** Curtains and vertical blinds open sideways. */
+  private get horizontal() {
+    return this.motion === "split" || this.motion === "side";
+  }
+
+  private get side() {
+    return this.config.cover_side === "end" ? "end" : "start";
+  }
+
+  /** Dragging the way the cover opens raises the position. */
+  private get dragAxis(): "x" | "-x" | "y" | "-y" {
+    switch (this.motion) {
+      case "down": return "y";
+      case "up": return "-y";
+      case "split": return "x";
+      case "side": return this.side === "start" ? "-x" : "x";
+      default: return "x";
+    }
   }
 
   /** Covers look like a window: an outdoor view (built-in scene or the user's photo) behind a blind; `view: color` keeps the plain fill. */
@@ -181,7 +223,15 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     // Fully open or closed greys out the button that would do nothing; while moving both stay live.
     const opened = !moving && (pos !== undefined ? pos >= 100 : s?.state === "open");
     const closed = !moving && (pos !== undefined ? pos <= 0 : s?.state === "closed");
-    const curtain = this.isCurtain;
+    // Icons point the way the cover moves; sideways ones are drawn for LTR and mirrored in RTL.
+    const icons: Record<string, [string, string]> = {
+      down: ["mdi:arrow-up", "mdi:arrow-down"],
+      up: ["mdi:arrow-down", "mdi:arrow-up"],
+      split: ["mdi:arrow-split-vertical", "mdi:arrow-collapse-horizontal"],
+      side: this.side === "start" ? ["mdi:arrow-left", "mdi:arrow-right"] : ["mdi:arrow-right", "mdi:arrow-left"],
+    };
+    const [openIcon, closeIcon] = icons[this.motion ?? "down"];
+    const mirror = this.motion === "side" ? "mirror" : "";
     const btn = (service: string, icon: string, label: string, disabled: boolean, cls = "") => html`
       <button class="round ${cls}" aria-label=${label} title=${label} ?disabled=${off || disabled}
         @click=${(e: Event) => { e.stopPropagation(); haptic("light"); this.hass?.callService("cover", service, { entity_id: id }); }}>
@@ -189,9 +239,9 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       </button>`;
     return html`
       <div class="cover-btns" data-no-gesture>
-        ${feat & COVER_OPEN ? btn("open_cover", curtain ? "mdi:arrow-split-vertical" : "mdi:arrow-up", t(this.hass, "open_cover"), opened) : nothing}
+        ${feat & COVER_OPEN ? btn("open_cover", openIcon, t(this.hass, "open_cover"), opened, mirror) : nothing}
         ${feat & COVER_STOP ? btn("stop_cover", "mdi:stop", t(this.hass, "stop_cover"), !moving, moving ? "stop live" : "stop") : nothing}
-        ${feat & COVER_CLOSE ? btn("close_cover", curtain ? "mdi:arrow-collapse-horizontal" : "mdi:arrow-down", t(this.hass, "close_cover"), closed) : nothing}
+        ${feat & COVER_CLOSE ? btn("close_cover", closeIcon, t(this.hass, "close_cover"), closed, mirror) : nothing}
       </div>
     `;
   }
@@ -211,13 +261,27 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     `;
   }
 
+  /** What covers the window: a blind or shade from the top or sill, or drapes and slats on a rail. */
+  private renderPanel(style: CoverStyle) {
+    const dragging = this.dragValue !== undefined ? "dragging" : "";
+    switch (COVER_MOTION[style]) {
+      case "split":
+        return html`<div class="rod"></div>${["start", "end"].map((side) => html`<div class="drape ${side} ${dragging}"></div>`)}`;
+      case "side":
+        return html`<div class="rod"></div><div class="drape single ${this.side} ${dragging}"></div>`;
+      default:
+        return html`<div class="fill ${dragging}"></div>${style === "shutter" ? html`<div class="box"></div>` : nothing}`;
+    }
+  }
+
   protected render() {
     const s = this.stateOf(this.config.entity);
     const slider = this.slider;
     const value = this.dragValue ?? slider?.value;
     const cover = this.isCover;
     const view = this.view;
-    const curtain = this.isCurtain;
+    const style = this.coverStyle;
+    const horizontal = this.horizontal;
     // Covers stay neutral like the mockup; the fill alone shows how open they are.
     const on = !cover && (this.dragValue !== undefined ? this.dragValue > 0 : isActive(s));
     const stateText = this.hass && this.config.entity && s ? formatState(this.hass, this.config.entity) : "";
@@ -232,16 +296,17 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       ? this.tpl.get("secondary") ?? ""
       : cover ? `${value}% ${stateText}` : this.coverButtons ? stateText : slider && on && value !== undefined ? `${value}%` : "";
     // In the window look the fill is the blind, so it covers what is closed.
-    const fill = view && !curtain ? 100 - (value ?? 0) : slider ? value ?? 0 : on ? 100 : 0;
+    const fill = view && !horizontal ? 100 - (value ?? 0) : slider ? value ?? 0 : on ? 100 : 0;
     const color = this.tpl.get("color")?.trim();
     const buttons = this.coverButtons;
     const moving = cover && this.dragValue === undefined && isMoving(s);
     return html`
       <div
-        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${view ? "window" : ""} ${curtain ? "curtain" : ""} ${moving ? "moving" : ""} ${buttons ? "has-btns" : ""} ${this.config.fill === false ? "nofill" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
+        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${view ? "window" : ""} ${style ? `style-${style} side-${this.side}` : ""} ${style === "curtain" ? "curtain" : ""} ${style && FABRIC.has(style) ? "fabric" : ""} ${moving ? "moving" : ""} ${buttons ? "has-btns" : ""} ${this.config.fill === false ? "nofill" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
         style=${styleMap({ "--domain": cssColor(color) ?? domainColor(s), "--gc-icon-on": onTextColor(color), "--fill": `${fill}%`,
           "--closed": `${(100 - (value ?? 0)) / 100}`,
-          "--gc-fabric": curtain ? cssColor(color) : undefined,
+          "--gc-fabric": style && FABRIC.has(style) ? cssColor(color) : undefined,
+          "--slat": style === "venetian" ? `${slatPx(s?.attributes.current_tilt_position)}px` : undefined,
           "--gc-move": moving ? `${Math.round(this.moveMs)}ms` : undefined,
         })}
         role="button"
@@ -249,9 +314,7 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
         aria-label=${name}
       >
         ${view ? this.renderView() : nothing}
-        ${view && curtain
-          ? html`<div class="rod"></div>${["start", "end"].map((side) => html`<div class="drape ${side} ${this.dragValue !== undefined ? "dragging" : ""}"></div>`)}`
-          : html`<div class="fill ${this.dragValue !== undefined ? "dragging" : ""}"></div>`}
+        ${view ? this.renderPanel(style!) : html`<div class="fill ${this.dragValue !== undefined ? "dragging" : ""}"></div>`}
         <div class="icon"><ha-icon .icon=${entityIcon(s, iconOrUndefined(this.tpl.get("icon")))}></ha-icon></div>
         <div class="text">
           <div class="name">${name}</div>
@@ -362,7 +425,7 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
       }
       /* Curtains: two folded drapes under a rod, parting from the centre; a bunched panel stays at each side when open. */
-      .curtain { --fabric: var(--gc-fabric, var(--gc-surface-solid, var(--gc-surface))); }
+      .cover { --fabric: var(--gc-fabric, var(--gc-surface-solid, var(--gc-surface))); }
       .rod {
         position: absolute;
         inset-inline: 0;
@@ -397,16 +460,96 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       .drape.end { inset-inline-end: 0; }
       .drape.start:dir(ltr), .drape.end:dir(rtl) { box-shadow: 3px 0 6px rgba(0, 0, 0, 0.22); }
       .drape.end:dir(ltr), .drape.start:dir(rtl) { box-shadow: -3px 0 6px rgba(0, 0, 0, 0.22); }
-      /* With the plain fill, a curtain fills start to end like the drag. */
-      .cover.curtain:not(.window) .fill {
+      /* One drape or a stack of vertical slats on the rail, gathered at one side when open. */
+      .drape.single { width: calc(7% + 93% * var(--closed)); }
+      .style-vertical .drape {
+        background: repeating-linear-gradient(
+          to right,
+          color-mix(in srgb, var(--fabric), black 14%) 0 1px,
+          color-mix(in srgb, var(--fabric), white 8%) 1px 45%,
+          var(--fabric) 45% 92%,
+          color-mix(in srgb, var(--fabric), black 8%) 92% 100%
+        );
+        background-size: 14px 100%;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border-bottom: none;
+      }
+
+      /* Shade from the sill: the same panel, anchored at the bottom with its bar on top. */
+      .style-bottom_up.window .fill {
+        inset-block: auto 0;
+        border-bottom: none;
+        border-top: 3px solid color-mix(in srgb, var(--gc-text) 22%, var(--gc-surface-solid, var(--gc-surface)));
+        box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.18);
+      }
+      /* Roman shade: soft horizontal folds in the fabric and a heavier hem. */
+      .style-roman.window .fill {
+        background: repeating-linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--fabric), white 10%) 0,
+          var(--fabric) 55%,
+          color-mix(in srgb, var(--fabric), black 18%) 100%
+        );
+        background-size: 100% 16px;
+        border-bottom: 5px solid color-mix(in srgb, var(--fabric), black 24%);
+      }
+      /* Venetian: slats over the view; --slat (from the tilt) sets how much of each 8px pitch is slat. */
+      .style-venetian.window .fill {
+        background: repeating-linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--gc-surface-solid, var(--gc-surface)), white 12%) 0,
+          var(--gc-surface-solid, var(--gc-surface)) calc(var(--slat, 5px) * 0.6),
+          color-mix(in srgb, var(--gc-surface-solid, var(--gc-surface)), black 14%) var(--slat, 5px),
+          transparent var(--slat, 5px) 8px
+        );
+        border-bottom: 3px solid color-mix(in srgb, var(--gc-text) 25%, var(--gc-surface-solid, var(--gc-surface)));
+      }
+      /* Outdoor roller shutter: opaque aluminium slats under a box that stays at the top. */
+      .style-shutter.window .fill {
+        --metal: color-mix(in srgb, var(--gc-surface-solid, var(--gc-surface)) 55%, #9aa3ad);
+        background: repeating-linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--metal), white 22%) 0,
+          var(--metal) 45%,
+          color-mix(in srgb, var(--metal), black 22%) 85%,
+          color-mix(in srgb, var(--metal), black 40%) 100%
+        );
+        background-size: 100% 7px;
+        border-bottom: 3px solid color-mix(in srgb, var(--metal), black 35%);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+      }
+      .box {
+        position: absolute;
+        inset-inline: 0;
+        top: 0;
+        height: 8px;
+        background: linear-gradient(to bottom, color-mix(in srgb, #9aa3ad, white 20%), color-mix(in srgb, #9aa3ad, black 25%));
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        pointer-events: none;
+      }
+
+      /* Plain fill (no view): it grows the way the cover opens. From the top for a shade from the sill, */
+      .style-bottom_up:not(.window) .fill {
+        inset-block: 0 auto;
+        border-top: none;
+        border-bottom: 1.5px solid color-mix(in srgb, var(--domain) 35%, transparent);
+        border-radius: 0 0 6px 6px;
+      }
+      /* sideways for curtains and vertical blinds: from the middle out, or away from the stacking side. */
+      .cover.style-curtain:not(.window) .fill,
+      .cover.style-curtain_side:not(.window) .fill,
+      .cover.style-vertical:not(.window) .fill {
         inset-block: 0;
-        inset-inline: 0 auto;
         width: var(--fill);
         height: auto;
         border-top: none;
         border-radius: 0;
         transition: width 0.45s cubic-bezier(0.2, 0.9, 0.25, 1);
       }
+      .cover.style-curtain:not(.window) .fill { inset-inline: calc((100% - var(--fill)) / 2) auto; }
+      .cover.side-start:not(.window):is(.style-curtain_side, .style-vertical) .fill { inset-inline: auto 0; }
+      .cover.side-end:not(.window):is(.style-curtain_side, .style-vertical) .fill { inset-inline: 0 auto; }
       /* While the motor runs, each reported step glides at a steady speed into the next. */
       @media (prefers-reduced-motion: no-preference) {
         .surface.moving .fill:not(.dragging),
@@ -524,6 +667,7 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       }
       .cover-btns .round:active:not(:disabled) { transform: scale(0.92); }
       .cover-btns .round:disabled { opacity: 0.4; cursor: default; }
+      .cover-btns .round.mirror:dir(rtl) ha-icon { transform: scaleX(-1); }
       .cover-btns .round.live {
         background: color-mix(in srgb, var(--domain) 22%, var(--gc-surface-solid, var(--gc-surface)));
         border-color: color-mix(in srgb, var(--domain) 45%, transparent);

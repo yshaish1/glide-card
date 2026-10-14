@@ -5,8 +5,11 @@ export interface GestureHandlers {
   doubleTap?(point?: { x: number; y: number }): void;
   /** Enable drag-to-adjust; value is relative to `dragStart()` in 0-100. */
   dragStart?(): number;
-  /** Drag direction, read per gesture. "x" (default) is RTL aware; "y" raises the value when moving up. */
-  axis?(): "x" | "y";
+  /**
+   * Drag direction, read per gesture. "x" (default) raises the value towards the end (RTL aware);
+   * "y" raises it when moving up. A leading "-" flips which way raises it.
+   */
+  axis?(): "x" | "-x" | "y" | "-y";
   /** Touch "y" drags arm after a still press; called when that happens. */
   arm?(): void;
   drag?(value: number): void;
@@ -31,7 +34,7 @@ const ignored = (e: Event) => e.composedPath().some((n) => n instanceof Element 
 export function attachGestures(el: HTMLElement, h: GestureHandlers): () => void {
   let x0 = 0, y0 = 0, start = 0, value = 0;
   let holdTimer = 0, tapTimer = 0, armTimer = 0;
-  let axis: "x" | "y" = "x", armed = false;
+  let axis: "x" | "y" = "x", sign = 1, armed = false;
   let state: "idle" | "down" | "held" | "drag" | "cancel" = "idle";
 
   const clear = () => { clearTimeout(holdTimer); clearTimeout(armTimer); };
@@ -43,7 +46,9 @@ export function attachGestures(el: HTMLElement, h: GestureHandlers): () => void 
     if (e.button !== 0 || ignored(e)) return;
     x0 = e.clientX; y0 = e.clientY; state = "down";
     clear();
-    axis = h.axis?.() ?? "x";
+    const a = h.axis?.() ?? "x";
+    axis = a.endsWith("y") ? "y" : "x";
+    sign = a.startsWith("-") ? -1 : 1;
     armed = axis === "y" && e.pointerType !== "touch";
     if (axis === "y" && !armed && h.dragStart) armTimer = window.setTimeout(() => { armed = true; h.arm?.(); }, ARM_MS);
     if (h.hold) holdTimer = window.setTimeout(() => { state = "held"; h.hold!(); }, HOLD_MS);
@@ -64,7 +69,7 @@ export function attachGestures(el: HTMLElement, h: GestureHandlers): () => void 
       const delta = axis === "y"
         ? ((y0 - e.clientY) / height()) * 100
         : ((e.clientX - x0) / width()) * 100 * (rtl() ? -1 : 1);
-      value = Math.round(Math.min(100, Math.max(0, start + delta)));
+      value = Math.round(Math.min(100, Math.max(0, start + sign * delta)));
       h.drag?.(value);
     }
   };
