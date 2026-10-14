@@ -53,6 +53,27 @@ function patch(id: string, state: string | undefined, attrs: Record<string, any>
   emit();
 }
 
+// Covers travel like a real motor: the position is reported in steps about once a second.
+const STEP = 8, STEP_MS = 1000;
+const travel = new Map<string, ReturnType<typeof setInterval>>();
+function stopTravel(id: string) {
+  clearInterval(travel.get(id));
+  travel.delete(id);
+}
+function moveTo(id: string, target: number) {
+  stopTravel(id);
+  const from = states[id].attributes.current_position ?? 0;
+  if (from === target) return patch(id, target ? "open" : "closed");
+  patch(id, target > from ? "opening" : "closing");
+  travel.set(id, setInterval(() => {
+    const pos: number = states[id].attributes.current_position;
+    const next = target > pos ? Math.min(target, pos + STEP) : Math.max(target, pos - STEP);
+    if (next !== target) return patch(id, undefined, { current_position: next });
+    stopTravel(id);
+    patch(id, target ? "open" : "closed", { current_position: target });
+  }, STEP_MS));
+}
+
 async function callService(domain: string, service: string, data: Record<string, any> = {}) {
   console.log("[mock] callService", domain, service, data);
   const id: string = data.entity_id;
@@ -67,11 +88,15 @@ async function callService(domain: string, service: string, data: Record<string,
     case "switch.toggle": return patch(id, on ? "off" : "on");
     case "fan.toggle": return patch(id, on ? "off" : "on");
     case "fan.set_percentage": return patch(id, data.percentage ? "on" : "off", { percentage: data.percentage });
-    case "cover.toggle": return patch(id, on ? "closed" : "open", { current_position: on ? 0 : 100 });
-    case "cover.open_cover": return patch(id, "open", "current_position" in s.attributes ? { current_position: 100 } : {});
-    case "cover.close_cover": return patch(id, "closed", "current_position" in s.attributes ? { current_position: 0 } : {});
-    case "cover.stop_cover": return patch(id, s.attributes.current_position ? "open" : s.state === "opening" ? "open" : s.state === "closing" ? "closed" : s.state);
-    case "cover.set_cover_position": return patch(id, data.position ? "open" : "closed", { current_position: data.position });
+    case "cover.toggle":
+      if (!("current_position" in s.attributes)) return patch(id, on ? "closed" : "open");
+      return moveTo(id, on ? 0 : 100);
+    case "cover.open_cover": return "current_position" in s.attributes ? moveTo(id, 100) : patch(id, "open");
+    case "cover.close_cover": return "current_position" in s.attributes ? moveTo(id, 0) : patch(id, "closed");
+    case "cover.stop_cover":
+      stopTravel(id);
+      return patch(id, s.attributes.current_position ? "open" : s.state === "opening" ? "open" : s.state === "closing" ? "closed" : s.state);
+    case "cover.set_cover_position": return moveTo(id, data.position);
     case "climate.set_temperature": return patch(id, undefined, { temperature: data.temperature });
     case "climate.set_hvac_mode": return patch(id, data.hvac_mode, { hvac_action: data.hvac_mode === "off" ? "off" : data.hvac_mode === "cool" ? "cooling" : "heating" });
     case "climate.toggle": return patch(id, on ? "off" : "heat");

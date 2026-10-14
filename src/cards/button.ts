@@ -16,6 +16,12 @@ const iconOrUndefined = (v?: string) => (v && /^[\w-]+:[\w-]+$/.test(v.trim()) ?
 const STATELESS = new Set(["scene", "script", "button", "input_button"]);
 /** HA's CoverEntityFeature bits for the cover buttons. */
 const COVER_OPEN = 1, COVER_CLOSE = 2, COVER_STOP = 8;
+/**
+ * A moving cover reports its position every second or so. Each step glides linearly until the next
+ * report is due, so the steps join into one motion; the first one is a guess, long gaps are capped.
+ */
+const MOVE_FIRST_MS = 1000, MOVE_MIN_MS = 250, MOVE_MAX_MS = 4000;
+const isMoving = (s?: HassEntity) => s?.state === "opening" || s?.state === "closing";
 const TOGGLEABLE = new Set(["light", "switch", "fan", "input_boolean", "cover", "lock", "scene", "script", "button", "input_button", "siren", "humidifier"]);
 
 export class GlideButton extends GlideBase<ButtonCardConfig> {
@@ -25,6 +31,10 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
   /** Bumped per template result, so the update isn't dropped by the hass-only update filter. */
   templateRev = 0;
   private detach?: () => void;
+  /** When the last position report came in, and whether the cover was moving then. */
+  private lastPos?: { value: number; at: number; moving: boolean };
+  /** How long each step glides while moving: the time between the last two reports. */
+  private moveMs = MOVE_FIRST_MS;
   private tpl = new TemplateController(
     this,
     () => {
@@ -69,6 +79,20 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       const id = this.config.entity!;
       if ((changed.get("hass") as any).states[id] !== this.hass?.states[id]) this.dragValue = undefined;
     }
+    if (changed.has("hass")) this.trackMotion();
+  }
+
+  private trackMotion() {
+    const s = this.stateOf(this.config.entity);
+    const value = s?.attributes.current_position;
+    if (typeof value !== "number" || value === this.lastPos?.value) return;
+    const at = performance.now(), moving = isMoving(s);
+    if (moving) {
+      this.moveMs = this.lastPos?.moving
+        ? Math.min(MOVE_MAX_MS, Math.max(MOVE_MIN_MS, at - this.lastPos.at))
+        : MOVE_FIRST_MS;
+    }
+    this.lastPos = { value, at, moving };
   }
 
   protected firstUpdated() {
@@ -152,7 +176,7 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     const a = s?.attributes ?? ({} as HassEntity["attributes"]);
     const feat: number = a.supported_features ?? COVER_OPEN | COVER_CLOSE | COVER_STOP;
     const pos: number | undefined = a.current_position;
-    const moving = s?.state === "opening" || s?.state === "closing";
+    const moving = isMoving(s);
     const off = !s || isUnavailable(s);
     // Fully open or closed greys out the button that would do nothing; while moving both stay live.
     const opened = !moving && (pos !== undefined ? pos >= 100 : s?.state === "open");
@@ -211,12 +235,14 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
     const fill = view && !curtain ? 100 - (value ?? 0) : slider ? value ?? 0 : on ? 100 : 0;
     const color = this.tpl.get("color")?.trim();
     const buttons = this.coverButtons;
+    const moving = cover && this.dragValue === undefined && isMoving(s);
     return html`
       <div
-        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${view ? "window" : ""} ${curtain ? "curtain" : ""} ${buttons ? "has-btns" : ""} ${this.config.fill === false ? "nofill" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
+        class="surface ${this.layout} ${on ? "on" : ""} ${cover ? "cover" : ""} ${view ? "window" : ""} ${curtain ? "curtain" : ""} ${moving ? "moving" : ""} ${buttons ? "has-btns" : ""} ${this.config.fill === false ? "nofill" : ""} ${isUnavailable(s) && this.config.entity ? "unavailable" : ""}"
         style=${styleMap({ "--domain": cssColor(color) ?? domainColor(s), "--gc-icon-on": onTextColor(color), "--fill": `${fill}%`,
           "--closed": `${(100 - (value ?? 0)) / 100}`,
           "--gc-fabric": curtain ? cssColor(color) : undefined,
+          "--gc-move": moving ? `${Math.round(this.moveMs)}ms` : undefined,
         })}
         role="button"
         tabindex="0"
@@ -380,6 +406,14 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
         border-top: none;
         border-radius: 0;
         transition: width 0.45s cubic-bezier(0.2, 0.9, 0.25, 1);
+      }
+      /* While the motor runs, each reported step glides at a steady speed into the next. */
+      @media (prefers-reduced-motion: no-preference) {
+        .surface.moving .fill:not(.dragging),
+        .surface.moving .drape:not(.dragging) {
+          transition-duration: var(--gc-move, 1s);
+          transition-timing-function: linear;
+        }
       }
 
       .window .icon, .window .badge { background: var(--gc-surface-solid, var(--gc-surface)); }

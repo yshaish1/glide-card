@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import "../src/themes";
 import "../src/cards/button";
 import type { HomeAssistant } from "../src/core/types";
@@ -97,5 +97,52 @@ describe("cover window view", () => {
     const el = await mount({ entity: "cover.c", color: "#b38b6d" });
     expect(q(el, ".surface")!.style.getPropertyValue("--gc-fabric")).toBe("#b38b6d");
     expect(q(await mount({ entity: "cover.c" }), ".surface")!.style.getPropertyValue("--gc-fabric")).toBe("");
+  });
+});
+
+describe("cover motion", () => {
+  const report = async (el: any, id: string, state: string, pos: number, extra: Record<string, unknown> = {}) => {
+    const h = hassWith();
+    h.states[id] = st(id, state, { current_position: pos, ...extra }) as any;
+    el.hass = h;
+    await el.updateComplete;
+  };
+  const motion = (el: any) => {
+    const s = q(el, ".surface")!;
+    return { moving: s.classList.contains("moving"), ms: s.style.getPropertyValue("--gc-move") };
+  };
+
+  it("glides each step for as long as the reports are apart, capped either way", async () => {
+    let now = 0;
+    const spy = vi.spyOn(performance, "now").mockImplementation(() => now);
+    const el = await mount({ entity: "cover.b" });
+    expect(motion(el)).toEqual({ moving: false, ms: "" });
+
+    now = 60_000; // the first report after it starts moving: a guess, not the minute since the last one
+    await report(el, "cover.b", "closing", 30);
+    expect(motion(el)).toEqual({ moving: true, ms: "1000ms" });
+    now += 1200;
+    await report(el, "cover.b", "closing", 20);
+    expect(motion(el).ms).toBe("1200ms");
+    now += 50;
+    await report(el, "cover.b", "closing", 18);
+    expect(motion(el).ms).toBe("250ms");
+    now += 9000;
+    await report(el, "cover.b", "closing", 10);
+    expect(motion(el).ms).toBe("4000ms");
+
+    now += 1000;
+    await report(el, "cover.b", "closed", 0); // stopped: back to the normal ease
+    expect(motion(el)).toEqual({ moving: false, ms: "" });
+    spy.mockRestore();
+  });
+
+  it("curtains glide too, and a drag stays instant", async () => {
+    const el = await mount({ entity: "cover.c" });
+    await report(el, "cover.c", "opening", 50, { device_class: "curtain" });
+    expect(motion(el).moving).toBe(true);
+    el.dragValue = 70;
+    await el.updateComplete;
+    expect(motion(el).moving).toBe(false);
   });
 });
