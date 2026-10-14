@@ -4,7 +4,7 @@ import { GlideBase, surface } from "../core/base-card";
 import { isActive } from "../core/entity";
 import { haptic } from "../core/fire";
 import { reducedMotion, springEasing } from "../core/spring";
-import type { NavCardConfig, NavItem } from "../core/types";
+import type { NavCardConfig, NavItem, NavMenuItem } from "../core/types";
 
 const ROUTE_EVENTS = ["popstate", "location-changed", "glide-hash"];
 const route = () => location.pathname + location.hash;
@@ -28,6 +28,17 @@ const EDGE = 12;
 
 const usable = (r?: DOMRect): r is DOMRect => !!r && r.width > 0 && r.height > 0;
 
+/** Gap between the bar and its menu, and the menu's minimum distance from the screen edge. */
+const MENU_GAP = 8;
+const MENU_OPEN = CSS.supports?.("animation-timing-function", "linear(0, 1)")
+  ? springEasing(320, 28)
+  : { easing: "cubic-bezier(.2,.9,.25,1.1)", duration: 320 };
+
+const isCurrentPath = (p: string) => {
+  if (p.startsWith("#")) return decodeURIComponent(location.hash) === p;
+  return !location.hash && (location.pathname === p || location.pathname === p.replace(/\/$/, ""));
+};
+
 /**
  * Floating pill navigation bar with a sliding active indicator.
  * Items that don't fit scroll sideways (the active one is centred); `pinned` items stay at the end.
@@ -37,7 +48,10 @@ const usable = (r?: DOMRect): r is DOMRect => !!r && r.width > 0 && r.height > 0
  */
 export class GlideNav extends GlideBase<NavCardConfig> {
   protected readonly cardType = "nav" as const;
-  private onRoute = () => this.requestUpdate();
+  private onRoute = () => {
+    this.closeMenu();
+    this.requestUpdate();
+  };
   /** Route of the last render; HA re-attaches cached views, which miss route events while detached. */
   private rendered?: string;
   private stale = false;
@@ -54,14 +68,78 @@ export class GlideNav extends GlideBase<NavCardConfig> {
   private glide?: number;
   /** The route changed before the bar was laid out: the slide (scroll + indicator) runs once it is. */
   private pending?: { scroll?: number; rect?: DOMRect };
+  /** The item whose menu is open. */
+  private menuFor?: NavItem;
+  /** The button that opened it, which the menu sits above. */
+  private menuAnchor?: HTMLElement;
 
   setConfig(config: NavCardConfig) {
     if (!Array.isArray(config.items) || !config.items.length) throw new Error("Nav needs an `items` list");
+    for (const i of config.items) {
+      if (i.items ? !Array.isArray(i.items) || !i.items.length : !i.navigation_path)
+        throw new Error(`Nav item "${i.name}" needs a \`navigation_path\` or an \`items\` list`);
+    }
     super.setConfig(config);
   }
 
   protected watched() {
-    return this.config.items.map((i) => i.entity);
+    return this.config.items.flatMap((i) => [i.entity, ...(i.items ?? []).map((c) => c.entity)]);
+  }
+
+  private openMenu(item: NavItem, anchor: HTMLElement, keyboard: boolean) {
+    this.menuFor = item;
+    this.menuAnchor = anchor;
+    window.addEventListener("pointerdown", this.onOutside, true);
+    window.addEventListener("keydown", this.onKey);
+    window.addEventListener("resize", this.closeMenu);
+    this.requestUpdate();
+    this.updateComplete.then(() => {
+      const menu = this.renderRoot.querySelector<HTMLElement>(".menu");
+      if (!menu) return;
+      if (keyboard) menu.querySelector<HTMLElement>("button")?.focus();
+      if (reducedMotion()) return;
+      menu.animate(
+        [
+          { opacity: 0, transform: `translateY(${MENU_GAP}px) scale(.92)` },
+          { opacity: 1, transform: "none" },
+        ],
+        MENU_OPEN,
+      );
+    });
+  }
+
+  private closeMenu = () => {
+    if (!this.menuFor) return;
+    this.menuFor = this.menuAnchor = undefined;
+    window.removeEventListener("pointerdown", this.onOutside, true);
+    window.removeEventListener("keydown", this.onKey);
+    window.removeEventListener("resize", this.closeMenu);
+    this.requestUpdate();
+  };
+
+  /** A tap anywhere but the menu or its own button closes it (the button toggles it itself). */
+  private onOutside = (e: Event) => {
+    const path = e.composedPath();
+    const menu = this.renderRoot.querySelector(".menu");
+    if ((menu && path.includes(menu)) || (this.menuAnchor && path.includes(this.menuAnchor))) return;
+    this.closeMenu();
+  };
+
+  private onKey = (e: KeyboardEvent) => {
+    if (e.key !== "Escape") return;
+    const anchor = this.menuAnchor;
+    this.closeMenu();
+    anchor?.focus();
+  };
+
+  /** Above the button, lined up with its outer edge (the one nearer the screen edge) and kept on screen. */
+  private menuPosition() {
+    const r = this.menuAnchor?.getBoundingClientRect();
+    if (!r) return "";
+    const bottom = `bottom: ${Math.max(MENU_GAP, innerHeight - r.top + MENU_GAP)}px;`;
+    return r.left + r.width / 2 > innerWidth / 2
+      ? `${bottom} right: ${Math.max(MENU_GAP, innerWidth - r.right)}px; transform-origin: bottom right;`
+      : `${bottom} left: ${Math.max(MENU_GAP, r.left)}px; transform-origin: bottom left;`;
   }
 
   connectedCallback() {
@@ -76,6 +154,7 @@ export class GlideNav extends GlideBase<NavCardConfig> {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.closeMenu();
     this.resizer?.disconnect();
     const scroller = this.scroller();
     if (scroller) this.stopGlide(scroller);
@@ -90,10 +169,9 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     return 1;
   }
 
+  /** A menu item is current when any of its entries is. */
   private isCurrent(item: NavItem) {
-    const p = item.navigation_path;
-    if (p.startsWith("#")) return decodeURIComponent(location.hash) === p;
-    return !location.hash && (location.pathname === p || location.pathname === p.replace(/\/$/, ""));
+    return item.items ? item.items.some((c) => isCurrentPath(c.navigation_path)) : isCurrentPath(item.navigation_path!);
   }
 
   private indRect() {
@@ -246,26 +324,65 @@ export class GlideNav extends GlideBase<NavCardConfig> {
     if (this.centred !== now) this.reveal(!!this.centred || !!inherit);
   }
 
+  /** Navigate, leaving the indicator's spot for the next view's nav to slide on from. */
+  private go(path: string, from: Element) {
+    const rect = this.indRect();
+    const scroll = this.scroller()?.scrollLeft ?? 0;
+    handoff = usable(rect) ? { rect, scroll, at: performance.now() } : undefined;
+    navigate(path, from);
+  }
+
+  private tapFx(e: Event) {
+    haptic("selection");
+    const btn = e.currentTarget as HTMLElement;
+    this.playTapFx(btn, e instanceof MouseEvent && e.detail ? { x: e.clientX, y: e.clientY } : undefined, { icon: btn.querySelector("ha-icon") });
+  }
+
+  private on = (entity?: string) => !!entity && isActive(this.stateOf(entity));
+
   private item(item: NavItem) {
     const current = this.isCurrent(item);
+    const open = this.menuFor === item;
     return html`
       <button
-        class=${current ? "active" : ""}
+        class="${current ? "active" : ""} ${open ? "open" : ""}"
         aria-current=${current ? "page" : "false"}
+        aria-haspopup=${item.items ? "menu" : nothing}
+        aria-expanded=${item.items ? String(open) : nothing}
         @click=${(e: Event) => {
-          haptic("selection");
+          this.tapFx(e);
           const btn = e.currentTarget as HTMLElement;
-          this.playTapFx(btn, e instanceof MouseEvent && e.detail ? { x: e.clientX, y: e.clientY } : undefined, { icon: btn.querySelector("ha-icon") });
-          const rect = this.indRect();
-          const scroll = this.renderRoot.querySelector(".scroller")?.scrollLeft ?? 0;
-          handoff = usable(rect) ? { rect, scroll, at: performance.now() } : undefined;
-          navigate(item.navigation_path, e.currentTarget as Element);
+          if (!item.items) return this.go(item.navigation_path!, btn);
+          if (open) this.closeMenu();
+          else this.openMenu(item, btn, e instanceof MouseEvent && !e.detail);
         }}
       >
         ${current ? html`<span class="ind"></span>` : nothing}
         <ha-icon .icon=${item.icon}></ha-icon>
         <span class="meta">${item.name}</span>
-        ${item.entity && isActive(this.stateOf(item.entity)) ? html`<i class="dot"></i>` : nothing}
+        ${this.on(item.entity) || item.items?.some((c) => this.on(c.entity)) ? html`<i class="dot"></i>` : nothing}
+      </button>
+    `;
+  }
+
+  private menuItem(item: NavMenuItem) {
+    const current = isCurrentPath(item.navigation_path);
+    return html`
+      <button
+        role="menuitem"
+        class=${current ? "active" : ""}
+        aria-current=${current ? "page" : "false"}
+        @click=${(e: Event) => {
+          this.tapFx(e);
+          const anchor = this.menuAnchor;
+          this.closeMenu();
+          // From the menu button, so a pop-up morphs out of the bar rather than a row that's gone
+          if (!current) this.go(item.navigation_path, anchor ?? (e.currentTarget as Element));
+        }}
+      >
+        <ha-icon .icon=${item.icon}></ha-icon>
+        <span class="label">${item.name}</span>
+        ${this.on(item.entity) ? html`<i class="dot"></i>` : nothing}
       </button>
     `;
   }
@@ -277,6 +394,11 @@ export class GlideNav extends GlideBase<NavCardConfig> {
         <div class="scroller">${this.config.items.filter((i) => !i.pinned).map((i) => this.item(i))}</div>
         ${pinned.length ? html`<div class="pinned">${pinned.map((i) => this.item(i))}</div>` : nothing}
       </nav>
+      ${this.menuFor?.items
+        ? html`<div class="menu surface" role="menu" aria-label=${this.menuFor.name} style=${this.menuPosition()}>
+            ${this.menuFor.items.map((i) => this.menuItem(i))}
+          </div>`
+        : nothing}
     `;
   }
 
@@ -367,11 +489,47 @@ export class GlideNav extends GlideBase<NavCardConfig> {
         background: var(--gc-accent);
       }
       /* Slim: icons only; the active item shows its name beside the icon. Compact is the same as full. */
-      :host([size="slim"]) button { flex-direction: row; gap: 6px; min-width: 40px; padding: 7px 9px; }
-      :host([size="slim"]) button:not(.active) .meta { display: none; }
-      :host([size="slim"]) button.active { padding-inline: 12px 14px; }
-      :host([size="slim"]) button .meta { font-size: 12px; }
-      :host([size="slim"]) .dot { top: 4px; inset-inline-end: 6px; }
+      :host([size="slim"]) nav button { flex-direction: row; gap: 6px; min-width: 40px; padding: 7px 9px; }
+      :host([size="slim"]) nav button:not(.active) .meta { display: none; }
+      :host([size="slim"]) nav button.active { padding-inline: 12px 14px; }
+      :host([size="slim"]) nav button .meta { font-size: 12px; }
+      :host([size="slim"]) nav .dot { top: 4px; inset-inline-end: 6px; }
+      button.open:not(.active) { color: var(--gc-text); }
+
+      /* The menu is the bar's sibling: inside it, the bar's clipping and backdrop would cut it off. */
+      .menu {
+        position: fixed;
+        z-index: 6;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 180px;
+        max-width: calc(100vw - ${2 * MENU_GAP}px);
+        max-height: 60vh;
+        overflow-y: auto;
+        padding: 4px;
+        border-radius: var(--gc-radius);
+        background: var(--gc-sheet-bg);
+      }
+      .menu button {
+        flex-direction: row;
+        gap: 12px;
+        min-width: 0;
+        padding: 10px 14px;
+        border-radius: max(6px, calc(var(--gc-radius) - 4px));
+        color: var(--gc-text);
+        scroll-snap-align: none;
+        transition: background 0.15s;
+      }
+      .menu button:hover { background: color-mix(in srgb, var(--gc-text) 7%, transparent); }
+      .menu button.active {
+        color: var(--gc-accent-text);
+        background: color-mix(in srgb, var(--gc-accent) 22%, transparent);
+      }
+      .menu button ha-icon { flex: none; color: var(--gc-text-dim); }
+      .menu button.active ha-icon { color: inherit; }
+      .menu .label { flex: 1; font-size: 14px; line-height: 1.3; }
+      .menu .dot { position: static; flex: none; }
     `,
   ];
 }

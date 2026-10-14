@@ -145,3 +145,88 @@ describe("nav", () => {
     vi.unstubAllGlobals();
   });
 });
+
+describe("nav menu", () => {
+  const more = {
+    name: "more",
+    icon: "mdi:dots-horizontal",
+    pinned: true,
+    items: [
+      { name: "cameras", icon: "mdi:cctv", navigation_path: "/d/cameras" },
+      { name: "pool", icon: "mdi:pool", navigation_path: "#pool", entity: "switch.pump" },
+    ],
+  };
+  const mountMenu = async (states = {}) => {
+    const nav = document.createElement("glide-nav") as any;
+    nav.setConfig({ card_type: "nav", items: [...items, more] });
+    nav.hass = { ...hass, states };
+    document.body.append(nav);
+    await nav.updateComplete;
+    return nav;
+  };
+  const moreBtn = (nav: any) => nav.shadowRoot.querySelector(".pinned button");
+  const menu = (nav: any) => nav.shadowRoot.querySelector(".menu");
+
+  it("needs a path or a menu on every item", () => {
+    const nav = document.createElement("glide-nav") as any;
+    expect(() => nav.setConfig({ card_type: "nav", items: [{ name: "x", icon: "mdi:home" }] })).toThrow(/navigation_path/);
+    expect(() => nav.setConfig({ card_type: "nav", items: [{ ...more, items: [] }] })).toThrow(/items/);
+  });
+
+  it("opens instead of navigating, and toggles closed", async () => {
+    go("/d/main");
+    const nav = await mountMenu();
+    moreBtn(nav).click();
+    await nav.updateComplete;
+    expect(location.pathname).toBe("/d/main");
+    expect(moreBtn(nav).getAttribute("aria-expanded")).toBe("true");
+    expect([...menu(nav).querySelectorAll("button")].map((b: any) => b.textContent.trim())).toEqual(["cameras", "pool"]);
+    moreBtn(nav).click();
+    await nav.updateComplete;
+    expect(menu(nav)).toBeNull();
+    nav.remove();
+  });
+
+  it("an entry navigates and closes; the menu button is then the active one", async () => {
+    go("/d/main");
+    const nav = await mountMenu();
+    moreBtn(nav).click();
+    await nav.updateComplete;
+    menu(nav).querySelector("button").click();
+    await nav.updateComplete;
+    expect(location.pathname).toBe("/d/cameras");
+    expect(menu(nav)).toBeNull();
+    expect(activeOf(nav)).toEqual({ name: "more", inds: 1, own: true });
+    moreBtn(nav).click();
+    await nav.updateComplete;
+    expect(menu(nav).querySelector("button.active").textContent.trim()).toBe("cameras");
+    nav.remove();
+  });
+
+  it("closes on an outside tap and on Escape, not on a tap inside", async () => {
+    go("/d/main");
+    const nav = await mountMenu();
+    moreBtn(nav).click();
+    await nav.updateComplete;
+    menu(nav).dispatchEvent(new Event("pointerdown", { bubbles: true, composed: true }));
+    await nav.updateComplete;
+    expect(menu(nav)).not.toBeNull();
+    document.body.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    await nav.updateComplete;
+    expect(menu(nav)).toBeNull();
+
+    moreBtn(nav).click();
+    await nav.updateComplete;
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    await nav.updateComplete;
+    expect(menu(nav)).toBeNull();
+    nav.remove();
+  });
+
+  it("the menu button shows a dot when an entry's entity is on", async () => {
+    go("/d/main");
+    const nav = await mountMenu({ "switch.pump": { entity_id: "switch.pump", state: "on", attributes: {} } });
+    expect(moreBtn(nav).querySelector(".dot")).not.toBeNull();
+    nav.remove();
+  });
+});

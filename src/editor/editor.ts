@@ -171,9 +171,24 @@ const SCHEMAS: Record<CardType, unknown[]> = {
           fields: {
             name: { required: true, selector: { text: {} } },
             icon: { required: true, selector: { icon: {} } },
-            navigation_path: { required: true, selector: { text: {} } },
+            navigation_path: { selector: { text: {} } },
             entity: { selector: { entity: {} } },
             pinned: { selector: { boolean: {} } },
+            // A menu instead of a path (e.g. "more")
+            items: {
+              selector: {
+                object: {
+                  multiple: true,
+                  label_field: "name",
+                  fields: {
+                    name: { required: true, selector: { text: {} } },
+                    icon: { required: true, selector: { icon: {} } },
+                    navigation_path: { required: true, selector: { text: {} } },
+                    entity: { selector: { entity: {} } },
+                  },
+                },
+              },
+            },
           },
         },
       },

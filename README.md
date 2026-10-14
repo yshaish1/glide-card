@@ -68,7 +68,7 @@ theme: glass      # glass | bubble | material
 | **[Button](https://github.com/yshaish1/glide-card/blob/main/docs/cards/button.md)** | Tile or pill. Tap to toggle, hold for more-info, swipe to set brightness, speed or position. Templates and soft colors. |
 | **[Cover](https://github.com/yshaish1/glide-card/blob/main/docs/cards/cover.md)** | A blind or curtains over a garden, sky, city or sea view (or your own photo), with night following the sun. Optional open, stop and close buttons. |
 | **[Pop-up](https://github.com/yshaish1/glide-card/blob/main/docs/cards/popup.md)** | A sheet opened by a `#hash`, holding any cards. |
-| **[Nav bar](https://github.com/yshaish1/glide-card/blob/main/docs/cards/nav.md)** | A floating bar with a sliding indicator, scrolling items and pinned items. |
+| **[Nav bar](https://github.com/yshaish1/glide-card/blob/main/docs/cards/nav.md)** | A floating bar with a sliding indicator, scrolling items, pinned items and a "More" menu. |
 | **[Climate](https://github.com/yshaish1/glide-card/blob/main/docs/cards/climate.md)** | A drag dial with −/+, and mode buttons. |
 | **[Media](https://github.com/yshaish1/glide-card/blob/main/docs/cards/media.md)** | Artwork, progress, transport and volume. |
 | **[Title and chips](https://github.com/yshaish1/glide-card/blob/main/docs/cards/chips.md)** | A page greeting and a row of info pills, with per-chip visibility conditions. |

@@ -94,12 +94,19 @@ export interface PopupCardConfig extends BaseCardConfig {
   cards: Record<string, unknown>[];
 }
 
-export interface NavItem {
+export interface NavMenuItem {
   name: string;
   icon: string;
   navigation_path: string;
   entity?: string; // shows an "active" dot when on
-  /** Kept at the end of the bar, outside the scrolling list (e.g. a "more" pop-up). */
+}
+
+export interface NavItem extends Omit<NavMenuItem, "navigation_path"> {
+  /** Where the item goes. Not needed when it has `items`. */
+  navigation_path?: string;
+  /** Opens a small menu of these instead of navigating (e.g. "more"). */
+  items?: NavMenuItem[];
+  /** Kept at the end of the bar, outside the scrolling list (e.g. "more"). */
   pinned?: boolean;
 }
 
