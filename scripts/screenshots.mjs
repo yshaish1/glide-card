@@ -12,7 +12,7 @@ const only = process.argv.slice(2);
 const want = (name) => !only.length || only.includes(name);
 
 const PNGS = [
-  ["hero-dark"], ["hero-light"], ["rtl"], ["button"], ["covers"], ["covers-night", "sun=night"], ["climate"], ["media"], ["chips"], ["nav"], ["sizes"], ["popup", "", true], ["popup-light", "", true],
+  ["hero-dark"], ["hero-light"], ["themes"], ["rtl"], ["button"], ["covers"], ["covers-night", "sun=night"], ["climate"], ["media"], ["chips"], ["nav"], ["sizes"], ["popup", "", true], ["popup-light", "", true],
 ];
 
 mkdirSync(OUT, { recursive: true });
@@ -41,7 +41,7 @@ const open = async (page, shot, query = "") => {
 
 for (const [shot, query, popup] of PNGS) {
   if (!want(shot)) continue;
-  const page = await browser.newPage({ viewport: popup ? { width: 390, height: 800 } : { width: 1600, height: 1000 }, deviceScaleFactor: 2 });
+  const page = await browser.newPage({ viewport: popup ? { width: 390, height: 800 } : { width: shot === "themes" ? 2600 : 1600, height: 1000 }, deviceScaleFactor: 2 });
   await open(page, shot, query);
   if (shot === "nav") {
     await page.evaluate(() => window.openMenus());

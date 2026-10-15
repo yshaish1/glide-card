@@ -32,5 +32,5 @@ Add 5 built-in themes, each clearly different from the others and from Liquid Gl
 Done and committed locally (not pushed or released). Stitch projects: Soft Clay 5984499356733657160, Terminal 17714093804391436588, Brutalist 15200106164297017731, Aurora 2599913761873314595, E-Ink 15006315205723108917.
 
 ## Open questions
-- Release as v0.17.0 with new screenshots when the user is happy with the looks.
+- None (released as v0.17.0 with docs/images/themes.webp).
 - Web fonts are referenced by name only (fallbacks otherwise); bundling or auto-loading them is not done.

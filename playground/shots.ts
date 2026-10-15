@@ -136,6 +136,10 @@ const trio = (mode: Mode): Panel[] =>
 const SHOTS: Record<string, () => Panel[]> = {
   "hero-dark": () => trio("dark"),
   "hero-light": () => trio("light"),
+  // The five newer themes, each in the mode that shows it best.
+  themes: () =>
+    ([["clay", "light", "Soft Clay"], ["terminal", "dark", "Terminal"], ["brutal", "light", "Brutalist"], ["aurora", "dark", "Aurora"], ["ink", "light", "E-Ink"]] as const)
+      .map(([theme, mode, label]) => ({ theme, mode, label, cards: dashboard() })),
   rtl: () => [
     { theme: "glass", mode: "dark", cards: dashboard(true) },
     { theme: "material", mode: "light", cards: dashboard(true) },

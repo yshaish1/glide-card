@@ -5005,7 +5005,7 @@ var Or = class extends I {
 customElements.define("glide-card-editor", Or);
 //#endregion
 //#region src/glide-card.ts
-var kr = "0.16.1", Ar = [
+var kr = "0.17.0", Ar = [
 	"button",
 	"popup",
 	"nav",

@@ -4,7 +4,7 @@
 [![Release][release-badge]][release-url]
 [![License][license-badge]](https://github.com/yshaish1/glide-card/blob/main/LICENSE)
 
-**Themeable Home Assistant cards that feel like a native app.** Swipe-to-dim buttons, covers that look like your real blinds and curtains, pop-up sheets, a floating nav bar, and climate and media cards. Three built-in designs, dark and light, with full RTL support.
+**Themeable Home Assistant cards that feel like a native app.** Swipe-to-dim buttons, covers that look like your real blinds and curtains, pop-up sheets, a floating nav bar, and climate and media cards. Eight built-in designs, dark and light, with full RTL support.
 
 ![Eight cover styles opening and closing: blind, bottom-up shade, Roman shade, Venetian, roller shutter, curtains, one-side curtain and vertical blinds](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/cover-styles.gif)
 
@@ -16,6 +16,10 @@
 
 ## What's new
 
+- **v0.17: Five new themes.** Soft Clay (neumorphic), Terminal (green-screen CRT), Brutalist (thick outlines, hard shadows), Aurora (night glass with vivid gradients) and E-Ink (monochrome paper and serif type). Each has dark and light versions. [Themes](https://github.com/yshaish1/glide-card/blob/main/docs/themes.md)
+
+![Soft Clay, Terminal, Brutalist, Aurora and E-Ink themes](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/themes.webp)
+
 - **v0.16: Cover styles.** Choose how each window opens: blind, bottom-up shade, Roman shade, Venetian (the slats show the tilt), outdoor roller shutter, curtains from the middle, a one-side curtain or vertical blinds. Dragging, the plain fill and the button arrows all follow the motion. [Cover docs](https://github.com/yshaish1/glide-card/blob/main/docs/cards/cover.md#styles)
 - **v0.15.1: Smooth cover motion.** While a cover opens or closes, it glides steadily instead of jumping from one position report to the next.
 - **v0.15: "More" menu in the nav bar.** Give a nav item its own `items` list, and it opens a small glass menu above the bar. [Nav docs](https://github.com/yshaish1/glide-card/blob/main/docs/cards/nav.md)
@@ -25,7 +29,7 @@
 ## Features
 
 - **One card, eight widgets.** Button, pop-up, nav bar, climate, media, chips, title and heading, all as `custom:glide-card`, all in the visual editor.
-- **Three designs.** Liquid Glass, Refined Bubble and Material You, each in dark and light. Switch per card or for the whole dashboard.
+- **Eight designs.** Liquid Glass, Refined Bubble, Material You, Soft Clay, Terminal, Brutalist, Aurora and E-Ink, each in dark and light. Switch per card or for the whole dashboard.
 - **Made for touch.** Swipe a tile to set brightness or position, hold for more-info, drag the climate dial. Haptics, plus 17 tap animations (or a random one each tap).
 - **Covers that match your windows.** Eight open styles over an outdoor view, with day and night following the sun. They move smoothly while the motor runs.
 - **A floating nav bar.** A sliding indicator, items that scroll, and a "More" menu for everything else.
@@ -71,7 +75,7 @@ Add a card, pick **Glide Card** in the card picker, and choose a type. In YAML:
 type: custom:glide-card
 card_type: button
 entity: light.living_room
-theme: glass      # glass | bubble | material
+theme: glass      # glass | bubble | material | clay | terminal | brutal | aurora | ink
 ```
 
 ## Cards

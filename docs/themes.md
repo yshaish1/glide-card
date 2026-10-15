@@ -17,6 +17,8 @@ The newer themes name fonts like Nunito Sans, JetBrains Mono, Space Grotesk, Out
 
 ![Themes, dark](images/hero-dark.webp)
 
+![Soft Clay, Terminal, Brutalist, Aurora and E-Ink](images/themes.webp)
+
 Each theme has a dark and a light variant, and `mode: auto` follows HA.
 
 ## How themes work
