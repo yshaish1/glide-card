@@ -2,10 +2,13 @@
 import "./ha-icon";
 import "../src/glide-card";
 import { entity as e, getHass, patchState, replaceStates, setLanguage, subscribe } from "./mock-hass";
+import { getTheme } from "../src/themes";
+import { resolveBackdrop } from "../src/core/backdrops";
+import { SCENES } from "../src/cards/cover-scenes";
 
 type Cfg = Record<string, any>;
 type Mode = "dark" | "light";
-interface Panel { theme: string; mode: Mode; cards: Cfg[]; label?: string; short?: boolean; width?: number; height?: number; span?: number }
+interface Panel { theme: string; mode: Mode; cards: Cfg[]; label?: string; short?: boolean; width?: number; height?: number; span?: number; backdrop?: Cfg }
 
 const now = new Date().toISOString();
 const at = (h: number, m: number) => { const d = new Date(); d.setHours(h, m, 0, 0); return d.toISOString(); };
@@ -19,6 +22,7 @@ const EN = [
   e("cover.office", "open", { friendly_name: "Office Shutter", current_position: 70 }),
   e("cover.curtains", "open", { friendly_name: "Curtains", device_class: "curtain", current_position: 55 }),
   e("cover.bedroom", "open", { friendly_name: "Bedroom Drapes", device_class: "curtain", current_position: 30 }),
+  e("cover.view", "open", { friendly_name: "View", current_position: 80 }),
   // One per cover style, for the styles GIF and stills
   ...([
     ["blind", "Blind"], ["bottom_up", "Bottom-up shade"], ["roman", "Roman shade"], ["venetian", "Venetian"],
@@ -93,6 +97,8 @@ const styleTiles = (): Cfg[] =>
     ...(style === "roman" ? { color: "#c9b79c" } : style === "curtain_side" ? { color: "#8e9fb5" } : style === "curtain" ? { color: "#b38b6d" } : {}),
     ...(style === "vertical" ? { cover_side: "end" } : {}),
   }));
+const viewTiles = (): Cfg[] =>
+  SCENES.map((v) => ({ card_type: "button", entity: "cover.view", view: v, name: v[0].toUpperCase() + v.slice(1) }));
 const chips: Cfg = {
   card_type: "chips",
   chips: [
@@ -185,6 +191,17 @@ const SHOTS: Record<string, () => Panel[]> = {
     theme: "glass", mode: "light", short: true, width: 440,
     cards: [{ card_type: "button", entity: "cover.blinds" }, { card_type: "button", entity: "cover.curtains" }],
   }],
+  // Every outdoor view, one tile each.
+  views: () => [{ theme: "glass", mode: "dark", short: true, width: 1180, span: 3, cards: viewTiles() }],
+  // One dashboard on different background-card settings.
+  backgrounds: () =>
+    ([
+      ["Preset · Aurora", "dark", { background: "preset", preset: "aurora" }],
+      ["Preset · Sunset", "light", { background: "preset", preset: "sunset" }],
+      ["Preset · Ocean", "dark", { background: "preset", preset: "ocean" }],
+      ["Gradient", "dark", { background: "color", color: "#0f172a", color2: "#7c3aed", angle: 150 }],
+      ["Photo · blur + dim", "dark", { background: "image", image: "/playground/bg-sample.jpg", blur: 14, dim: 45 }],
+    ] as const).map(([label, mode, backdrop]) => ({ theme: "glass", mode, label, backdrop, cards: dashboard() })),
   "gif-styles": () => [{ theme: "glass", mode: "dark", short: true, width: 860, span: 3, cards: styleTiles() }],
   "gif-tap": () => [{
     theme: "glass", mode: "dark", short: true, width: 440,
@@ -211,6 +228,16 @@ for (const p of panels) {
   const phone = document.createElement("div");
   phone.className = `phone${p.short ? " short" : ""}`;
   phone.dataset.bg = `${p.theme}-${p.mode}`;
+  // Same resolution as the background card in HA; photos get their own blurred layer.
+  const bd = resolveBackdrop(p.backdrop ?? { background: "theme" }, { dark: p.mode === "dark", night, themeBackground: getTheme(p.theme).background, still: true });
+  phone.style.background = bd.background;
+  if (bd.image) {
+    const img = document.createElement("div");
+    img.style.cssText = `position:absolute;inset:-${bd.blur * 2}px;z-index:-1;background:url("${bd.image}") center/cover;filter:blur(${bd.blur}px)`;
+    const veil = document.createElement("div");
+    veil.style.cssText = `position:absolute;inset:0;z-index:-1;background:${bd.dark ? "#000" : "#fff"};opacity:${bd.dim}`;
+    phone.append(img, veil);
+  }
   phone.dataset.mode = p.mode;
   if (p.width) phone.style.setProperty("--w", `${p.width}px`);
   if (p.height) phone.style.setProperty("--h", `${p.height}px`);

@@ -7,6 +7,10 @@ export const glass: GlideTheme = {
   version: "1.0.0",
   description: "Frosted translucent tiles with a warm glow",
   preview: { background: "linear-gradient(135deg,#2a1d14,#14121c)", surface: "rgba(255,255,255,.1)", accent: "#ff9f43" },
+  background: {
+    dark: "radial-gradient(120% 80% at 10% 0%, #5a3518 0%, transparent 55%), radial-gradient(90% 70% at 100% 40%, #2b2246 0%, transparent 60%), #121016",
+    light: "radial-gradient(120% 80% at 10% 0%, #ffd9b0 0%, transparent 55%), radial-gradient(90% 70% at 100% 40%, #d9d4ff 0%, transparent 60%), #f4f1ee",
+  },
   tokens: {
     base: {
       "--gc-font": "-apple-system, 'SF Pro Display', Inter, system-ui, sans-serif",

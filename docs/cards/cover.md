@@ -18,12 +18,20 @@ Everything from [Button](button.md), plus:
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `view` | `garden` \| `sky` \| `city` \| `sea` \| `color` | `garden` | The outdoor scene. `color` keeps the plain colored fill. |
+| `view` | `garden` \| `sky` \| `city` \| `sea` \| `mountains` \| `beach` \| `forest` \| `desert` \| `snow` \| `field` \| `pool` \| `color` | `garden` | The outdoor scene (see [Views](#views)). `color` keeps the plain colored fill. |
 | `view_image` | URL | | Your own photo, for example `/local/yard.jpg`. Used when `view` is not set, and dimmed at night. |
 | `cover_style` | see [Styles](#styles) | from device class | How the window opens. Device class `curtain` gets `curtain`, `shutter` gets `shutter`, anything else gets `blind`. |
 | `cover_side` | `start` \| `end` | `start` | Where `curtain_side` and `vertical` gather when open. It follows the text direction, so `start` is the right side in Hebrew. |
 | `color` | color | theme | On fabric styles (`curtain`, `curtain_side`, `roman`), this tints the fabric. |
 | `cover_buttons` | boolean | `false` | Open, stop and close buttons in place of the badge. |
+
+## Views
+
+Eleven outdoor scenes, each with a day and a night version:
+
+![All cover views by day](../images/views.webp)
+
+![All cover views at night](../images/views-night.webp)
 
 ## Styles
 

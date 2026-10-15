@@ -37,7 +37,7 @@ export interface ActionConfig {
   [key: string]: unknown;
 }
 
-export type CardType = "button" | "popup" | "nav" | "climate" | "media" | "chips" | "title" | "heading";
+export type CardType = "button" | "popup" | "nav" | "climate" | "media" | "chips" | "title" | "heading" | "background";
 export type ThemeMode = "auto" | "dark" | "light";
 /** How much room a card takes: today's look, tighter, or the minimum (some layouts change). */
 export type CardSize = "full" | "compact" | "slim";
@@ -70,7 +70,7 @@ export interface ButtonCardConfig extends BaseCardConfig {
   layout?: "tile" | "pill";
   slider?: boolean;
   /** Covers: the outdoor view behind the blind (`garden` by default), or `color` for the plain fill. */
-  view?: "garden" | "sky" | "city" | "sea" | "color";
+  view?: "garden" | "sky" | "city" | "sea" | "mountains" | "beach" | "forest" | "desert" | "snow" | "field" | "pool" | "color";
   /** Covers: your own photo for the view (e.g. `/local/yard.jpg`), used when `view` is not set. */
   view_image?: string;
   /**
@@ -177,6 +177,29 @@ export interface HeadingCardConfig extends BaseCardConfig {
   badges?: ChipConfig[];
 }
 
+/** Paints the dashboard behind the cards; invisible outside edit mode. */
+export interface BackgroundCardConfig extends BaseCardConfig {
+  card_type: "background";
+  /** `theme` (the Glide theme's own backdrop), a built-in `preset`, a `color`/gradient, or an `image`. */
+  background?: "theme" | "preset" | "color" | "image";
+  preset?: string;
+  color?: string;
+  /** With `color`, makes a gradient. */
+  color2?: string;
+  angle?: number;
+  image?: string;
+  /** Used while `sun.sun` is below the horizon. */
+  image_night?: string;
+  /** Photo blur in px (0-40). */
+  blur?: number;
+  /** Photo veil in % (0-90): darkens in dark mode, lightens in light mode. */
+  dim?: number;
+  /** Slow drift for theme, preset and gradient backgrounds. Off in lite mode and with reduced motion. */
+  animate?: boolean;
+  /** `view` (default): only the view it's on. `dashboard`: every view without its own background card. */
+  scope?: "view" | "dashboard";
+}
+
 export type GlideCardConfig =
   | ButtonCardConfig
   | PopupCardConfig
@@ -185,4 +208,5 @@ export type GlideCardConfig =
   | MediaCardConfig
   | ChipsCardConfig
   | TitleCardConfig
-  | HeadingCardConfig;
+  | HeadingCardConfig
+  | BackgroundCardConfig;

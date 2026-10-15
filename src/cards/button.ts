@@ -406,11 +406,63 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
       .view.night .wave { opacity: 0.25; }
       .view.night .sail { fill: #9aa5c4; }
       .view.night .hull { fill: #5a2a22; }
+      /* Mountains, beach, forest, desert, snow, field, pool. */
+      .view.day.desert { background: linear-gradient(to bottom, #f6b26b, #fde3b0 75%); }
+      .view.day.field { background: linear-gradient(to bottom, #f7a65e, #ffe0a8 70%); }
+      .view.day.snow { background: linear-gradient(to bottom, #a9c4dc, #e6eef5 75%); }
+      .view.day.beach, .view.day.pool { background: linear-gradient(to bottom, #4fb3f0, #c4ecff 75%); }
+      .view.night.desert { background: linear-gradient(to bottom, #1c1640, #4a3060 85%); }
+      .view.night.desert .moon-cut { fill: #22184a; }
+      .view .peak-back { fill: #8fa6c4; }
+      .view .peak { fill: #5f7a9c; }
+      .view .snowcap, .view .snow, .view .snowman { fill: #ffffff; }
+      .view .snow-back { fill: #dfe8f1; }
+      .view .snowman .nose { fill: #f08a1c; }
+      .view .flake { fill: #fff; opacity: 0.85; }
+      .view .lake { fill: #5aa7d8; }
+      .view .sand { fill: #f2d39b; }
+      .view .foam { fill: #fff; opacity: 0.7; }
+      .view .palm-trunk { fill: #9a6b45; }
+      .view .frond { fill: #3f9a4a; }
+      .view .dune-back { fill: #f0c27f; }
+      .view .dune { fill: #e3a95e; }
+      .view .dune-shade { fill: #c98a47; opacity: 0.55; }
+      .view .cactus { fill: #4f8f4a; }
+      .view .field { fill: #e5b84a; }
+      .view .row { fill: none; stroke: #c99a2e; stroke-width: 1.2; opacity: 0.8; }
+      .view .fence { fill: #a87a52; }
+      .view .hedge { fill: #4f9a45; }
+      .view .deck { fill: #e8d6b8; }
+      .view .pool { fill: #36c2e3; }
+      .view .pool-line { fill: none; stroke: #fff; stroke-width: 1.1; stroke-linecap: round; opacity: 0.7; }
+      .view .ladder { fill: none; stroke: #cfd8de; stroke-width: 1.4; stroke-linecap: round; }
+      .view .glint, .view .pool-light { fill: #f3efd8; opacity: 0.5; }
+      .view .firefly { fill: #f6f08a; }
+      .view.night .peak-back { fill: #2b3a5c; }
+      .view.night .peak { fill: #1d2944; }
+      .view.night .snowcap, .view.night .snow, .view.night .snowman { fill: #c9d4e8; }
+      .view.night .snow-back { fill: #9fb0cc; }
+      .view.night .lake { fill: #172a52; }
+      .view.night .sand { fill: #6b5e4a; }
+      .view.night .foam { opacity: 0.25; }
+      .view.night .palm-trunk { fill: #2a2018; }
+      .view.night .frond, .view.night .cactus, .view.night .hedge { fill: #10261a; }
+      .view.night .dune-back { fill: #5a4468; }
+      .view.night .dune { fill: #3e2f52; }
+      .view.night .dune-shade { fill: #241a36; }
+      .view.night .field { fill: #4a3f22; }
+      .view.night .row { stroke: #6b5a2c; }
+      .view.night .fence { fill: #2a2018; }
+      .view.night .deck { fill: #4a4438; }
+      .view.night .pool { fill: #1aa6c9; }
+      .view.night .pool-light { fill: #8ff0ff; opacity: 0.45; }
+      .view.night .ladder { stroke: #8a96a0; }
       @media (prefers-reduced-motion: no-preference) {
         .view .cloud { animation: gc-drift 80s ease-in-out infinite alternate; }
         .view .cloud.c2 { animation-duration: 110s; animation-direction: alternate-reverse; }
         .view .cloud.c3 { animation-duration: 95s; }
         .view .star { animation: gc-twinkle 4s ease-in-out infinite; }
+        .view .firefly { animation: gc-twinkle 2.6s ease-in-out infinite; }
       }
       @keyframes gc-drift { from { translate: -14px 0; } to { translate: 14px 0; } }
       @keyframes gc-twinkle { 50% { opacity: 0.3; } }

@@ -7,6 +7,10 @@ export const terminal: GlideTheme = {
   version: "1.0.0",
   description: "Retro CRT: phosphor green on black, monospace, inverse when on",
   preview: { background: "#05080a", surface: "#071a10", accent: "#39ff88" },
+  background: {
+    dark: "radial-gradient(120% 90% at 50% 40%, #0a1a10, #020403)",
+    light: "#e3eddc",
+  },
   tokens: {
     base: {
       "--gc-font": "'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace",
@@ -63,6 +67,8 @@ export const terminal: GlideTheme = {
   styles: {
     all:
       `:host{text-shadow:var(--gc-glow)}.name,.title{text-transform:uppercase;letter-spacing:.12em;font-weight:700}` +
+      // Heading badges are surfaces too; position them so their scanlines stay inside.
+      `.badge.surface{position:relative}` +
       `.surface::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;` +
       `background:repeating-linear-gradient(to bottom,transparent 0 2px,var(--gc-scan) 2px 3px)}`,
     // Inverse video when on.

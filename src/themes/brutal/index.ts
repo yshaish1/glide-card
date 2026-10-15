@@ -7,6 +7,10 @@ export const brutal: GlideTheme = {
   version: "1.0.0",
   description: "Thick black outlines, hard shadows, flat yellow",
   preview: { background: "#f4f0e8", surface: "#ffffff", accent: "#ffd400" },
+  background: {
+    dark: "#111",
+    light: "#f4f0e8",
+  },
   tokens: {
     base: {
       "--gc-font": "'Space Grotesk', 'Archivo', 'Arial Black', system-ui, sans-serif",

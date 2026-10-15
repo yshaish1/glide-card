@@ -12,7 +12,7 @@ const only = process.argv.slice(2);
 const want = (name) => !only.length || only.includes(name);
 
 const PNGS = [
-  ["hero-dark"], ["hero-light"], ["themes"], ["rtl"], ["button"], ["covers"], ["covers-night", "sun=night"], ["climate"], ["media"], ["chips"], ["nav"], ["sizes"], ["popup", "", true], ["popup-light", "", true],
+  ["hero-dark"], ["hero-light"], ["themes"], ["views"], ["views-night", "sun=night", false, "views"], ["backgrounds"], ["rtl"], ["button"], ["covers"], ["covers-night", "sun=night"], ["climate"], ["media"], ["chips"], ["nav"], ["sizes"], ["popup", "", true], ["popup-light", "", true],
 ];
 
 mkdirSync(OUT, { recursive: true });
@@ -39,9 +39,10 @@ const open = async (page, shot, query = "") => {
   await page.waitForFunction(() => window.__ready === true, null, { timeout: 30000 });
 };
 
-for (const [shot, query, popup] of PNGS) {
-  if (!want(shot)) continue;
-  const page = await browser.newPage({ viewport: popup ? { width: 390, height: 800 } : { width: shot === "themes" ? 2600 : 1600, height: 1000 }, deviceScaleFactor: 2 });
+for (const [name, query, popup, as] of PNGS) {
+  if (!want(name)) continue;
+  const shot = as ?? name;
+  const page = await browser.newPage({ viewport: popup ? { width: 390, height: 800 } : { width: shot === "themes" || shot === "backgrounds" ? 2600 : 1600, height: 1000 }, deviceScaleFactor: 2 });
   await open(page, shot, query);
   if (shot === "nav") {
     await page.evaluate(() => window.openMenus());
@@ -50,11 +51,11 @@ for (const [shot, query, popup] of PNGS) {
   if (popup) {
     await page.evaluate(() => window.openPopup("#lights"));
     await page.waitForTimeout(1200);
-    await saveWebp(page, await page.screenshot(), shot);
+    await saveWebp(page, await page.screenshot(), name);
   } else {
-    await saveWebp(page, await page.locator("#stage").screenshot({ omitBackground: true }), shot);
+    await saveWebp(page, await page.locator("#stage").screenshot({ omitBackground: true }), name);
   }
-  console.log("image", shot);
+  console.log("image", name);
   await page.close();
 }
 

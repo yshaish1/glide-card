@@ -7,6 +7,10 @@ export const ink: GlideTheme = {
   version: "1.0.0",
   description: "Monochrome paper and serif type, inverted when on",
   preview: { background: "#efede6", surface: "#efede6", accent: "#161616" },
+  background: {
+    dark: "#141414",
+    light: "#efede6",
+  },
   tokens: {
     base: {
       "--gc-font": "Newsreader, 'Source Serif 4', 'Iowan Old Style', Georgia, serif",

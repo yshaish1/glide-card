@@ -16,6 +16,12 @@
 
 ## What's new
 
+- **v0.18: Dashboard backgrounds and more cover views.** A new background card paints the dashboard: match your Glide theme, pick one of ten presets, use a colour or gradient, or your own photo with blur and dim. It works per view or for the whole dashboard, with an optional slow drift. Covers get seven new views: mountains, beach, forest, desert, snow, field and a pool with palms. [Background docs](https://github.com/yshaish1/glide-card/blob/main/docs/cards/background.md) · [Cover views](https://github.com/yshaish1/glide-card/blob/main/docs/cards/cover.md#views)
+
+![One dashboard on five backgrounds](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/backgrounds.webp)
+
+![Eleven cover views](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/views.webp)
+
 - **v0.17: Five new themes.** Soft Clay (neumorphic), Terminal (green-screen CRT), Brutalist (thick outlines, hard shadows), Aurora (night glass with vivid gradients) and E-Ink (monochrome paper and serif type). Each has dark and light versions. [Themes](https://github.com/yshaish1/glide-card/blob/main/docs/themes.md)
 
 ![Soft Clay, Terminal, Brutalist, Aurora and E-Ink themes](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/themes.webp)
@@ -28,11 +34,12 @@
 
 ## Features
 
-- **One card, eight widgets.** Button, pop-up, nav bar, climate, media, chips, title and heading, all as `custom:glide-card`, all in the visual editor.
+- **One card, nine widgets.** Button, pop-up, nav bar, climate, media, chips, title, heading and background, all as `custom:glide-card`, all in the visual editor.
 - **Eight designs.** Liquid Glass, Refined Bubble, Material You, Soft Clay, Terminal, Brutalist, Aurora and E-Ink, each in dark and light. Switch per card or for the whole dashboard.
 - **Made for touch.** Swipe a tile to set brightness or position, hold for more-info, drag the climate dial. Haptics, plus 17 tap animations (or a random one each tap).
-- **Covers that match your windows.** Eight open styles over an outdoor view, with day and night following the sun. They move smoothly while the motor runs.
+- **Covers that match your windows.** Eight open styles over eleven outdoor views (or your photo), with day and night following the sun. They move smoothly while the motor runs.
 - **A floating nav bar.** A sliding indicator, items that scroll, and a "More" menu for everything else.
+- **Your dashboard background.** Match the theme, pick a preset, set a gradient or a blurred photo, per view or for every view.
 - **Real pop-ups.** A bottom sheet on phones and a centred modal on desktop. The tile morphs into it, and any HA card works inside.
 - **Templates.** Name, icon, color, badge and secondary line accept HA templates, like Mushroom.
 - **Three sizes.** Full, compact and slim, per card or dashboard-wide.
@@ -83,13 +90,14 @@ theme: glass      # glass | bubble | material | clay | terminal | brutal | auror
 | Card | What it does |
 | --- | --- |
 | **[Button](https://github.com/yshaish1/glide-card/blob/main/docs/cards/button.md)** | Tile or pill. Tap to toggle, hold for more-info, swipe to set brightness, speed or position. Templates and soft colors. |
-| **[Cover](https://github.com/yshaish1/glide-card/blob/main/docs/cards/cover.md)** | A window over a garden, sky, city or sea view (or your own photo), with night following the sun. 8 styles that match how your cover opens (blind, bottom-up shade, Roman, Venetian, roller shutter, curtains from the middle or to one side, vertical blinds). Optional open, stop and close buttons. |
+| **[Cover](https://github.com/yshaish1/glide-card/blob/main/docs/cards/cover.md)** | A window over one of eleven outdoor views (garden, sky, city, sea, mountains, beach, forest, desert, snow, field, pool) or your own photo, with night following the sun. 8 styles that match how your cover opens (blind, bottom-up shade, Roman, Venetian, roller shutter, curtains from the middle or to one side, vertical blinds). Optional open, stop and close buttons. |
 | **[Pop-up](https://github.com/yshaish1/glide-card/blob/main/docs/cards/popup.md)** | A sheet opened by a `#hash`, holding any cards. |
 | **[Nav bar](https://github.com/yshaish1/glide-card/blob/main/docs/cards/nav.md)** | A floating bar with a sliding indicator, scrolling items, pinned items and a "More" menu. |
 | **[Climate](https://github.com/yshaish1/glide-card/blob/main/docs/cards/climate.md)** | A drag dial with −/+, and mode buttons. |
 | **[Media](https://github.com/yshaish1/glide-card/blob/main/docs/cards/media.md)** | Artwork, progress, transport and volume. |
 | **[Title and chips](https://github.com/yshaish1/glide-card/blob/main/docs/cards/chips.md)** | A page greeting and a row of info pills, with per-chip visibility conditions. |
 | **[Heading](https://github.com/yshaish1/glide-card/blob/main/docs/cards/heading.md)** | A section heading with an icon, badges and an optional link. |
+| **[Background](https://github.com/yshaish1/glide-card/blob/main/docs/cards/background.md)** | Paints the dashboard: theme, presets, gradient or a blurred photo, per view or for all views. |
 
 ![Cards](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/button.webp)
 

@@ -21,6 +21,8 @@ export interface GlideTheme {
   description?: string;
   /** Swatches shown in the editor's theme picker. */
   preview: { background: string; surface: string; accent: string };
+  /** Dashboard background (any CSS `background`) for the background card's `theme` option. */
+  background?: { dark: string; light: string };
   tokens: { base?: TokenMap; dark: TokenMap; light: TokenMap };
   /** Extra CSS per card type ("all" applies everywhere; "popup" also styles the sheet). */
   styles?: Partial<Record<CardType | "all", string>>;

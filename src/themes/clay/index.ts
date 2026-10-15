@@ -7,6 +7,10 @@ export const clay: GlideTheme = {
   version: "1.0.0",
   description: "Neumorphic tiles from one matte colour, pressed in when on",
   preview: { background: "#e4e0db", surface: "#e4e0db", accent: "#f2734e" },
+  background: {
+    dark: "#2b2d33",
+    light: "#e4e0db",
+  },
   tokens: {
     base: {
       "--gc-font": "'Nunito Sans', Nunito, 'Varela Round', 'SF Pro Rounded', ui-rounded, system-ui, sans-serif",

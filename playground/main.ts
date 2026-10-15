@@ -3,6 +3,8 @@ import "../src/glide-card";
 import { getHass, setDark, setLanguage, setState, subscribe } from "./mock-hass";
 import { listThemes } from "../src/themes";
 import { TAP_EFFECTS } from "../src/core/tap-fx";
+import { paintBackdrop } from "../src/core/backdrop";
+import { PRESETS } from "../src/core/backdrops";
 
 type Cfg = Record<string, any>;
 const cards: Cfg[] = [
@@ -34,6 +36,13 @@ const cards: Cfg[] = [
   { card_type: "button", entity: "cover.kitchen", name: "Sky view", view: "sky" },
   { card_type: "button", entity: "cover.office", name: "Photo view", view_image: "https://picsum.photos/seed/garden/400/300" },
   { card_type: "button", entity: "cover.blinds", name: "Plain colour", view: "color" },
+  { card_type: "button", entity: "cover.kitchen", name: "Mountains", view: "mountains" },
+  { card_type: "button", entity: "cover.kitchen", name: "Beach", view: "beach" },
+  { card_type: "button", entity: "cover.kitchen", name: "Forest", view: "forest" },
+  { card_type: "button", entity: "cover.kitchen", name: "Desert", view: "desert" },
+  { card_type: "button", entity: "cover.kitchen", name: "Snow", view: "snow" },
+  { card_type: "button", entity: "cover.kitchen", name: "Field", view: "field" },
+  { card_type: "button", entity: "cover.kitchen", name: "Pool", view: "pool" },
   { card_type: "button", entity: "cover.kitchen", name: "Pill blind", layout: "pill", view: "sea" },
   { card_type: "button", entity: "cover.living_curtains" },
   { card_type: "button", entity: "cover.office", name: "וילון", cover_style: "curtain", color: "#b38b6d", view: "city" },
@@ -128,7 +137,26 @@ function build() {
     els.push(el);
   }
   document.body.dataset.bg = `${state.theme}-${state.mode}`;
+  paintBg();
 }
+
+// Dashboard background, painted the same way the background card does in HA.
+const BACKDROPS: Record<string, Cfg> = {
+  theme: { background: "theme" },
+  ...Object.fromEntries(Object.entries(PRESETS).map(([id]) => [`preset:${id}`, { background: "preset", preset: id }])),
+  "preset:aurora+drift": { background: "preset", preset: "aurora", animate: true },
+  gradient: { background: "color", color: "#0f172a", color2: "#7c3aed", angle: 150 },
+  image: { background: "image", image: "/bg-sample.jpg", blur: 14, dim: 35 },
+};
+const bgSel = document.getElementById("backdrop") as HTMLSelectElement;
+bgSel.innerHTML = Object.keys(BACKDROPS)
+  .map((k) => `<option value="${k}">${k === "theme" ? "Match theme" : k.startsWith("preset:") ? (PRESETS[k.slice(7).split("+")[0]].name + (k.includes("+") ? " (drift)" : "")) : k[0].toUpperCase() + k.slice(1)}</option>`)
+  .join("");
+function paintBg() {
+  const cfg = { type: "custom:glide-card", card_type: "background", ...BACKDROPS[bgSel.value], theme: state.theme, mode: state.mode } as any;
+  paintBackdrop(cfg, getHass() as any, { parent: document.body });
+}
+bgSel.onchange = paintBg;
 
 subscribe((h) => els.forEach((el) => (el.hass = h)));
 

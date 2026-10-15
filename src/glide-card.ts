@@ -8,12 +8,13 @@ import "./cards/media";
 import "./cards/chips";
 import "./cards/title";
 import "./cards/heading";
+import "./cards/background";
 import "./editor/editor";
 import type { GlideBase } from "./core/base-card";
 import type { GlideCardConfig, HomeAssistant } from "./core/types";
 
-const VERSION = "0.17.0";
-const TYPES = ["button", "popup", "nav", "climate", "media", "chips", "title", "heading"] as const;
+const VERSION = "0.18.0";
+const TYPES = ["button", "popup", "nav", "climate", "media", "chips", "title", "heading", "background"] as const;
 
 /**
  * `custom:glide-card` - a thin host that creates the inner card for
@@ -37,6 +38,7 @@ class GlideCard extends HTMLElement {
     this.inner.setConfig({ ...config, card_type: type } as never);
     if (this._hass) this.inner.hass = this._hass;
     this.inner.editMode = this._editMode;
+    (this.inner as any).preview = this._preview;
   }
 
   set hass(hass: HomeAssistant) {
@@ -47,6 +49,13 @@ class GlideCard extends HTMLElement {
   set editMode(v: boolean) {
     this._editMode = v;
     if (this.inner) this.inner.editMode = v;
+  }
+
+  // HA marks the card in the card editor's preview; the background card previews live there.
+  private _preview = false;
+  set preview(v: boolean) {
+    this._preview = v;
+    if (this.inner) (this.inner as any).preview = v;
   }
 
   connectedCallback() {

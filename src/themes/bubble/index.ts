@@ -7,6 +7,10 @@ export const bubble: GlideTheme = {
   version: "1.0.0",
   description: "Compact solid pills with a neon accent, no blur",
   preview: { background: "#0a0a0c", surface: "#16161a", accent: "#d4ff00" },
+  background: {
+    dark: "#0a0a0c",
+    light: "#ececef",
+  },
   tokens: {
     base: {
       "--gc-font": "'Inter Tight', Inter, system-ui, sans-serif",

@@ -7,6 +7,10 @@ export const material: GlideTheme = {
   version: "1.0.0",
   description: "Soft tonal surfaces from a teal seed",
   preview: { background: "#e6f4ef", surface: "#ffffff", accent: "#006a60" },
+  background: {
+    dark: "#0f1513",
+    light: "linear-gradient(#e6f4ef, #f4faf7)",
+  },
   tokens: {
     base: {
       "--gc-font": "'Google Sans', 'Google Sans Text', Roboto, system-ui, sans-serif",

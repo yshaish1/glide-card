@@ -3,6 +3,7 @@ import { fire } from "../core/fire";
 import { TAP_EFFECTS } from "../core/tap-fx";
 import { isTemplate } from "../core/templates";
 import type { CardType, GlideCardConfig, HomeAssistant } from "../core/types";
+import { PRESETS } from "../core/backdrops";
 import { listThemes } from "../themes";
 
 const TYPES: { id: CardType; icon: string; label: string }[] = [
@@ -14,6 +15,7 @@ const TYPES: { id: CardType; icon: string; label: string }[] = [
   { id: "chips", icon: "mdi:label-multiple-outline", label: "Chips" },
   { id: "title", icon: "mdi:format-title", label: "Title" },
   { id: "heading", icon: "mdi:format-header-pound", label: "Heading" },
+  { id: "background", icon: "mdi:image-filter-hdr", label: "Background" },
 ];
 const ACCENTS = ["#ff9f43", "#d4ff00", "#006a60", "#4aa8ff", "#a78bfa", "#ff5c8a", "#34c759", "#ffd60a"];
 
@@ -46,6 +48,7 @@ const templates = {
 
 /** Per-config schema: a main-grid picker is hidden while its value is a template, so it's edited in Templates only. */
 function schemaFor(c: GlideCardConfig): unknown[] {
+  if (c.card_type === "background") return backgroundSchema(c.background ?? "theme");
   let schema = SCHEMAS[c.card_type];
   if (c.card_type === "button") {
     const cfg = c as unknown as Record<string, unknown>;
@@ -54,6 +57,51 @@ function schemaFor(c: GlideCardConfig): unknown[] {
     schema = [...schema.slice(0, -1), templates, schema[schema.length - 1]]; // before Interactions
   }
   return TAP_TYPES.has(c.card_type) ? [...schema, TAP_FIELD] : schema;
+}
+
+const slider = (min: number, max: number, unit: string) => ({ number: { min, max, step: 1, mode: "slider", unit_of_measurement: unit } });
+
+/** Background card: only the fields for the chosen kind (presets get a swatch grid above the form). */
+function backgroundSchema(kind: string): unknown[] {
+  const head = [
+    {
+      type: "grid",
+      name: "",
+      schema: [
+        {
+          name: "background",
+          selector: {
+            select: {
+              mode: "dropdown",
+              options: [
+                { value: "theme", label: "Match the Glide theme" },
+                { value: "preset", label: "Preset" },
+                { value: "color", label: "Colour / gradient" },
+                { value: "image", label: "Image" },
+              ],
+            },
+          },
+        },
+        {
+          name: "scope",
+          selector: { select: { mode: "dropdown", options: [{ value: "view", label: "This view" }, { value: "dashboard", label: "Whole dashboard" }] } },
+        },
+      ],
+    },
+  ];
+  const byKind: Record<string, unknown[]> = {
+    color: [
+      { type: "grid", name: "", schema: [{ name: "color", selector: { text: {} } }, { name: "color2", selector: { text: {} } }] },
+      { name: "angle", selector: slider(0, 360, "°") },
+    ],
+    image: [
+      { name: "image", selector: { text: {} } },
+      { name: "image_night", selector: { text: {} } },
+      { type: "grid", name: "", schema: [{ name: "blur", selector: slider(0, 40, "px") }, { name: "dim", selector: slider(0, 90, "%") }] },
+    ],
+  };
+  const motion = kind === "image" ? [] : [{ name: "animate", selector: { boolean: {} } }];
+  return [...head, ...(byKind[kind] ?? []), ...motion];
 }
 
 const ALIGN = { select: { mode: "dropdown", options: [{ value: "center", label: "Center" }, { value: "start", label: "Start" }] } };
@@ -67,6 +115,7 @@ const BADGE_FIELDS = {
 };
 
 const SCHEMAS: Record<CardType, unknown[]> = {
+  background: [],
   heading: [
     { name: "title", required: true, selector: { text: {} } },
     {
@@ -134,6 +183,13 @@ const SCHEMAS: Record<CardType, unknown[]> = {
                 { value: "sky", label: "Sky" },
                 { value: "city", label: "City" },
                 { value: "sea", label: "Sea" },
+                { value: "mountains", label: "Mountains" },
+                { value: "beach", label: "Beach" },
+                { value: "forest", label: "Forest" },
+                { value: "desert", label: "Desert" },
+                { value: "snow", label: "Snow" },
+                { value: "field", label: "Field" },
+                { value: "pool", label: "Pool" },
                 { value: "color", label: "Plain colour" },
               ],
             },
@@ -237,6 +293,15 @@ const LABELS: Record<string, string> = {
   cover_style: "Cover style (empty = auto from device class)",
   cover_side: "One-sided covers stack at (empty = start)",
   cover_buttons: "Open / stop / close buttons (covers)",
+  background: "Background",
+  scope: "Applies to",
+  color2: "Second colour (makes a gradient)",
+  angle: "Gradient angle",
+  image: "Image, e.g. /local/wall.jpg",
+  image_night: "Night image (optional, while the sun is down)",
+  blur: "Blur",
+  dim: "Dim",
+  animate: "Slow drift",
 };
 
 /** Loads HA's lazy form components (ha-form etc.) by asking a built-in card for its editor. */
@@ -278,6 +343,7 @@ export class GlideCardEditor extends LitElement {
     if (type === "chips") Object.assign(base, { chips: [] });
     if (type === "title") Object.assign(base, { title: "Home" });
     if (type === "heading") Object.assign(base, { title: "Section" });
+    if (type === "background") Object.assign(base, { background: "theme" });
     if (type === "nav") Object.assign(base, { items: [{ name: "Home", icon: "mdi:home", navigation_path: "#home" }] });
     this.config = {} as GlideCardConfig;
     this.update_(base);
@@ -341,6 +407,19 @@ export class GlideCardEditor extends LitElement {
         </div>
       </div>
 
+      ${c.card_type === "background" && (c.background ?? "theme") === "preset"
+        ? html`<div class="section">
+            <div class="label">Preset</div>
+            <div class="themes">
+              ${Object.entries(PRESETS).map(
+                ([id, p]) => html`<button class="theme ${(c.preset ?? "aurora") === id ? "sel" : ""}" @click=${() => this.update_({ preset: id })}>
+                  <div class="swatch" style="background:${c.mode === "light" ? p.light : p.dark}"></div>
+                  <span>${p.name}</span>
+                </button>`,
+              )}
+            </div>
+          </div>`
+        : nothing}
       ${this.ready
         ? html`<ha-form
             .hass=${this.hass}

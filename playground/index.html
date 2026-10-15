@@ -19,22 +19,6 @@
         margin: 0; min-height: 100vh; font-family: Inter, system-ui, sans-serif; color: #eee;
         background: #0f0e13; transition: background .4s;
       }
-      body[data-bg="glass-dark"] { background: radial-gradient(120% 80% at 10% 0%, #5a3518 0%, transparent 55%), radial-gradient(90% 70% at 100% 40%, #2b2246 0%, transparent 60%), #121016; }
-      body[data-bg="glass-light"] { background: radial-gradient(120% 80% at 10% 0%, #ffd9b0 0%, transparent 55%), radial-gradient(90% 70% at 100% 40%, #d9d4ff 0%, transparent 60%), #f4f1ee; color: #222; }
-      body[data-bg="bubble-dark"] { background: #0a0a0c; }
-      body[data-bg="bubble-light"] { background: #ececef; color: #222; }
-      body[data-bg="material-dark"] { background: #0f1513; }
-      body[data-bg="material-light"] { background: linear-gradient(#e6f4ef, #f4faf7); color: #222; }
-      body[data-bg="clay-dark"] { background: #2b2d33; }
-      body[data-bg="clay-light"] { background: #e4e0db; color: #222; }
-      body[data-bg="terminal-dark"] { background: radial-gradient(120% 90% at 50% 40%, #0a1a10, #020403); }
-      body[data-bg="terminal-light"] { background: #e3eddc; color: #222; }
-      body[data-bg="brutal-dark"] { background: #111; }
-      body[data-bg="brutal-light"] { background: #f4f0e8; color: #222; }
-      body[data-bg="aurora-dark"] { background: radial-gradient(80% 60% at 0% 0%, #4c1d95 0%, transparent 60%), radial-gradient(70% 50% at 100% 50%, #0f5e57 0%, transparent 60%), radial-gradient(70% 50% at 20% 100%, #831843 0%, transparent 60%), #0b0820; }
-      body[data-bg="aurora-light"] { background: radial-gradient(80% 60% at 0% 0%, #e9d5ff 0%, transparent 60%), radial-gradient(70% 50% at 100% 50%, #ccfbf1 0%, transparent 60%), radial-gradient(70% 50% at 20% 100%, #fce7f3 0%, transparent 60%), #f7f5ff; color: #222; }
-      body[data-bg="ink-dark"] { background: #141414; }
-      body[data-bg="ink-light"] { background: #efede6; color: #222; }
       .bar {
         position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 16px;
         background: rgba(20,20,24,.85); backdrop-filter: blur(12px); color: #eee; font-size: 13px; align-items: center;
@@ -49,6 +33,7 @@
       /* Mimics HA sections view: 12 columns, 56px rows, 8px gap */
       .grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: minmax(56px, auto); gap: 8px; }
       .grid > * { grid-column: span var(--cols, 6); grid-row: span var(--rows, 2); min-width: 0; }
+      body[data-bg$="-light"] { color: #222; }
     </style>
   </head>
   <body data-bg="glass-dark">
@@ -59,6 +44,7 @@
       <label>Language <select id="lang"><option value="en">English (LTR)</option><option value="he">עברית (RTL)</option></select></label>
       <label>Tap <select id="tap"></select></label>
       <label>Size <select id="size"><option value="full">Full</option><option value="compact">Compact</option><option value="slim">Slim</option></select></label>
+      <label>Background <select id="backdrop"></select></label>
       <label>Sun <select id="sun"><option value="above_horizon">Day</option><option value="below_horizon">Night</option></select></label>
       <label>Width <select id="width"><option value="phone">Phone</option><option value="tablet">Tablet</option><option value="desktop">Desktop</option></select></label>
     </div>

@@ -7,6 +7,10 @@ export const aurora: GlideTheme = {
   version: "1.0.0",
   description: "Night glass with vivid violet, teal and pink gradients",
   preview: { background: "linear-gradient(135deg,#2b1a6b,#0b0820 55%,#0d3b3a)", surface: "rgba(30,24,70,.7)", accent: "#c084fc" },
+  background: {
+    dark: "radial-gradient(80% 60% at 0% 0%, #4c1d95 0%, transparent 60%), radial-gradient(70% 50% at 100% 50%, #0f5e57 0%, transparent 60%), radial-gradient(70% 50% at 20% 100%, #831843 0%, transparent 60%), #0b0820",
+    light: "radial-gradient(80% 60% at 0% 0%, #e9d5ff 0%, transparent 60%), radial-gradient(70% 50% at 100% 50%, #ccfbf1 0%, transparent 60%), radial-gradient(70% 50% at 20% 100%, #fce7f3 0%, transparent 60%), #f7f5ff",
+  },
   tokens: {
     base: {
       "--gc-font": "Outfit, 'Poppins', system-ui, sans-serif",
