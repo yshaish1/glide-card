@@ -99,7 +99,6 @@ export interface PopupCardConfig extends BaseCardConfig {
   title?: string;
   icon?: string;
   entity?: string; // optional header entity
-  position?: "auto" | "bottom"; // bottom: a bottom sheet on wide screens too
   cards: Record<string, unknown>[];
 }
 

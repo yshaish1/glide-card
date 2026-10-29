@@ -578,26 +578,26 @@ function _(e) {
 	m.set(e.id, e);
 	for (let t of h.keys()) t.startsWith(`${e.id}|`) && h.delete(t);
 }
-var v = (e) => e && m.get(e) || m.get("glass"), y = () => [...m.values()], ee = (e) => Object.entries(e).map(([e, t]) => `${e}:${t};`).join("");
-function te(e, t, n) {
+var v = (e) => e && m.get(e) || m.get("glass"), y = () => [...m.values()], b = (e) => Object.entries(e).map(([e, t]) => `${e}:${t};`).join("");
+function ee(e, t, n) {
 	let r = {
 		...g,
 		...e.tokens.base,
 		...t ? e.tokens.dark : e.tokens.light
 	};
 	for (let e of ["--gc-font", "--gc-font-meta"]) r[e].startsWith("var(") || (r[e] = f(r[e]));
-	return `:host{${ee(r)}}${e.styles?.all ?? ""}${e.styles?.[n] ?? ""}`;
+	return `:host{${b(r)}}${e.styles?.all ?? ""}${e.styles?.[n] ?? ""}`;
 }
-function ne(e, t, n) {
+function te(e, t, n) {
 	let r = v(e), i = `${r.id}|${t ? "d" : "l"}|${n}`, a = h.get(i);
-	return a || (a = new CSSStyleSheet(), a.replaceSync(te(r, t, n)), h.set(i, a)), a;
+	return a || (a = new CSSStyleSheet(), a.replaceSync(ee(r, t, n)), h.set(i, a)), a;
 }
-function re(e, t) {
+function ne(e, t) {
 	if (e && m.has(e)) return e;
 	let n = getComputedStyle(t).getPropertyValue("--glide-theme").trim();
 	return m.has(n) ? n : p;
 }
-function ie(e, t) {
+function re(e, t) {
 	return e === "dark" ? !0 : e === "light" ? !1 : t ?? matchMedia("(prefers-color-scheme: dark)").matches;
 }
 [
@@ -615,41 +615,41 @@ function ie(e, t) {
 };
 //#endregion
 //#region node_modules/@lit/reactive-element/css-tag.js
-var ae = globalThis, oe = ae.ShadowRoot && (ae.ShadyCSS === void 0 || ae.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, se = Symbol(), ce = /* @__PURE__ */ new WeakMap(), le = class {
+var ie = globalThis, ae = ie.ShadowRoot && (ie.ShadyCSS === void 0 || ie.ShadyCSS.nativeShadow) && "adoptedStyleSheets" in Document.prototype && "replace" in CSSStyleSheet.prototype, oe = Symbol(), se = /* @__PURE__ */ new WeakMap(), ce = class {
 	constructor(e, t, n) {
-		if (this._$cssResult$ = !0, n !== se) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
+		if (this._$cssResult$ = !0, n !== oe) throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");
 		this.cssText = e, this.t = t;
 	}
 	get styleSheet() {
 		let e = this.o, t = this.t;
-		if (oe && e === void 0) {
+		if (ae && e === void 0) {
 			let n = t !== void 0 && t.length === 1;
-			n && (e = ce.get(t)), e === void 0 && ((this.o = e = new CSSStyleSheet()).replaceSync(this.cssText), n && ce.set(t, e));
+			n && (e = se.get(t)), e === void 0 && ((this.o = e = new CSSStyleSheet()).replaceSync(this.cssText), n && se.set(t, e));
 		}
 		return e;
 	}
 	toString() {
 		return this.cssText;
 	}
-}, ue = (e) => new le(typeof e == "string" ? e : e + "", void 0, se), b = (e, ...t) => new le(e.length === 1 ? e[0] : t.reduce((t, n, r) => t + ((e) => {
+}, le = (e) => new ce(typeof e == "string" ? e : e + "", void 0, oe), x = (e, ...t) => new ce(e.length === 1 ? e[0] : t.reduce((t, n, r) => t + ((e) => {
 	if (!0 === e._$cssResult$) return e.cssText;
 	if (typeof e == "number") return e;
 	throw Error("Value passed to 'css' function must be a 'css' function result: " + e + ". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.");
-})(n) + e[r + 1], e[0]), e, se), de = (e, t) => {
-	if (oe) e.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
+})(n) + e[r + 1], e[0]), e, oe), ue = (e, t) => {
+	if (ae) e.adoptedStyleSheets = t.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
 	else for (let n of t) {
-		let t = document.createElement("style"), r = ae.litNonce;
+		let t = document.createElement("style"), r = ie.litNonce;
 		r !== void 0 && t.setAttribute("nonce", r), t.textContent = n.cssText, e.appendChild(t);
 	}
-}, fe = oe ? (e) => e : (e) => e instanceof CSSStyleSheet ? ((e) => {
+}, de = ae ? (e) => e : (e) => e instanceof CSSStyleSheet ? ((e) => {
 	let t = "";
 	for (let n of e.cssRules) t += n.cssText;
-	return ue(t);
-})(e) : e, { is: pe, defineProperty: me, getOwnPropertyDescriptor: he, getOwnPropertyNames: ge, getOwnPropertySymbols: _e, getPrototypeOf: ve } = Object, ye = globalThis, be = ye.trustedTypes, xe = be ? be.emptyScript : "", Se = ye.reactiveElementPolyfillSupport, x = (e, t) => e, Ce = {
+	return le(t);
+})(e) : e, { is: fe, defineProperty: pe, getOwnPropertyDescriptor: me, getOwnPropertyNames: he, getOwnPropertySymbols: ge, getPrototypeOf: _e } = Object, ve = globalThis, ye = ve.trustedTypes, be = ye ? ye.emptyScript : "", xe = ve.reactiveElementPolyfillSupport, S = (e, t) => e, Se = {
 	toAttribute(e, t) {
 		switch (t) {
 			case Boolean:
-				e = e ? xe : null;
+				e = e ? be : null;
 				break;
 			case Object:
 			case Array: e = e == null ? e : JSON.stringify(e);
@@ -674,30 +674,30 @@ var ae = globalThis, oe = ae.ShadowRoot && (ae.ShadyCSS === void 0 || ae.ShadyCS
 		}
 		return n;
 	}
-}, we = (e, t) => !pe(e, t), Te = {
+}, Ce = (e, t) => !fe(e, t), we = {
 	attribute: !0,
 	type: String,
-	converter: Ce,
+	converter: Se,
 	reflect: !1,
 	useDefault: !1,
-	hasChanged: we
+	hasChanged: Ce
 };
-Symbol.metadata ??= Symbol("metadata"), ye.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
-var S = class extends HTMLElement {
+Symbol.metadata ??= Symbol("metadata"), ve.litPropertyMetadata ??= /* @__PURE__ */ new WeakMap();
+var C = class extends HTMLElement {
 	static addInitializer(e) {
 		this._$Ei(), (this.l ??= []).push(e);
 	}
 	static get observedAttributes() {
 		return this.finalize(), this._$Eh && [...this._$Eh.keys()];
 	}
-	static createProperty(e, t = Te) {
+	static createProperty(e, t = we) {
 		if (t.state && (t.attribute = !1), this._$Ei(), this.prototype.hasOwnProperty(e) && ((t = Object.create(t)).wrapped = !0), this.elementProperties.set(e, t), !t.noAccessor) {
 			let n = Symbol(), r = this.getPropertyDescriptor(e, n, t);
-			r !== void 0 && me(this.prototype, e, r);
+			r !== void 0 && pe(this.prototype, e, r);
 		}
 	}
 	static getPropertyDescriptor(e, t, n) {
-		let { get: r, set: i } = he(this.prototype, e) ?? {
+		let { get: r, set: i } = me(this.prototype, e) ?? {
 			get() {
 				return this[t];
 			},
@@ -716,17 +716,17 @@ var S = class extends HTMLElement {
 		};
 	}
 	static getPropertyOptions(e) {
-		return this.elementProperties.get(e) ?? Te;
+		return this.elementProperties.get(e) ?? we;
 	}
 	static _$Ei() {
-		if (this.hasOwnProperty(x("elementProperties"))) return;
-		let e = ve(this);
+		if (this.hasOwnProperty(S("elementProperties"))) return;
+		let e = _e(this);
 		e.finalize(), e.l !== void 0 && (this.l = [...e.l]), this.elementProperties = new Map(e.elementProperties);
 	}
 	static finalize() {
-		if (this.hasOwnProperty(x("finalized"))) return;
-		if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(x("properties"))) {
-			let e = this.properties, t = [...ge(e), ..._e(e)];
+		if (this.hasOwnProperty(S("finalized"))) return;
+		if (this.finalized = !0, this._$Ei(), this.hasOwnProperty(S("properties"))) {
+			let e = this.properties, t = [...he(e), ...ge(e)];
 			for (let n of t) this.createProperty(n, e[n]);
 		}
 		let e = this[Symbol.metadata];
@@ -745,8 +745,8 @@ var S = class extends HTMLElement {
 		let t = [];
 		if (Array.isArray(e)) {
 			let n = new Set(e.flat(1 / 0).reverse());
-			for (let e of n) t.unshift(fe(e));
-		} else e !== void 0 && t.push(fe(e));
+			for (let e of n) t.unshift(de(e));
+		} else e !== void 0 && t.push(de(e));
 		return t;
 	}
 	static _$Eu(e, t) {
@@ -772,7 +772,7 @@ var S = class extends HTMLElement {
 	}
 	createRenderRoot() {
 		let e = this.shadowRoot ?? this.attachShadow(this.constructor.shadowRootOptions);
-		return de(e, this.constructor.elementStyles), e;
+		return ue(e, this.constructor.elementStyles), e;
 	}
 	connectedCallback() {
 		this.renderRoot ??= this.createRenderRoot(), this.enableUpdating(!0), this._$EO?.forEach((e) => e.hostConnected?.());
@@ -787,14 +787,14 @@ var S = class extends HTMLElement {
 	_$ET(e, t) {
 		let n = this.constructor.elementProperties.get(e), r = this.constructor._$Eu(e, n);
 		if (r !== void 0 && !0 === n.reflect) {
-			let i = (n.converter?.toAttribute === void 0 ? Ce : n.converter).toAttribute(t, n.type);
+			let i = (n.converter?.toAttribute === void 0 ? Se : n.converter).toAttribute(t, n.type);
 			this._$Em = e, i == null ? this.removeAttribute(r) : this.setAttribute(r, i), this._$Em = null;
 		}
 	}
 	_$AK(e, t) {
 		let n = this.constructor, r = n._$Eh.get(e);
 		if (r !== void 0 && this._$Em !== r) {
-			let e = n.getPropertyOptions(r), i = typeof e.converter == "function" ? { fromAttribute: e.converter } : e.converter?.fromAttribute === void 0 ? Ce : e.converter;
+			let e = n.getPropertyOptions(r), i = typeof e.converter == "function" ? { fromAttribute: e.converter } : e.converter?.fromAttribute === void 0 ? Se : e.converter;
 			this._$Em = r;
 			let a = i.fromAttribute(t, e.type);
 			this[r] = a ?? this._$Ej?.get(r) ?? a, this._$Em = null;
@@ -803,7 +803,7 @@ var S = class extends HTMLElement {
 	requestUpdate(e, t, n, r = !1, i) {
 		if (e !== void 0) {
 			let a = this.constructor;
-			if (!1 === r && (i = this[e]), n ??= a.getPropertyOptions(e), !((n.hasChanged ?? we)(i, t) || n.useDefault && n.reflect && i === this._$Ej?.get(e) && !this.hasAttribute(a._$Eu(e, n)))) return;
+			if (!1 === r && (i = this[e]), n ??= a.getPropertyOptions(e), !((n.hasChanged ?? Ce)(i, t) || n.useDefault && n.reflect && i === this._$Ej?.get(e) && !this.hasAttribute(a._$Eu(e, n)))) return;
 			this.C(e, t, n);
 		}
 		!1 === this.isUpdatePending && (this._$ES = this._$EP());
@@ -867,25 +867,25 @@ var S = class extends HTMLElement {
 	updated(e) {}
 	firstUpdated(e) {}
 };
-S.elementStyles = [], S.shadowRootOptions = { mode: "open" }, S[x("elementProperties")] = /* @__PURE__ */ new Map(), S[x("finalized")] = /* @__PURE__ */ new Map(), Se?.({ ReactiveElement: S }), (ye.reactiveElementVersions ??= []).push("2.1.2");
+C.elementStyles = [], C.shadowRootOptions = { mode: "open" }, C[S("elementProperties")] = /* @__PURE__ */ new Map(), C[S("finalized")] = /* @__PURE__ */ new Map(), xe?.({ ReactiveElement: C }), (ve.reactiveElementVersions ??= []).push("2.1.2");
 //#endregion
 //#region node_modules/lit-html/lit-html.js
-var Ee = globalThis, De = (e) => e, Oe = Ee.trustedTypes, ke = Oe ? Oe.createPolicy("lit-html", { createHTML: (e) => e }) : void 0, Ae = "$lit$", C = `lit$${Math.random().toFixed(9).slice(2)}$`, je = "?" + C, Me = `<${je}>`, w = document, T = () => w.createComment(""), E = (e) => e === null || typeof e != "object" && typeof e != "function", Ne = Array.isArray, Pe = (e) => Ne(e) || typeof e?.[Symbol.iterator] == "function", Fe = "[ 	\n\f\r]", D = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, Ie = /-->/g, Le = />/g, O = RegExp(`>|${Fe}(?:([^\\s"'>=/]+)(${Fe}*=${Fe}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`, "g"), Re = /'/g, ze = /"/g, Be = /^(?:script|style|textarea|title)$/i, Ve = (e) => (t, ...n) => ({
+var Te = globalThis, Ee = (e) => e, De = Te.trustedTypes, Oe = De ? De.createPolicy("lit-html", { createHTML: (e) => e }) : void 0, ke = "$lit$", w = `lit$${Math.random().toFixed(9).slice(2)}$`, Ae = "?" + w, je = `<${Ae}>`, T = document, E = () => T.createComment(""), D = (e) => e === null || typeof e != "object" && typeof e != "function", Me = Array.isArray, Ne = (e) => Me(e) || typeof e?.[Symbol.iterator] == "function", Pe = "[ 	\n\f\r]", Fe = /<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g, Ie = /-->/g, Le = />/g, O = RegExp(`>|${Pe}(?:([^\\s"'>=/]+)(${Pe}*=${Pe}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`, "g"), Re = /'/g, ze = /"/g, Be = /^(?:script|style|textarea|title)$/i, Ve = (e) => (t, ...n) => ({
 	_$litType$: e,
 	strings: t,
 	values: n
-}), k = Ve(1), A = Ve(2), j = Symbol.for("lit-noChange"), M = Symbol.for("lit-nothing"), He = /* @__PURE__ */ new WeakMap(), N = w.createTreeWalker(w, 129);
+}), k = Ve(1), A = Ve(2), j = Symbol.for("lit-noChange"), M = Symbol.for("lit-nothing"), He = /* @__PURE__ */ new WeakMap(), N = T.createTreeWalker(T, 129);
 function Ue(e, t) {
-	if (!Ne(e) || !e.hasOwnProperty("raw")) throw Error("invalid template strings array");
-	return ke === void 0 ? t : ke.createHTML(t);
+	if (!Me(e) || !e.hasOwnProperty("raw")) throw Error("invalid template strings array");
+	return Oe === void 0 ? t : Oe.createHTML(t);
 }
 var We = (e, t) => {
-	let n = e.length - 1, r = [], i, a = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", o = D;
+	let n = e.length - 1, r = [], i, a = t === 2 ? "<svg>" : t === 3 ? "<math>" : "", o = Fe;
 	for (let t = 0; t < n; t++) {
 		let n = e[t], s, c, l = -1, u = 0;
-		for (; u < n.length && (o.lastIndex = u, c = o.exec(n), c !== null);) u = o.lastIndex, o === D ? c[1] === "!--" ? o = Ie : c[1] === void 0 ? c[2] === void 0 ? c[3] !== void 0 && (o = O) : (Be.test(c[2]) && (i = RegExp("</" + c[2], "g")), o = O) : o = Le : o === O ? c[0] === ">" ? (o = i ?? D, l = -1) : c[1] === void 0 ? l = -2 : (l = o.lastIndex - c[2].length, s = c[1], o = c[3] === void 0 ? O : c[3] === "\"" ? ze : Re) : o === ze || o === Re ? o = O : o === Ie || o === Le ? o = D : (o = O, i = void 0);
+		for (; u < n.length && (o.lastIndex = u, c = o.exec(n), c !== null);) u = o.lastIndex, o === Fe ? c[1] === "!--" ? o = Ie : c[1] === void 0 ? c[2] === void 0 ? c[3] !== void 0 && (o = O) : (Be.test(c[2]) && (i = RegExp("</" + c[2], "g")), o = O) : o = Le : o === O ? c[0] === ">" ? (o = i ?? Fe, l = -1) : c[1] === void 0 ? l = -2 : (l = o.lastIndex - c[2].length, s = c[1], o = c[3] === void 0 ? O : c[3] === "\"" ? ze : Re) : o === ze || o === Re ? o = O : o === Ie || o === Le ? o = Fe : (o = O, i = void 0);
 		let d = o === O && e[t + 1].startsWith("/>") ? " " : "";
-		a += o === D ? n + Me : l >= 0 ? (r.push(s), n.slice(0, l) + Ae + n.slice(l) + C + d) : n + C + (l === -2 ? t : d);
+		a += o === Fe ? n + je : l >= 0 ? (r.push(s), n.slice(0, l) + ke + n.slice(l) + w + d) : n + w + (l === -2 ? t : d);
 	}
 	return [Ue(e, a + (e[n] || "<?>") + (t === 2 ? "</svg>" : t === 3 ? "</math>" : "")), r];
 }, Ge = class e {
@@ -899,8 +899,8 @@ var We = (e, t) => {
 		}
 		for (; (i = N.nextNode()) !== null && c.length < s;) {
 			if (i.nodeType === 1) {
-				if (i.hasAttributes()) for (let e of i.getAttributeNames()) if (e.endsWith(Ae)) {
-					let t = u[o++], n = i.getAttribute(e).split(C), r = /([.?@])?(.*)/.exec(t);
+				if (i.hasAttributes()) for (let e of i.getAttributeNames()) if (e.endsWith(ke)) {
+					let t = u[o++], n = i.getAttribute(e).split(w), r = /([.?@])?(.*)/.exec(t);
 					c.push({
 						type: 1,
 						index: a,
@@ -908,45 +908,45 @@ var We = (e, t) => {
 						strings: n,
 						ctor: r[1] === "." ? Ye : r[1] === "?" ? Xe : r[1] === "@" ? Ze : Je
 					}), i.removeAttribute(e);
-				} else e.startsWith(C) && (c.push({
+				} else e.startsWith(w) && (c.push({
 					type: 6,
 					index: a
 				}), i.removeAttribute(e));
 				if (Be.test(i.tagName)) {
-					let e = i.textContent.split(C), t = e.length - 1;
+					let e = i.textContent.split(w), t = e.length - 1;
 					if (t > 0) {
-						i.textContent = Oe ? Oe.emptyScript : "";
-						for (let n = 0; n < t; n++) i.append(e[n], T()), N.nextNode(), c.push({
+						i.textContent = De ? De.emptyScript : "";
+						for (let n = 0; n < t; n++) i.append(e[n], E()), N.nextNode(), c.push({
 							type: 2,
 							index: ++a
 						});
-						i.append(e[t], T());
+						i.append(e[t], E());
 					}
 				}
 			} else if (i.nodeType === 8) {
-				if (i.data === je) c.push({
+				if (i.data === Ae) c.push({
 					type: 2,
 					index: a
 				});
 				else {
 					let e = -1;
-					for (; (e = i.data.indexOf(C, e + 1)) !== -1;) c.push({
+					for (; (e = i.data.indexOf(w, e + 1)) !== -1;) c.push({
 						type: 7,
 						index: a
-					}), e += C.length - 1;
+					}), e += w.length - 1;
 				}
 			}
 			a++;
 		}
 	}
 	static createElement(e, t) {
-		let n = w.createElement("template");
+		let n = T.createElement("template");
 		return n.innerHTML = e, n;
 	}
 };
 function P(e, t, n = e, r) {
 	if (t === j) return t;
-	let i = r === void 0 ? n._$Cl : n._$Co?.[r], a = E(t) ? void 0 : t._$litDirective$;
+	let i = r === void 0 ? n._$Cl : n._$Co?.[r], a = D(t) ? void 0 : t._$litDirective$;
 	return i?.constructor !== a && (i?._$AO?.(!1), a === void 0 ? i = void 0 : (i = new a(e), i._$AT(e, n, r)), r === void 0 ? n._$Cl = i : (n._$Co ??= [])[r] = i), i !== void 0 && (t = P(e, i._$AS(e, t.values), i, r)), t;
 }
 var Ke = class {
@@ -960,7 +960,7 @@ var Ke = class {
 		return this._$AM._$AU;
 	}
 	u(e) {
-		let { el: { content: t }, parts: n } = this._$AD, r = (e?.creationScope ?? w).importNode(t, !0);
+		let { el: { content: t }, parts: n } = this._$AD, r = (e?.creationScope ?? T).importNode(t, !0);
 		N.currentNode = r;
 		let i = N.nextNode(), a = 0, o = 0, s = n[0];
 		for (; s !== void 0;) {
@@ -970,7 +970,7 @@ var Ke = class {
 			}
 			a !== s?.index && (i = N.nextNode(), a++);
 		}
-		return N.currentNode = w, r;
+		return N.currentNode = T, r;
 	}
 	p(e) {
 		let t = 0;
@@ -994,7 +994,7 @@ var Ke = class {
 		return this._$AB;
 	}
 	_$AI(e, t = this) {
-		e = P(this, e, t), E(e) ? e === M || e == null || e === "" ? (this._$AH !== M && this._$AR(), this._$AH = M) : e !== this._$AH && e !== j && this._(e) : e._$litType$ === void 0 ? e.nodeType === void 0 ? Pe(e) ? this.k(e) : this._(e) : this.T(e) : this.$(e);
+		e = P(this, e, t), D(e) ? e === M || e == null || e === "" ? (this._$AH !== M && this._$AR(), this._$AH = M) : e !== this._$AH && e !== j && this._(e) : e._$litType$ === void 0 ? e.nodeType === void 0 ? Ne(e) ? this.k(e) : this._(e) : this.T(e) : this.$(e);
 	}
 	O(e) {
 		return this._$AA.parentNode.insertBefore(e, this._$AB);
@@ -1003,7 +1003,7 @@ var Ke = class {
 		this._$AH !== e && (this._$AR(), this._$AH = this.O(e));
 	}
 	_(e) {
-		this._$AH !== M && E(this._$AH) ? this._$AA.nextSibling.data = e : this.T(w.createTextNode(e)), this._$AH = e;
+		this._$AH !== M && D(this._$AH) ? this._$AA.nextSibling.data = e : this.T(T.createTextNode(e)), this._$AH = e;
 	}
 	$(e) {
 		let { values: t, _$litType$: n } = e, r = typeof n == "number" ? this._$AC(e) : (n.el === void 0 && (n.el = Ge.createElement(Ue(n.h, n.h[0]), this.options)), n);
@@ -1018,15 +1018,15 @@ var Ke = class {
 		return t === void 0 && He.set(e.strings, t = new Ge(e)), t;
 	}
 	k(t) {
-		Ne(this._$AH) || (this._$AH = [], this._$AR());
+		Me(this._$AH) || (this._$AH = [], this._$AR());
 		let n = this._$AH, r, i = 0;
-		for (let a of t) i === n.length ? n.push(r = new e(this.O(T()), this.O(T()), this, this.options)) : r = n[i], r._$AI(a), i++;
+		for (let a of t) i === n.length ? n.push(r = new e(this.O(E()), this.O(E()), this, this.options)) : r = n[i], r._$AI(a), i++;
 		i < n.length && (this._$AR(r && r._$AB.nextSibling, i), n.length = i);
 	}
 	_$AR(e = this._$AA.nextSibling, t) {
 		for (this._$AP?.(!1, !0, t); e !== this._$AB;) {
-			let t = De(e).nextSibling;
-			De(e).remove(), e = t;
+			let t = Ee(e).nextSibling;
+			Ee(e).remove(), e = t;
 		}
 	}
 	setConnected(e) {
@@ -1044,10 +1044,10 @@ var Ke = class {
 	}
 	_$AI(e, t = this, n, r) {
 		let i = this.strings, a = !1;
-		if (i === void 0) e = P(this, e, t, 0), a = !E(e) || e !== this._$AH && e !== j, a && (this._$AH = e);
+		if (i === void 0) e = P(this, e, t, 0), a = !D(e) || e !== this._$AH && e !== j, a && (this._$AH = e);
 		else {
 			let r = e, o, s;
-			for (e = i[0], o = 0; o < i.length - 1; o++) s = P(this, r[n + o], t, o), s === j && (s = this._$AH[o]), a ||= !E(s) || s !== this._$AH[o], s === M ? e = M : e !== M && (e += (s ?? "") + i[o + 1]), this._$AH[o] = s;
+			for (e = i[0], o = 0; o < i.length - 1; o++) s = P(this, r[n + o], t, o), s === j && (s = this._$AH[o]), a ||= !D(s) || s !== this._$AH[o], s === M ? e = M : e !== M && (e += (s ?? "") + i[o + 1]), this._$AH[o] = s;
 		}
 		a && !r && this.j(e);
 	}
@@ -1090,16 +1090,16 @@ var Ke = class {
 	_$AI(e) {
 		P(this, e);
 	}
-}, $e = Ee.litHtmlPolyfillSupport;
-$e?.(Ge, qe), (Ee.litHtmlVersions ??= []).push("3.3.3");
+}, $e = Te.litHtmlPolyfillSupport;
+$e?.(Ge, qe), (Te.litHtmlVersions ??= []).push("3.3.3");
 var et = (e, t, n) => {
 	let r = n?.renderBefore ?? t, i = r._$litPart$;
 	if (i === void 0) {
 		let e = n?.renderBefore ?? null;
-		r._$litPart$ = i = new qe(t.insertBefore(T(), e), e, void 0, n ?? {});
+		r._$litPart$ = i = new qe(t.insertBefore(E(), e), e, void 0, n ?? {});
 	}
 	return i._$AI(e), i;
-}, tt = globalThis, F = class extends S {
+}, tt = globalThis, F = class extends C {
 	constructor() {
 		super(...arguments), this.renderOptions = { host: this }, this._$Do = void 0;
 	}
@@ -1310,14 +1310,15 @@ function R(e, t, n) {
 		composed: !0
 	}));
 }
-var z = (e = "light") => R(window, "haptic", e), St;
-function Ct(e, t) {
-	St = t?.getBoundingClientRect();
-	let n = e.startsWith("#") ? e : `#${e}`;
-	location.hash !== n && history.pushState({ glidePopup: !0 }, "", n), window.dispatchEvent(new CustomEvent("glide-hash"));
+var z = (e = "light") => R(window, "haptic", e);
+//#endregion
+//#region src/core/actions.ts
+function St(e) {
+	let t = e.startsWith("#") ? e : `#${e}`;
+	location.hash !== t && history.pushState({ glidePopup: !0 }, "", t), window.dispatchEvent(new CustomEvent("glide-hash"));
 }
-function wt(e, t) {
-	if (e.startsWith("#")) return Ct(e, t);
+function Ct(e) {
+	if (e.startsWith("#")) return St(e);
 	history.pushState(null, "", e), R(window, "location-changed", { replace: !1 });
 }
 function B(e, t, n, r) {
@@ -1332,7 +1333,7 @@ function B(e, t, n, r) {
 			return;
 		case "popup":
 		case "navigate":
-			n.navigation_path && wt(n.navigation_path, e);
+			n.navigation_path && Ct(n.navigation_path);
 			return;
 		default: R(e, "hass-action", {
 			config: {
@@ -1345,14 +1346,14 @@ function B(e, t, n, r) {
 }
 //#endregion
 //#region src/core/spring.ts
-function Tt(e = 170, t = 22, n = 1, r = 48) {
+function wt(e = 170, t = 22, n = 1, r = 48) {
 	let i = Math.sqrt(e / n), a = t / (2 * Math.sqrt(e * n)), o = i * Math.sqrt(Math.max(0, 1 - a * a)), s = (e) => a < 1 ? 1 - Math.exp(-a * i * e) * (Math.cos(o * e) + a * i / o * Math.sin(o * e)) : 1 - Math.exp(-i * e) * (1 + i * e), c = Math.min(1.2, Math.log(1e3) / (a * i)), l = Array.from({ length: r + 1 }, (e, t) => +s(t / r * c).toFixed(4));
 	return l[r] = 1, {
 		easing: `linear(${l.join(",")})`,
 		duration: Math.round(c * 1e3)
 	};
 }
-var V = () => matchMedia("(prefers-reduced-motion: reduce)").matches, Et = {
+var V = () => matchMedia("(prefers-reduced-motion: reduce)").matches, Tt = {
 	shine: "Glass shine",
 	random: "Random (different each tap)",
 	press: "Press (shrink only)",
@@ -1372,24 +1373,24 @@ var V = () => matchMedia("(prefers-reduced-motion: reduce)").matches, Et = {
 	nudge: "Nudge",
 	"badge-pop": "Badge pop",
 	none: "None"
-}, Dt = "shine", Ot = (e) => typeof e == "string" && e in Et;
-function kt(e, t) {
-	if (Ot(e)) return e;
+}, Et = "shine", Dt = (e) => typeof e == "string" && e in Tt;
+function Ot(e, t) {
+	if (Dt(e)) return e;
 	let n = getComputedStyle(t).getPropertyValue("--glide-tap-animation").trim();
-	return Ot(n) ? n : Dt;
+	return Dt(n) ? n : Et;
 }
-var At = "cubic-bezier(.2,.8,.2,1)", H = "cubic-bezier(.2,.9,.3,1.25)", jt = /* @__PURE__ */ new WeakMap();
-function Mt(e, t) {
-	let n = jt.get(e), r = Object.keys(Et).filter((e) => e !== "random" && e !== "press" && e !== "none" && e !== n && (t.icon || e !== "icon-pop" && e !== "icon-flip") && (t.badge || e !== "badge-pop")), i = r[Math.floor(Math.random() * r.length)] ?? "shine";
-	return jt.set(e, i), i;
+var kt = "cubic-bezier(.2,.8,.2,1)", H = "cubic-bezier(.2,.9,.3,1.25)", At = /* @__PURE__ */ new WeakMap();
+function jt(e, t) {
+	let n = At.get(e), r = Object.keys(Tt).filter((e) => e !== "random" && e !== "press" && e !== "none" && e !== n && (t.icon || e !== "icon-pop" && e !== "icon-flip") && (t.badge || e !== "badge-pop")), i = r[Math.floor(Math.random() * r.length)] ?? "shine";
+	return At.set(e, i), i;
 }
-var Nt = /* @__PURE__ */ new WeakMap(), U = (e, t) => `color-mix(in srgb, ${e} ${t}%, transparent)`;
-function Pt(e, t, n) {
+var Mt = /* @__PURE__ */ new WeakMap(), U = (e, t) => `color-mix(in srgb, ${e} ${t}%, transparent)`;
+function Nt(e, t, n) {
 	if (t === "none" || t === "press" || V()) return;
-	t === "random" && (t = Mt(e, n)), Ft(e);
+	t === "random" && (t = jt(e, n)), Pt(e);
 	let r = e.offsetWidth || e.getBoundingClientRect().width, i = e.offsetHeight || e.getBoundingClientRect().height, a = n.x ?? r / 2, o = n.y ?? i / 2, s = { anims: [] };
-	Nt.set(e, s);
-	let c = (e, t, n, r = At) => {
+	Mt.set(e, s);
+	let c = (e, t, n, r = kt) => {
 		let i = e.animate(t, {
 			duration: n,
 			easing: r
@@ -1610,28 +1611,28 @@ function Pt(e, t, n) {
 			{ transform: "scale(1)" }
 		], 450, H);
 	}
-	Promise.all(s.anims.map((e) => e.finished)).then(() => Nt.get(e) === s && Ft(e), () => {});
+	Promise.all(s.anims.map((e) => e.finished)).then(() => Mt.get(e) === s && Pt(e), () => {});
 }
-function Ft(e) {
-	let t = Nt.get(e);
-	t && (Nt.delete(e), t.anims.forEach((e) => e.cancel()), t.layer?.remove());
+function Pt(e) {
+	let t = Mt.get(e);
+	t && (Mt.delete(e), t.anims.forEach((e) => e.cancel()), t.layer?.remove());
 }
 //#endregion
 //#region src/core/base-card.ts
-var It = [
+var Ft = [
 	"full",
 	"compact",
 	"slim"
-], Lt = (e) => It.includes(e);
-function Rt(e, t) {
-	if (Lt(e)) return e;
+], It = (e) => Ft.includes(e);
+function Lt(e, t) {
+	if (It(e)) return e;
 	for (let e of [t, document.documentElement]) {
 		let t = getComputedStyle(e).getPropertyValue("--glide-size").trim();
-		if (Lt(t)) return t;
+		if (It(t)) return t;
 	}
 	return "full";
 }
-var W = b`
+var W = x`
   :host {
     display: block;
     font-family: var(--gc-font);
@@ -1682,7 +1683,7 @@ var W = b`
     }
   }
 `;
-function zt(e) {
+function Rt(e) {
 	if (e !== void 0) return e;
 	try {
 		let e = localStorage.getItem("glide-card-lite");
@@ -1691,7 +1692,7 @@ function zt(e) {
 	let t = navigator.deviceMemory;
 	return t !== void 0 && t <= 2;
 }
-var Bt = [
+var zt = [
 	"100% 100%",
 	"0% 100%",
 	"100% 0%",
@@ -1699,12 +1700,12 @@ var Bt = [
 	"85% 110%",
 	"0% 30%"
 ];
-function Vt(e) {
+function Bt(e) {
 	let t = e, n = t.entity ?? t.name ?? t.title ?? JSON.stringify(e), r = 2166136261;
 	for (let e = 0; e < n.length; e++) r = Math.imul(r ^ n.charCodeAt(e), 16777619) >>> 0;
 	return {
 		tint: r % 5 + 1,
-		glowAt: Bt[(r >>> 8) % Bt.length]
+		glowAt: zt[(r >>> 8) % zt.length]
 	};
 }
 var G = class extends F {
@@ -1726,7 +1727,7 @@ var G = class extends F {
 	}
 	setConfig(e) {
 		this.config = e;
-		let t = Vt(e);
+		let t = Bt(e);
 		this.style.setProperty("--gc-tint", `var(--gc-tint-${t.tint})`), this.style.setProperty("--gc-glow-at", t.glowAt), this.theme = v(e.theme);
 	}
 	shouldUpdate(e) {
@@ -1739,20 +1740,20 @@ var G = class extends F {
 	}
 	applyTheme() {
 		if (!this.config) return;
-		let e = re(this.config.theme, this), t = ie(this.config.mode, this.hass?.themes?.darkMode), n = `${e}|${t}|${this.config.accent ?? ""}|${this.config.lite}|${this.config.tap_animation ?? ""}|${this.config.size ?? ""}`;
+		let e = ne(this.config.theme, this), t = re(this.config.mode, this.hass?.themes?.darkMode), n = `${e}|${t}|${this.config.accent ?? ""}|${this.config.lite}|${this.config.tap_animation ?? ""}|${this.config.size ?? ""}`;
 		if (n === this.themeKey) return;
-		this.themeKey = n, this.theme = v(e), this.toggleAttribute("dark", t), this.toggleAttribute("lite", zt(this.config.lite)), this.dataset.theme = e, this.setAttribute("tap-fx", kt(this.config.tap_animation, this)), this.setAttribute("size", this.size), this.config.accent ? this.style.setProperty("--gc-accent", this.config.accent) : this.style.removeProperty("--gc-accent");
+		this.themeKey = n, this.theme = v(e), this.toggleAttribute("dark", t), this.toggleAttribute("lite", Rt(this.config.lite)), this.dataset.theme = e, this.setAttribute("tap-fx", Ot(this.config.tap_animation, this)), this.setAttribute("size", this.size), this.config.accent ? this.style.setProperty("--gc-accent", this.config.accent) : this.style.removeProperty("--gc-accent");
 		let r = this.constructor.elementStyles.map((e) => e instanceof CSSStyleSheet ? e : e.styleSheet);
-		this.renderRoot.adoptedStyleSheets = [...r, ne(e, t, this.cardType)];
+		this.renderRoot.adoptedStyleSheets = [...r, te(e, t, this.cardType)];
 	}
 	playTapFx(e, t, n = {}) {
-		let r = kt(this.config.tap_animation, this), i = e.getBoundingClientRect(), a = getComputedStyle(e), o = [
+		let r = Ot(this.config.tap_animation, this), i = e.getBoundingClientRect(), a = getComputedStyle(e), o = [
 			"--domain",
 			"--chip",
 			"--c",
 			"--gc-accent"
 		].map((e) => a.getPropertyValue(e).trim()).find(Boolean) ?? "#ff9f43";
-		Pt(e, r, {
+		Nt(e, r, {
 			x: t && t.x - i.left,
 			y: t && t.y - i.top,
 			color: o,
@@ -1760,28 +1761,28 @@ var G = class extends F {
 		});
 	}
 	get size() {
-		return Rt(this.config?.size, this);
+		return Lt(this.config?.size, this);
 	}
 	stateOf(e) {
 		return e ? this.hass?.states[e] : void 0;
 	}
-}, Ht = 500, Ut = 250, Wt = 250, Gt = 8, Kt = (e) => e.composedPath().some((e) => e instanceof Element && e.hasAttribute("data-no-gesture"));
-function qt(e, t) {
+}, Vt = 500, Ht = 250, Ut = 250, Wt = 8, Gt = (e) => e.composedPath().some((e) => e instanceof Element && e.hasAttribute("data-no-gesture"));
+function Kt(e, t) {
 	let n = 0, r = 0, i = 0, a = 0, o = 0, s = 0, c = 0, l = "x", u = 1, d = !1, f = "idle", p = () => {
 		clearTimeout(o), clearTimeout(c);
 	}, m = () => e.getBoundingClientRect().width || 1, h = () => e.getBoundingClientRect().height || 1, g = () => getComputedStyle(e).direction === "rtl", _ = (e) => {
-		if (e.button !== 0 || Kt(e)) return;
+		if (e.button !== 0 || Gt(e)) return;
 		n = e.clientX, r = e.clientY, f = "down", p();
 		let i = t.axis?.() ?? "x";
 		l = i.endsWith("y") ? "y" : "x", u = i.startsWith("-") ? -1 : 1, d = l === "y" && e.pointerType !== "touch", l === "y" && !d && t.dragStart && (c = window.setTimeout(() => {
 			d = !0, t.arm?.();
-		}, Wt)), t.hold && (o = window.setTimeout(() => {
+		}, Ut)), t.hold && (o = window.setTimeout(() => {
 			f = "held", t.hold();
-		}, Ht));
+		}, Vt));
 	}, v = (o) => {
 		if (f === "down") {
 			let a = o.clientX - n, s = o.clientY - r;
-			if (Math.abs(a) < Gt && Math.abs(s) < Gt) return;
+			if (Math.abs(a) < Wt && Math.abs(s) < Wt) return;
 			p();
 			let c = l === "y" ? d && Math.abs(s) > Math.abs(a) : Math.abs(a) > Math.abs(s);
 			t.dragStart && c ? (f = "drag", i = t.dragStart(), e.setPointerCapture(o.pointerId)) : f = "cancel";
@@ -1800,29 +1801,29 @@ function qt(e, t) {
 				};
 				s ? (clearTimeout(s), s = 0, t.doubleTap(e)) : s = window.setTimeout(() => {
 					s = 0, t.tap?.(e);
-				}, Ut);
+				}, Ht);
 			} else t.tap?.({
 				x: n,
 				y: r
 			});
 		}
 		f = "idle";
-	}, ee = () => {
+	}, b = () => {
 		p(), d = !1, f === "drag" && t.dragEnd?.(a), f = "idle";
-	}, te = (e) => {
+	}, ee = (e) => {
 		t.hold && e.preventDefault();
-	}, ne = (e) => {
+	}, te = (e) => {
 		d && (f === "down" || f === "drag") && e.preventDefault();
-	}, re = (e) => {
-		Kt(e) || (e.key === "Enter" || e.key === " ") && (e.preventDefault(), t.tap?.());
+	}, ne = (e) => {
+		Gt(e) || (e.key === "Enter" || e.key === " ") && (e.preventDefault(), t.tap?.());
 	};
-	return e.addEventListener("pointerdown", _), e.addEventListener("pointermove", v), e.addEventListener("pointerup", y), e.addEventListener("pointercancel", ee), e.addEventListener("contextmenu", te), e.addEventListener("keydown", re), e.addEventListener("touchmove", ne, { passive: !1 }), () => {
-		p(), clearTimeout(s), e.removeEventListener("pointerdown", _), e.removeEventListener("pointermove", v), e.removeEventListener("pointerup", y), e.removeEventListener("pointercancel", ee), e.removeEventListener("contextmenu", te), e.removeEventListener("keydown", re), e.removeEventListener("touchmove", ne);
+	return e.addEventListener("pointerdown", _), e.addEventListener("pointermove", v), e.addEventListener("pointerup", y), e.addEventListener("pointercancel", b), e.addEventListener("contextmenu", ee), e.addEventListener("keydown", ne), e.addEventListener("touchmove", te, { passive: !1 }), () => {
+		p(), clearTimeout(s), e.removeEventListener("pointerdown", _), e.removeEventListener("pointermove", v), e.removeEventListener("pointerup", y), e.removeEventListener("pointercancel", b), e.removeEventListener("contextmenu", ee), e.removeEventListener("keydown", ne), e.removeEventListener("touchmove", te);
 	};
 }
 //#endregion
 //#region src/cards/cover-scenes.ts
-var Jt = [
+var qt = [
 	"garden",
 	"sky",
 	"city",
@@ -1834,12 +1835,12 @@ var Jt = [
 	"snow",
 	"field",
 	"pool"
-], Yt = (e) => Jt.includes(e), K = (e, t, n, r) => A`
+], Jt = (e) => qt.includes(e), K = (e, t, n, r) => A`
   <g class="cloud ${r}" transform="translate(${e} ${t}) scale(${n})">
     <ellipse cx="0" cy="4" rx="16" ry="6" />
     <circle cx="-6" cy="0" r="7" />
     <circle cx="5" cy="-2" r="9" />
-  </g>`, Xt = [
+  </g>`, Yt = [
 	[
 		18,
 		14,
@@ -1891,9 +1892,9 @@ var Jt = [
 		.6
 	]
 ];
-function Zt(e) {
+function Xt(e) {
 	return e ? A`
-      <g class="stars">${Xt.map(([e, t, n], r) => A`<circle class="star" style="animation-delay:${r % 5 * .7}s" cx=${e} cy=${t} r=${n} />`)}</g>
+      <g class="stars">${Yt.map(([e, t, n], r) => A`<circle class="star" style="animation-delay:${r % 5 * .7}s" cx=${e} cy=${t} r=${n} />`)}</g>
       <circle class="moon" cx="150" cy="50" r="10" />
       <circle class="moon-cut" cx="155" cy="46" r="9" />` : A`
       <circle class="halo" cx="150" cy="50" r="18" />
@@ -1901,7 +1902,7 @@ function Zt(e) {
       ${K(42, 24, 1, "c1")}
       ${K(112, 16, .75, "c2")}`;
 }
-var Qt = (e, t, n) => A`
+var Zt = (e, t, n) => A`
   <g transform="translate(${e} ${t}) scale(${n})">
     <rect class="trunk" x="-1.5" y="-4" width="3" height="10" />
     <circle class="leaf" cx="0" cy="-10" r="9" />
@@ -1919,16 +1920,16 @@ var Qt = (e, t, n) => A`
       <path d="M0 0 Q6 -10 14 -9 Q6 -6 0 0Z" />
       <path d="M0 0 Q-1 -9 -2 -13 Q1 -8 0 0Z" />
     </g>
-  </g>`, $t = (e, t, n) => A`
+  </g>`, Qt = (e, t, n) => A`
   <g class="cactus" transform="translate(${e} ${t}) scale(${n})">
     <rect x="-2.5" y="-20" width="5" height="20" rx="2.5" />
     <path d="M-2.5 -10 H-6 V-15 a1.6 1.6 0 0 1 3.2 0 V-12.5 H-2.5Z M2.5 -7 H6 V-13 a1.6 1.6 0 0 0 -3.2 0 V-9.5 H2.5Z" />
-  </g>`, en = (e, t, n) => A`
+  </g>`, $t = (e, t, n) => A`
   <g transform="translate(${e} ${t}) scale(${n})">
     <rect class="trunk" x="-1.5" y="-3" width="3" height="8" />
     <polygon class="pine" points="0,-26 9,-2 -9,-2" />
     <polygon class="snowcap" points="0,-26 4.2,-14.5 1.5,-16 -1,-14 -4.2,-14.5" />
-  </g>`, tn = [
+  </g>`, en = [
 	[14, 30],
 	[38, 52],
 	[62, 22],
@@ -1941,7 +1942,7 @@ var Qt = (e, t, n) => A`
 	[96, 66],
 	[148, 72],
 	[182, 70]
-], nn = [
+], tn = [
 	[30, 86],
 	[58, 94],
 	[86, 80],
@@ -1949,13 +1950,13 @@ var Qt = (e, t, n) => A`
 	[144, 84],
 	[170, 96],
 	[104, 102]
-], rn = {
+], nn = {
 	sky: () => A`${K(70, 62, 1.1, "c3")}${K(168, 74, .8, "c1")}${K(18, 88, .9, "c2")}`,
 	garden: () => A`
     <path class="hill-back" d="M0 90 Q50 68 100 84 T200 78 V120 H0Z" />
-    ${q(150, 86, 1)}${Qt(172, 88, .9)}${q(34, 92, .8)}
+    ${q(150, 86, 1)}${Zt(172, 88, .9)}${q(34, 92, .8)}
     <path class="hill" d="M0 102 Q60 86 120 98 T200 94 V120 H0Z" />
-    ${Qt(62, 100, 1.1)}${q(88, 100, .9)}`,
+    ${Zt(62, 100, 1.1)}${q(88, 100, .9)}`,
 	city: (e) => {
 		let t = [
 			[
@@ -2080,25 +2081,25 @@ var Qt = (e, t, n) => A`
 		160,
 		186
 	].map((e, t) => q(e, 104 + t % 2 * 3, 1 + t % 3 * .12))}
-    ${e ? nn.map(([e, t], n) => A`<circle class="firefly" style="animation-delay:${n * .45}s" cx=${e} cy=${t} r="1.1" />`) : null}`,
+    ${e ? tn.map(([e, t], n) => A`<circle class="firefly" style="animation-delay:${n * .45}s" cx=${e} cy=${t} r="1.1" />`) : null}`,
 	desert: () => A`
     <path class="dune-back" d="M0 92 Q40 74 90 88 T200 82 V120 H0Z" />
     <path class="dune" d="M0 106 Q50 90 110 104 T200 98 V120 H0Z" />
     <path class="dune-shade" d="M110 104 Q150 96 200 98 V120 H140Z" />
-    ${$t(46, 104, 1.1)}${$t(170, 100, .8)}${$t(24, 98, .6)}`,
+    ${Qt(46, 104, 1.1)}${Qt(170, 100, .8)}${Qt(24, 98, .6)}`,
 	snow: () => A`
     <path class="snow-back" d="M0 90 Q50 76 100 86 T200 80 V120 H0Z" />
-    ${en(148, 88, 1)}${en(168, 90, .8)}${en(30, 92, .85)}
+    ${$t(148, 88, 1)}${$t(168, 90, .8)}${$t(30, 92, .85)}
     <path class="snow" d="M0 104 Q60 92 120 102 T200 98 V120 H0Z" />
-    ${en(70, 104, 1.1)}
+    ${$t(70, 104, 1.1)}
     <g class="snowman" transform="translate(118 104)">
       <circle cy="-5" r="5.5" /><circle cy="-14" r="3.8" />
       <polygon class="nose" points="0,-14.5 4,-14 0,-13.3" />
     </g>
-    ${tn.map(([e, t]) => A`<circle class="flake" cx=${e} cy=${t} r="1" />`)}`,
+    ${en.map(([e, t]) => A`<circle class="flake" cx=${e} cy=${t} r="1" />`)}`,
 	field: () => A`
     <path class="hill-back" d="M0 88 Q60 78 120 86 T200 82 V120 H0Z" />
-    ${Qt(158, 88, 1)}
+    ${Zt(158, 88, 1)}
     <path class="field" d="M0 98 Q70 90 140 97 T200 95 V120 H0Z" />
     <path class="row" d="M0 106 Q100 98 200 104 M0 112 Q100 104 200 110 M0 118 Q100 110 200 116" />
     <g class="fence">
@@ -2119,12 +2120,12 @@ var Qt = (e, t, n) => A`
     <g class="ladder"><path d="M150 92 V104 M156 92 V104 M150 96 H156 M150 100 H156" /></g>
     ${J(16, 100, 1.05)}${J(186, 100, 1, -1)}`
 };
-function an(e, t) {
-	return k`<svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">${Zt(t)}${rn[e](t)}</svg>`;
+function rn(e, t) {
+	return k`<svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMax slice" aria-hidden="true">${Xt(t)}${nn[e](t)}</svg>`;
 }
 //#endregion
 //#region src/core/i18n.ts
-var on = {
+var an = {
 	on: "On",
 	off: "Off",
 	open: "Open",
@@ -2149,8 +2150,8 @@ var on = {
 	open_cover: "Open",
 	close_cover: "Close",
 	stop_cover: "Stop"
-}, sn = {
-	en: on,
+}, on = {
+	en: an,
 	he: {
 		on: "פועל",
 		off: "כבוי",
@@ -2179,9 +2180,9 @@ var on = {
 	}
 };
 function Y(e, t) {
-	return (sn[(e?.locale?.language ?? e?.language ?? "en").split("-")[0]] ?? on)[t] ?? on[t];
+	return (on[(e?.locale?.language ?? e?.language ?? "en").split("-")[0]] ?? an)[t] ?? an[t];
 }
-function cn(e, t) {
+function sn(e, t) {
 	let n = e.states[t];
 	if (!n) return Y(e, "unavailable");
 	let r = e.formatEntityState;
@@ -2189,7 +2190,7 @@ function cn(e, t) {
 }
 //#endregion
 //#region src/core/templates.ts
-var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
+var cn = (e) => typeof e == "string" && /\{\{|\{%/.test(e), ln = class {
 	constructor(e, t, n, r = () => e.requestUpdate()) {
 		this.fields = t, this.ctx = n, this.onChange = r, this.values = {}, this.subs = /* @__PURE__ */ new Map(), this.warned = /* @__PURE__ */ new Set(), e.addController(this);
 	}
@@ -2204,7 +2205,7 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
 	}
 	get(e, t) {
 		let n = this.fields()[e];
-		return ln(n) ? e in this.values ? this.values[e] : t : typeof n == "string" ? n : t;
+		return cn(n) ? e in this.values ? this.values[e] : t : typeof n == "string" ? n : t;
 	}
 	sync() {
 		let { hass: e, config: t, entity: n } = this.ctx(), r = e?.connection;
@@ -2212,7 +2213,7 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
 			r !== this.conn && (this.clear(), this.conn = r);
 			for (let [i, a] of Object.entries(this.fields())) {
 				let o = this.subs.get(i);
-				if (!ln(a)) {
+				if (!cn(a)) {
 					o && this.drop(i);
 					continue;
 				}
@@ -2249,12 +2250,12 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
 		for (let e of [...this.subs.keys()]) this.drop(e);
 		this.conn = void 0;
 	}
-}, dn = (e) => e && /^[\w-]+:[\w-]+$/.test(e.trim()) ? e.trim() : void 0, fn = /* @__PURE__ */ new Set([
+}, un = (e) => e && /^[\w-]+:[\w-]+$/.test(e.trim()) ? e.trim() : void 0, dn = /* @__PURE__ */ new Set([
 	"scene",
 	"script",
 	"button",
 	"input_button"
-]), pn = 1, mn = 2, hn = 8, gn = {
+]), fn = 1, pn = 2, mn = 8, hn = {
 	blind: "down",
 	roman: "down",
 	venetian: "down",
@@ -2263,14 +2264,14 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
 	curtain: "split",
 	curtain_side: "side",
 	vertical: "side"
-}, _n = /* @__PURE__ */ new Set([
+}, gn = /* @__PURE__ */ new Set([
 	"curtain",
 	"curtain_side",
 	"roman"
-]), vn = 1e3, yn = 250, bn = 4e3, xn = (e) => {
+]), _n = 1e3, vn = 250, yn = 4e3, bn = (e) => {
 	let t = typeof e == "number" ? Math.abs(e - 50) / 50 : .5;
 	return Math.round((2.5 + 5.5 * t) * 10) / 10;
-}, Sn = (e) => e?.state === "opening" || e?.state === "closing", Cn = /* @__PURE__ */ new Set([
+}, xn = (e) => e?.state === "opening" || e?.state === "closing", Sn = /* @__PURE__ */ new Set([
 	"light",
 	"switch",
 	"fan",
@@ -2283,9 +2284,9 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
 	"input_button",
 	"siren",
 	"humidifier"
-]), wn = class extends G {
+]), Cn = class extends G {
 	constructor(...e) {
-		super(...e), this.cardType = "button", this.templateRev = 0, this.moveMs = vn, this.tpl = new un(this, () => {
+		super(...e), this.cardType = "button", this.templateRev = 0, this.moveMs = _n, this.tpl = new ln(this, () => {
 			let e = this.config ?? {};
 			return {
 				name: e.name,
@@ -2332,7 +2333,7 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
 		let t = this.config[`${e}_action`];
 		if (t) return t;
 		let n = this.config.entity;
-		if (e === "tap") return { action: n && Cn.has(I(n)) ? "toggle" : "more-info" };
+		if (e === "tap") return { action: n && Sn.has(I(n)) ? "toggle" : "more-info" };
 		if (e === "hold") return { action: "more-info" };
 	}
 	willUpdate(e) {
@@ -2345,8 +2346,8 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
 	trackMotion() {
 		let e = this.stateOf(this.config.entity), t = e?.attributes.current_position;
 		if (typeof t != "number" || t === this.lastPos?.value) return;
-		let n = performance.now(), r = Sn(e);
-		r && (this.moveMs = this.lastPos?.moving ? Math.min(bn, Math.max(yn, n - this.lastPos.at)) : vn), this.lastPos = {
+		let n = performance.now(), r = xn(e);
+		r && (this.moveMs = this.lastPos?.moving ? Math.min(yn, Math.max(vn, n - this.lastPos.at)) : _n), this.lastPos = {
 			value: t,
 			at: n,
 			moving: r
@@ -2354,7 +2355,7 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
 	}
 	firstUpdated() {
 		let e = this.renderRoot.querySelector(".surface"), t = -1;
-		this.detach = qt(e, {
+		this.detach = Kt(e, {
 			axis: () => this.dragAxis,
 			arm: () => z("selection"),
 			tap: (t) => {
@@ -2401,13 +2402,13 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
 	get coverStyle() {
 		if (!this.isCover) return;
 		let e = this.config.cover_style;
-		if (e && e in gn) return e;
+		if (e && e in hn) return e;
 		let t = this.stateOf(this.config.entity)?.attributes.device_class;
 		return t === "curtain" ? "curtain" : t === "shutter" ? "shutter" : "blind";
 	}
 	get motion() {
 		let e = this.coverStyle;
-		return e ? gn[e] : void 0;
+		return e ? hn[e] : void 0;
 	}
 	get horizontal() {
 		return this.motion === "split" || this.motion === "side";
@@ -2433,7 +2434,7 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
 		return I(this.config.entity) === "cover" && !!this.config.cover_buttons;
 	}
 	renderCoverButtons(e) {
-		let t = this.config.entity, n = e?.attributes ?? {}, r = n.supported_features ?? 11, i = n.current_position, a = Sn(e), o = !e || ut(e), s = !a && (i === void 0 ? e?.state === "open" : i >= 100), c = !a && (i === void 0 ? e?.state === "closed" : i <= 0), [l, u] = {
+		let t = this.config.entity, n = e?.attributes ?? {}, r = n.supported_features ?? 11, i = n.current_position, a = xn(e), o = !e || ut(e), s = !a && (i === void 0 ? e?.state === "open" : i >= 100), c = !a && (i === void 0 ? e?.state === "closed" : i <= 0), [l, u] = {
 			down: ["mdi:arrow-up", "mdi:arrow-down"],
 			up: ["mdi:arrow-down", "mdi:arrow-up"],
 			split: ["mdi:arrow-split-vertical", "mdi:arrow-collapse-horizontal"],
@@ -2447,9 +2448,9 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
       </button>`;
 		return k`
       <div class="cover-btns" data-no-gesture>
-        ${r & pn ? f("open_cover", l, Y(this.hass, "open_cover"), s, d) : M}
-        ${r & hn ? f("stop_cover", "mdi:stop", Y(this.hass, "stop_cover"), !a, a ? "stop live" : "stop") : M}
-        ${r & mn ? f("close_cover", u, Y(this.hass, "close_cover"), c, d) : M}
+        ${r & fn ? f("open_cover", l, Y(this.hass, "open_cover"), s, d) : M}
+        ${r & mn ? f("stop_cover", "mdi:stop", Y(this.hass, "stop_cover"), !a, a ? "stop live" : "stop") : M}
+        ${r & pn ? f("close_cover", u, Y(this.hass, "close_cover"), c, d) : M}
       </div>
     `;
 	}
@@ -2457,33 +2458,33 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
 		return this.view ? [...super.watched(), "sun.sun"] : super.watched();
 	}
 	renderView() {
-		let e = this.hass?.states["sun.sun"]?.state === "below_horizon", t = Yt(this.config.view) ? this.config.view : "garden";
+		let e = this.hass?.states["sun.sun"]?.state === "below_horizon", t = Jt(this.config.view) ? this.config.view : "garden";
 		return k`
       <div class="view ${e ? "night" : "day"} ${this.view === "image" ? "photo" : t}">
-        ${this.view === "image" ? k`<img src=${this.config.view_image} alt="" draggable="false" />` : an(t, e)}
+        ${this.view === "image" ? k`<img src=${this.config.view_image} alt="" draggable="false" />` : rn(t, e)}
       </div>
     `;
 	}
 	renderPanel(e) {
 		let t = this.dragValue === void 0 ? "" : "dragging";
-		switch (gn[e]) {
+		switch (hn[e]) {
 			case "split": return k`<div class="rod"></div>${["start", "end"].map((e) => k`<div class="drape ${e} ${t}"></div>`)}`;
 			case "side": return k`<div class="rod"></div><div class="drape single ${this.side} ${t}"></div>`;
 			default: return k`<div class="fill ${t}"></div>${e === "shutter" ? k`<div class="box"></div>` : M}`;
 		}
 	}
 	render() {
-		let e = this.stateOf(this.config.entity), t = this.slider, n = this.dragValue ?? t?.value, r = this.isCover, i = this.view, a = this.coverStyle, o = this.horizontal, s = !r && (this.dragValue === void 0 ? dt(e) : this.dragValue > 0), c = this.hass && this.config.entity && e ? cn(this.hass, this.config.entity) : "", l = fn.has(I(this.config.entity)), u = mt(e, this.tpl.get("name") || void 0), d = (this.config.badge === void 0 ? void 0 : this.tpl.get("badge") ?? "") ?? (l ? "" : r ? `${n}%` : c), f = this.config.secondary === void 0 ? r ? `${n}% ${c}` : this.coverButtons ? c : t && s && n !== void 0 ? `${n}%` : "" : this.tpl.get("secondary") ?? "", p = i && !o ? 100 - (n ?? 0) : t ? n ?? 0 : s ? 100 : 0, m = this.tpl.get("color")?.trim(), h = this.coverButtons, g = r && this.dragValue === void 0 && Sn(e);
+		let e = this.stateOf(this.config.entity), t = this.slider, n = this.dragValue ?? t?.value, r = this.isCover, i = this.view, a = this.coverStyle, o = this.horizontal, s = !r && (this.dragValue === void 0 ? dt(e) : this.dragValue > 0), c = this.hass && this.config.entity && e ? sn(this.hass, this.config.entity) : "", l = dn.has(I(this.config.entity)), u = mt(e, this.tpl.get("name") || void 0), d = (this.config.badge === void 0 ? void 0 : this.tpl.get("badge") ?? "") ?? (l ? "" : r ? `${n}%` : c), f = this.config.secondary === void 0 ? r ? `${n}% ${c}` : this.coverButtons ? c : t && s && n !== void 0 ? `${n}%` : "" : this.tpl.get("secondary") ?? "", p = i && !o ? 100 - (n ?? 0) : t ? n ?? 0 : s ? 100 : 0, m = this.tpl.get("color")?.trim(), h = this.coverButtons, g = r && this.dragValue === void 0 && xn(e);
 		return k`
       <div
-        class="surface ${this.layout} ${s ? "on" : ""} ${r ? "cover" : ""} ${i ? "window" : ""} ${a ? `style-${a} side-${this.side}` : ""} ${a === "curtain" ? "curtain" : ""} ${a && _n.has(a) ? "fabric" : ""} ${g ? "moving" : ""} ${h ? "has-btns" : ""} ${this.config.fill === !1 ? "nofill" : ""} ${ut(e) && this.config.entity ? "unavailable" : ""}"
+        class="surface ${this.layout} ${s ? "on" : ""} ${r ? "cover" : ""} ${i ? "window" : ""} ${a ? `style-${a} side-${this.side}` : ""} ${a === "curtain" ? "curtain" : ""} ${a && gn.has(a) ? "fabric" : ""} ${g ? "moving" : ""} ${h ? "has-btns" : ""} ${this.config.fill === !1 ? "nofill" : ""} ${ut(e) && this.config.entity ? "unavailable" : ""}"
         style=${ct({
 			"--domain": L(m) ?? ht(e),
 			"--gc-icon-on": vt(m),
 			"--fill": `${p}%`,
 			"--closed": `${(100 - (n ?? 0)) / 100}`,
-			"--gc-fabric": a && _n.has(a) ? L(m) : void 0,
-			"--slat": a === "venetian" ? `${xn(e?.attributes.current_tilt_position)}px` : void 0,
+			"--gc-fabric": a && gn.has(a) ? L(m) : void 0,
+			"--slat": a === "venetian" ? `${bn(e?.attributes.current_tilt_position)}px` : void 0,
 			"--gc-move": g ? `${Math.round(this.moveMs)}ms` : void 0
 		})}
         role="button"
@@ -2492,7 +2493,7 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
       >
         ${i ? this.renderView() : M}
         ${i ? this.renderPanel(a) : k`<div class="fill ${this.dragValue === void 0 ? "" : "dragging"}"></div>`}
-        <div class="icon"><ha-icon .icon=${pt(e, dn(this.tpl.get("icon")))}></ha-icon></div>
+        <div class="icon"><ha-icon .icon=${pt(e, un(this.tpl.get("icon")))}></ha-icon></div>
         <div class="text">
           <div class="name">${u}</div>
           ${f ? k`<div class="meta">${f}</div>` : M}
@@ -2503,7 +2504,7 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
     `;
 	}
 	static {
-		this.styles = [W, b`
+		this.styles = [W, x`
       :host { height: 100%; container-type: inline-size; }
       .surface {
         height: 100%;
@@ -2957,21 +2958,21 @@ var ln = (e) => typeof e == "string" && /\{\{|\{%/.test(e), un = class {
     `];
 	}
 };
-customElements.define("glide-button", wn);
+customElements.define("glide-button", Cn);
 //#endregion
 //#region src/cards/sheet.ts
-var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
+var wn = 120, Tn = .6, En = [
 	"hass-more-info",
 	"show-dialog",
 	"hass-notification",
 	"hass-action",
 	"ll-custom"
-], kn = CSS.supports?.("animation-timing-function", "linear(0, 1)"), An = (e, t) => kn ? Tt(e, t) : {
+], Dn = CSS.supports?.("animation-timing-function", "linear(0, 1)"), On = (e, t) => Dn ? wt(e, t) : {
 	easing: "cubic-bezier(.2,.9,.25,1)",
 	duration: 420
-}, jn = 0, Mn = (e) => {
-	jn = Math.max(0, jn + (e ? 1 : -1)), document.documentElement.style.overflow = jn ? "hidden" : "";
-}, Nn = class extends G {
+}, kn = 0, An = (e) => {
+	kn = Math.max(0, kn + (e ? 1 : -1)), document.documentElement.style.overflow = kn ? "hidden" : "";
+}, jn = class extends G {
 	static {
 		this.properties = {
 			...G.properties,
@@ -2993,20 +2994,14 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 			});
 			n.__glideForwarded = !0, t.dispatchEvent(n);
 		};
-		for (let e of On) this.addEventListener(e, this.forward);
+		for (let e of En) this.addEventListener(e, this.forward);
 		this.addEventListener("keydown", (e) => e.key === "Escape" && this.requestClose());
 	}
 	disconnectedCallback() {
 		super.disconnectedCallback(), this.lock(!1);
 	}
 	lock(e) {
-		this.locked === e || e && !this.isConnected || (this.locked = e, Mn(e));
-	}
-	willUpdate(e) {
-		super.willUpdate(e), this.config && this.setAttribute("position", this.config.position ?? "auto");
-	}
-	get bottomSheet() {
-		return this.config?.position === "bottom" || !matchMedia(Tn).matches;
+		this.locked === e || e && !this.isConnected || (this.locked = e, An(e));
 	}
 	setHass(e) {
 		this.hass = e;
@@ -3032,7 +3027,7 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 		this.open && (z("light"), history.state?.glidePopup ? history.back() : (history.replaceState(history.state, "", location.pathname + location.search), window.dispatchEvent(new CustomEvent("glide-hash"))));
 	}
 	updated(e) {
-		super.updated(e), e.has("open") && (e.get("open") !== void 0 || this.open) && (this.open ? (this.build(), this.origin = St, this.lock(!0), this.animateOpen()) : (this.lock(!1), this.animateClose()));
+		super.updated(e), e.has("open") && (e.get("open") !== void 0 || this.open) && (this.open ? (this.build(), this.lock(!0), this.animateOpen()) : (this.lock(!1), this.animateClose()));
 	}
 	get panel() {
 		return this.renderRoot.querySelector(".panel");
@@ -3047,62 +3042,20 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 			duration: 250,
 			fill: "backwards"
 		}), V()) return;
-		let { easing: t, duration: n } = An(), r = this.origin, i = e.getBoundingClientRect();
-		if (r && r.width && r.bottom > 0 && r.top < innerHeight && this.config.position !== "bottom") {
-			let a = `translate(${r.left - i.left}px, ${r.top - i.top}px) scale(${r.width / i.width}, ${r.height / i.height})`;
-			e.style.transformOrigin = "0 0", e.animate([{
-				transform: a,
-				opacity: .5
-			}, {
-				transform: "none",
-				opacity: 1
-			}], {
-				duration: n,
-				easing: t,
-				fill: "backwards"
-			}).finished.then(() => e.style.transformOrigin = "", () => e.style.transformOrigin = ""), this.renderRoot.querySelector(".content")?.animate([
-				{ opacity: 0 },
-				{
-					opacity: 0,
-					offset: .35
-				},
-				{ opacity: 1 }
-			], {
-				duration: n,
-				fill: "backwards"
-			});
-		} else this.bottomSheet ? e.animate([{ transform: "translateY(100%)" }, { transform: "none" }], {
-			duration: n,
-			easing: t,
-			fill: "backwards"
-		}) : e.animate([{
-			transform: "scale(.92)",
-			opacity: 0
-		}, {
-			transform: "none",
-			opacity: 1
-		}], {
+		let { easing: t, duration: n } = On();
+		e.animate([{ transform: "translateY(100%)" }, { transform: "none" }], {
 			duration: n,
 			easing: t,
 			fill: "backwards"
 		});
 	}
 	animateClose() {
-		let e = this.panel, t = e.style.transform || "none", n = this.bottomSheet ? {
-			transform: "translateY(100%)",
-			opacity: 1
-		} : {
-			transform: "scale(.94)",
-			opacity: 0
-		}, r = V() ? 0 : 260;
+		let e = this.panel, t = e.style.transform || "none", n = V() ? 0 : 260;
 		this.scrim.animate([{ opacity: getComputedStyle(this.scrim).opacity }, { opacity: 0 }], {
-			duration: r,
+			duration: n,
 			fill: "forwards"
-		}), e.animate([{
-			transform: t,
-			opacity: 1
-		}, n], {
-			duration: r,
+		}), e.animate([{ transform: t }, { transform: "translateY(100%)" }], {
+			duration: n,
 			easing: "cubic-bezier(.4,0,.8,.4)",
 			fill: "forwards"
 		}).finished.then(() => {
@@ -3110,7 +3063,7 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 		}).catch(() => {});
 	}
 	onDragStart(e) {
-		if (!this.bottomSheet || e.button !== 0 || e.target.closest("button")) return;
+		if (e.button !== 0 || e.target.closest("button")) return;
 		let t = this.panel, n = e.currentTarget, r = e.clientY, i = {
 			y: r,
 			t: e.timeStamp
@@ -3126,8 +3079,8 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 			let s = o > 0 ? o : o * .2;
 			t.style.transform = `translateY(${s}px)`, this.scrim.style.opacity = String(1 - Math.max(0, o) / t.offsetHeight);
 		}, c = () => {
-			if (n.removeEventListener("pointermove", s), n.removeEventListener("pointerup", c), n.removeEventListener("pointercancel", c), this.scrim.style.opacity = "", o > En || a > Dn) return this.requestClose();
-			let { easing: e, duration: r } = An(260, 24), i = t.style.transform;
+			if (n.removeEventListener("pointermove", s), n.removeEventListener("pointerup", c), n.removeEventListener("pointercancel", c), this.scrim.style.opacity = "", o > wn || a > Tn) return this.requestClose();
+			let { easing: e, duration: r } = On(260, 24), i = t.style.transform;
 			t.style.transform = "", t.animate([{ transform: i }, { transform: "none" }], {
 				duration: r,
 				easing: e
@@ -3153,7 +3106,7 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
             ${e.icon || t ? k`<div class="icon"><ha-icon .icon=${e.icon ?? pt(t)}></ha-icon></div>` : M}
             <div class="titles">
               <div class="title">${e.title ?? ""}</div>
-              ${t && this.hass ? k`<div class="meta">${cn(this.hass, e.entity)}</div>` : M}
+              ${t && this.hass ? k`<div class="meta">${sn(this.hass, e.entity)}</div>` : M}
             </div>
             <button class="close" aria-label=${Y(this.hass, "close")} @click=${() => this.requestClose()}>
               <ha-icon icon="mdi:close" .icon=${"mdi:close"}></ha-icon>
@@ -3165,7 +3118,7 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
     `;
 	}
 	static {
-		this.styles = [W, b`
+		this.styles = [W, x`
       :host {
         position: fixed;
         inset: 0;
@@ -3254,51 +3207,38 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
       }
       .content > * { grid-column: span var(--cols, 12); grid-row: span var(--rows, 1); min-width: 0; }
       @media (min-width: 768px) {
+        /* Still a bottom sheet, centred at a readable width. */
         .panel {
-          inset: 50% auto auto 50%;
-          bottom: auto;
+          inset: auto auto 0 50%;
           width: min(600px, 92vw);
           max-height: 85dvh;
-          translate: -50% -50%;
-          border-radius: var(--gc-radius);
-          border-bottom: 1px solid var(--gc-border);
-        }
-        .grabber { visibility: hidden; height: 0; margin: 6px; }
-        .handle { cursor: default; }
-        /* position: bottom keeps the sheet on the bottom edge, centred at the same width. */
-        :host([position="bottom"]) .panel {
-          inset: auto auto 0 50%;
           translate: -50% 0;
-          border-radius: var(--gc-radius) var(--gc-radius) 0 0;
-          border-bottom: 0;
         }
-        :host([position="bottom"]) .grabber { visibility: inherit; height: 5px; margin: 8px auto 2px; }
-        :host([position="bottom"]) .handle { cursor: grab; }
       }
     `];
 	}
 };
-customElements.define("glide-sheet", Nn);
-var X = /* @__PURE__ */ new Map(), Pn, Fn = (e) => e.startsWith("#") ? e : `#${e}`, In = () => document.querySelector("home-assistant")?.shadowRoot ?? document.body;
-function Ln(e, t) {
-	let n = Fn(e.hash), r = X.get(n);
+customElements.define("glide-sheet", jn);
+var X = /* @__PURE__ */ new Map(), Mn, Nn = (e) => e.startsWith("#") ? e : `#${e}`, Pn = () => document.querySelector("home-assistant")?.shadowRoot ?? document.body;
+function Fn(e, t) {
+	let n = Nn(e.hash), r = X.get(n);
 	if (!r) {
 		let e = document.createElement("glide-sheet");
-		In().appendChild(e), X.set(n, r = {
+		Pn().appendChild(e), X.set(n, r = {
 			el: e,
 			owners: /* @__PURE__ */ new Set()
 		});
 	}
-	r.owners.add(t), r.el.setConfig(e), Pn && r.el.setHass(Pn), Bn();
+	r.owners.add(t), r.el.setConfig(e), Mn && r.el.setHass(Mn), Rn();
 }
-function Rn(e, t) {
-	let n = X.get(Fn(e));
-	n && n.owners.delete(t) && !n.owners.size && (n.el.remove(), X.delete(Fn(e)));
+function In(e, t) {
+	let n = X.get(Nn(e));
+	n && n.owners.delete(t) && !n.owners.size && (n.el.remove(), X.delete(Nn(e)));
 }
-function zn(e) {
-	Pn = e, X.forEach(({ el: t }) => t.setHass(e));
+function Ln(e) {
+	Mn = e, X.forEach(({ el: t }) => t.setHass(e));
 }
-function Bn() {
+function Rn() {
 	let e = decodeURIComponent(location.hash);
 	X.forEach(({ el: t }, n) => t.open = n === e);
 }
@@ -3307,28 +3247,28 @@ for (let e of [
 	"hashchange",
 	"glide-hash",
 	"location-changed"
-]) window.addEventListener(e, Bn);
+]) window.addEventListener(e, Rn);
 //#endregion
 //#region src/cards/popup.ts
-var Vn = class extends G {
+var zn = class extends G {
 	constructor(...e) {
 		super(...e), this.cardType = "popup";
 	}
 	setConfig(e) {
 		if (!e.hash) throw Error("Pop-up needs a `hash`, e.g. #living-room");
 		if (!Array.isArray(e.cards)) throw Error("Pop-up needs a `cards` list");
-		super.setConfig(e), this.isConnected && Ln(e, this);
+		super.setConfig(e), this.isConnected && Fn(e, this);
 	}
 	shouldUpdate(e) {
-		return e.has("hass") && this.hass && zn(this.hass), e.has("editMode") || e.has("config") || super.shouldUpdate(e);
+		return e.has("hass") && this.hass && Ln(this.hass), e.has("editMode") || e.has("config") || super.shouldUpdate(e);
 	}
 	connectedCallback() {
-		super.connectedCallback(), this.config && Ln(this.config, this);
+		super.connectedCallback(), this.config && Fn(this.config, this);
 	}
 	disconnectedCallback() {
 		super.disconnectedCallback();
 		let e = this.config?.hash;
-		setTimeout(() => !this.isConnected && e && Rn(e, this), 1e3);
+		setTimeout(() => !this.isConnected && e && In(e, this), 1e3);
 	}
 	updated(e) {
 		if (super.updated(e), e.has("editMode")) {
@@ -3355,12 +3295,12 @@ var Vn = class extends G {
           <div class="name">${e.title ?? Y(this.hass, "popup_placeholder")}</div>
           <div class="meta">${e.hash} · ${e.cards.length} cards</div>
         </div>
-        <button @click=${(t) => Ct(e.hash, t.currentTarget)}>Preview</button>
+        <button @click=${() => St(e.hash)}>Preview</button>
       </div>
     `;
 	}
 	static {
-		this.styles = [W, b`
+		this.styles = [W, x`
       .surface {
         display: flex;
         align-items: center;
@@ -3383,20 +3323,20 @@ var Vn = class extends G {
     `];
 	}
 };
-customElements.define("glide-popup", Vn);
+customElements.define("glide-popup", zn);
 //#endregion
 //#region src/cards/nav.ts
-var Hn = [
+var Bn = [
 	"popstate",
 	"location-changed",
 	"glide-hash"
-], Un = () => location.pathname + location.hash, Wn = CSS.supports?.("animation-timing-function", "linear(0, 1)") ? Tt(260, 26) : {
+], Vn = () => location.pathname + location.hash, Hn = CSS.supports?.("animation-timing-function", "linear(0, 1)") ? wt(260, 26) : {
 	easing: "cubic-bezier(.3,1.3,.4,1)",
 	duration: 450
-}, Gn, Kn = 1e3, qn = 450, Jn = (e) => 1 - (1 - e) ** 3, Yn = 12, Xn = (e) => !!e && e.width > 0 && e.height > 0, Zn = 8, Qn = CSS.supports?.("animation-timing-function", "linear(0, 1)") ? Tt(320, 28) : {
+}, Un, Wn = 1e3, Gn = 450, Kn = (e) => 1 - (1 - e) ** 3, qn = 12, Jn = (e) => !!e && e.width > 0 && e.height > 0, Yn = 8, Xn = CSS.supports?.("animation-timing-function", "linear(0, 1)") ? wt(320, 28) : {
 	easing: "cubic-bezier(.2,.9,.25,1.1)",
 	duration: 320
-}, $n = (e) => e.startsWith("#") ? decodeURIComponent(location.hash) === e : !location.hash && (location.pathname === e || location.pathname === e.replace(/\/$/, "")), er = class extends G {
+}, Zn = (e) => e.startsWith("#") ? decodeURIComponent(location.hash) === e : !location.hash && (location.pathname === e || location.pathname === e.replace(/\/$/, "")), Qn = class extends G {
 	constructor(...e) {
 		super(...e), this.cardType = "nav", this.onRoute = () => {
 			this.closeMenu(), this.requestUpdate();
@@ -3439,23 +3379,23 @@ var Hn = [
 			}
 			n && e.querySelector("button")?.focus(), !V() && e.animate([{
 				opacity: 0,
-				transform: `translateY(${Zn}px) scale(.92)`
+				transform: `translateY(${Yn}px) scale(.92)`
 			}, {
 				opacity: 1,
 				transform: "none"
-			}], Qn);
+			}], Xn);
 		});
 	}
 	menuTarget() {
 		let e = this.menuAnchor?.getBoundingClientRect();
 		if (!e) return;
-		let t = this.renderRoot.querySelector("nav")?.getBoundingClientRect(), n = t && t.width ? t.left + t.width / 2 : innerWidth / 2, r = Math.min(innerHeight - Zn, e.top - Zn);
+		let t = this.renderRoot.querySelector("nav")?.getBoundingClientRect(), n = t && t.width ? t.left + t.width / 2 : innerWidth / 2, r = Math.min(innerHeight - Yn, e.top - Yn);
 		return e.left + e.width / 2 > n ? {
 			bottom: r,
-			right: Math.min(innerWidth - Zn, e.right)
+			right: Math.min(innerWidth - Yn, e.right)
 		} : {
 			bottom: r,
-			left: Math.max(Zn, e.left)
+			left: Math.max(Yn, e.left)
 		};
 	}
 	menuPosition() {
@@ -3465,12 +3405,12 @@ var Hn = [
 		return e.right === void 0 ? `${r} left: ${e.left + t}px; transform-origin: bottom left;` : `${r} right: ${innerWidth - e.right + t}px; transform-origin: bottom right;`;
 	}
 	connectedCallback() {
-		super.connectedCallback(), this.observe(), Hn.forEach((e) => window.addEventListener(e, this.onRoute)), this.rendered !== void 0 && this.rendered !== Un() && (this.stale = !0, this.requestUpdate());
+		super.connectedCallback(), this.observe(), Bn.forEach((e) => window.addEventListener(e, this.onRoute)), this.rendered !== void 0 && this.rendered !== Vn() && (this.stale = !0, this.requestUpdate());
 	}
 	disconnectedCallback() {
 		super.disconnectedCallback(), this.closeMenu(), this.resizer?.disconnect();
 		let e = this.scroller();
-		e && this.stopGlide(e), Hn.forEach((e) => window.removeEventListener(e, this.onRoute));
+		e && this.stopGlide(e), Bn.forEach((e) => window.removeEventListener(e, this.onRoute));
 	}
 	getGridOptions() {
 		return {
@@ -3482,7 +3422,7 @@ var Hn = [
 		return 1;
 	}
 	isCurrent(e) {
-		return e.items ? !this.config.items.some((e) => !e.items && $n(e.navigation_path)) && e.items.some((e) => $n(e.navigation_path)) : $n(e.navigation_path);
+		return e.items ? !this.config.items.some((e) => !e.items && Zn(e.navigation_path)) && e.items.some((e) => Zn(e.navigation_path)) : Zn(e.navigation_path);
 	}
 	indRect() {
 		return this.renderRoot.querySelector(".ind")?.getBoundingClientRect();
@@ -3498,12 +3438,12 @@ var Hn = [
 		let t = e.querySelector("button.active");
 		if (!t || !e.classList.contains("overflow")) return !0;
 		let n = e.getBoundingClientRect(), r = t.getBoundingClientRect();
-		return r.left >= n.left + Yn - 2 && r.right <= n.right - Yn + 2;
+		return r.left >= n.left + qn - 2 && r.right <= n.right - qn + 2;
 	}
 	reveal(e) {
 		let t = this.scroller();
 		if (!t || t.clientWidth <= 0) return;
-		this.markOverflow(t), this.pending && (this.pending.scroll !== void 0 && (t.scrollLeft = this.pending.scroll), this.slide(this.pending.rect), this.pending = void 0, e = !0), e &&= !V(), this.centred = Un(), this.touched = !1, this.stopGlide(t);
+		this.markOverflow(t), this.pending && (this.pending.scroll !== void 0 && (t.scrollLeft = this.pending.scroll), this.slide(this.pending.rect), this.pending = void 0, e = !0), e &&= !V(), this.centred = Vn(), this.touched = !1, this.stopGlide(t);
 		let n = t.querySelector("button.active");
 		if (!n) return;
 		let r = t.getBoundingClientRect(), i = n.getBoundingClientRect(), a = t.scrollLeft;
@@ -3513,8 +3453,8 @@ var Hn = [
 		t.scrollLeft = a, t.style.scrollSnapType = "none";
 		let s = performance.now(), c = (e) => {
 			if (this.touched) return this.stopGlide(t);
-			let n = Math.min(1, (e - s) / qn);
-			t.scrollLeft = a + (o - a) * Jn(n), n < 1 ? this.glide = requestAnimationFrame(c) : (this.stopGlide(t), this.recheck());
+			let n = Math.min(1, (e - s) / Gn);
+			t.scrollLeft = a + (o - a) * Kn(n), n < 1 ? this.glide = requestAnimationFrame(c) : (this.stopGlide(t), this.recheck());
 		};
 		this.glide = requestAnimationFrame(c);
 	}
@@ -3523,17 +3463,17 @@ var Hn = [
 	}
 	recheck() {
 		let e = this.scroller();
-		e && (this.markOverflow(e), this.centred === Un() ? !this.touched && (this.glide !== void 0 || !this.inView(e)) && this.reveal(!0) : this.reveal(!1));
+		e && (this.markOverflow(e), this.centred === Vn() ? !this.touched && (this.glide !== void 0 || !this.inView(e)) && this.reveal(!0) : this.reveal(!1));
 	}
 	slide(e) {
 		let t = this.renderRoot.querySelector(".ind"), n = t?.getBoundingClientRect();
-		t && Xn(e) && Xn(n) && !V() && (Math.abs(e.left - n.left) + Math.abs(e.width - n.width) <= 1 || t.animate([{
+		t && Jn(e) && Jn(n) && !V() && (Math.abs(e.left - n.left) + Math.abs(e.width - n.width) <= 1 || t.animate([{
 			transform: `translateX(${e.left - n.left}px)`,
 			width: `${e.width}px`
 		}, {
 			transform: "none",
 			width: "100%"
-		}], Wn));
+		}], Hn));
 	}
 	observe() {
 		let e = this.scroller();
@@ -3554,12 +3494,12 @@ var Hn = [
 		super.willUpdate(e), this.from = this.stale ? void 0 : this.indRect();
 	}
 	updated() {
-		let e = Un(), t = this.rendered === void 0, n = !t && this.rendered !== e;
+		let e = Vn(), t = this.rendered === void 0, n = !t && this.rendered !== e;
 		this.rendered = e, this.stale = !1;
 		let r = this.scroller();
 		if (!r) return;
 		this.markOverflow(r);
-		let i = Gn && performance.now() - Gn.at < Kn ? Gn : void 0, a = n ? this.from : void 0, o = !a && (n || t) ? i : void 0, s = a ?? o?.rect;
+		let i = Un && performance.now() - Un.at < Wn ? Un : void 0, a = n ? this.from : void 0, o = !a && (n || t) ? i : void 0, s = a ?? o?.rect;
 		if (n || t) {
 			let e = r.clientWidth > 0;
 			this.pending = e || !s && !o ? void 0 : {
@@ -3569,13 +3509,13 @@ var Hn = [
 		}
 		this.observe(), this.centred !== e && this.reveal(!!this.centred || !!o);
 	}
-	go(e, t) {
-		let n = this.indRect(), r = this.scroller()?.scrollLeft ?? 0;
-		Gn = Xn(n) ? {
-			rect: n,
-			scroll: r,
+	go(e) {
+		let t = this.indRect(), n = this.scroller()?.scrollLeft ?? 0;
+		Un = Jn(t) ? {
+			rect: t,
+			scroll: n,
 			at: performance.now()
-		} : void 0, wt(e, t);
+		} : void 0, Ct(e);
 	}
 	tapFx(e) {
 		z("selection");
@@ -3596,7 +3536,7 @@ var Hn = [
         @click=${(t) => {
 			this.tapFx(t);
 			let r = t.currentTarget;
-			if (!e.items) return this.go(e.navigation_path, r);
+			if (!e.items) return this.go(e.navigation_path);
 			n ? this.closeMenu() : this.openMenu(e, r, t instanceof MouseEvent && !t.detail);
 		}}
       >
@@ -3608,16 +3548,14 @@ var Hn = [
     `;
 	}
 	menuItem(e) {
-		let t = $n(e.navigation_path);
+		let t = Zn(e.navigation_path);
 		return k`
       <button
         role="menuitem"
         class=${t ? "active" : ""}
         aria-current=${t ? "page" : "false"}
         @click=${(n) => {
-			this.tapFx(n);
-			let r = this.menuAnchor;
-			this.closeMenu(), t || this.go(e.navigation_path, r ?? n.currentTarget);
+			this.tapFx(n), this.closeMenu(), t || this.go(e.navigation_path);
 		}}
       >
         <ha-icon .icon=${e.icon}></ha-icon>
@@ -3639,7 +3577,7 @@ var Hn = [
     `;
 	}
 	static {
-		this.styles = [W, b`
+		this.styles = [W, x`
       nav {
         display: flex;
         padding: 4px;
@@ -3666,7 +3604,7 @@ var Hn = [
       }
       .scroller::-webkit-scrollbar { display: none; }
       .scroller.overflow {
-        padding-inline: ${Yn}px;
+        padding-inline: ${qn}px;
         mask-image: linear-gradient(to right, transparent, #000 18px, #000 calc(100% - 18px), transparent);
       }
       .pinned {
@@ -3768,10 +3706,10 @@ var Hn = [
     `];
 	}
 };
-customElements.define("glide-nav", er);
+customElements.define("glide-nav", Qn);
 //#endregion
 //#region src/cards/climate.ts
-var tr = {
+var $n = {
 	heat: "mdi:fire",
 	cool: "mdi:snowflake",
 	heat_cool: "mdi:alpha-a-circle-outline",
@@ -3779,13 +3717,13 @@ var tr = {
 	dry: "mdi:water-percent",
 	fan_only: "mdi:fan",
 	off: "mdi:power"
-}, Z = 270, Q = 135, nr = 80, rr = 700, ir = (e) => `\u2066${e}°\u2069`, ar = (e) => {
+}, Z = 270, Q = 135, er = 80, tr = 700, nr = (e) => `\u2066${e}°\u2069`, rr = (e) => {
 	let t = e * Math.PI / 180;
-	return [100 + nr * Math.cos(t), 100 + nr * Math.sin(t)];
-}, or = (e, t) => {
-	let [n, r] = ar(e), [i, a] = ar(t);
-	return `M ${n} ${r} A ${nr} ${nr} 0 ${+(t - e > 180)} 1 ${i} ${a}`;
-}, sr = class extends G {
+	return [100 + er * Math.cos(t), 100 + er * Math.sin(t)];
+}, ir = (e, t) => {
+	let [n, r] = rr(e), [i, a] = rr(t);
+	return `M ${n} ${r} A ${er} ${er} 0 ${+(t - e > 180)} 1 ${i} ${a}`;
+}, ar = class extends G {
 	constructor(...e) {
 		super(...e), this.cardType = "climate", this.timer = 0;
 	}
@@ -3841,7 +3779,7 @@ var tr = {
 				entity_id: this.config.entity,
 				temperature: this.pending
 			});
-		}, rr));
+		}, tr));
 	}
 	get target() {
 		return this.pending ?? this.s?.attributes.temperature;
@@ -3868,7 +3806,7 @@ var tr = {
 	render() {
 		let e = this.s;
 		if (!e) return k`<div class="surface empty">${this.config.entity}</div>`;
-		let t = e.attributes, { min: n, max: r, step: i } = this.range, a = this.target, o = e.state === "off", s = this.modeColor(e.state), c = Q + (a === void 0 ? 0 : (a - n) / (r - n)) * Z, [l, u] = ar(Q), [d, f] = ar(c), p = Number(t.current_temperature), m = t.current_temperature != null && Number.isFinite(p), [h, g] = ar(Q + Math.min(1, Math.max(0, (p - n) / (r - n))) * Z), _ = t.hvac_action, v = +(i < 1), y = a === void 0 ? "" : ir(a.toFixed(v)), ee = (e) => /[-־]$/.test(e) ? e : `${e} `, te = o || _ === "off" ? Y(this.hass, "off") : _ === "heating" ? ee(Y(this.hass, "heating")) + y : _ === "cooling" ? ee(Y(this.hass, "cooling")) + y : [Y(this.hass, _ === "idle" ? "idle" : e.state) ?? e.state, y].filter(Boolean).join(" · "), ne = !o && [
+		let t = e.attributes, { min: n, max: r, step: i } = this.range, a = this.target, o = e.state === "off", s = this.modeColor(e.state), c = Q + (a === void 0 ? 0 : (a - n) / (r - n)) * Z, [l, u] = rr(Q), [d, f] = rr(c), p = Number(t.current_temperature), m = t.current_temperature != null && Number.isFinite(p), [h, g] = rr(Q + Math.min(1, Math.max(0, (p - n) / (r - n))) * Z), _ = t.hvac_action, v = +(i < 1), y = a === void 0 ? "" : nr(a.toFixed(v)), b = (e) => /[-־]$/.test(e) ? e : `${e} `, ee = o || _ === "off" ? Y(this.hass, "off") : _ === "heating" ? b(Y(this.hass, "heating")) + y : _ === "cooling" ? b(Y(this.hass, "cooling")) + y : [Y(this.hass, _ === "idle" ? "idle" : e.state) ?? e.state, y].filter(Boolean).join(" · "), te = !o && [
 			"heating",
 			"cooling",
 			"drying",
@@ -3877,12 +3815,12 @@ var tr = {
 		return k`
       <div class="surface ${o ? "off" : ""}" style="--mode:${s}">
         <header>
-          <div class="icon"><ha-icon .icon=${tr[e.state] ?? "mdi:thermostat"}></ha-icon></div>
+          <div class="icon"><ha-icon .icon=${$n[e.state] ?? "mdi:thermostat"}></ha-icon></div>
           <div class="titles">
             <div class="name">${mt(e, this.config.name)}</div>
-            <div class="meta mode-text">${te}</div>
+            <div class="meta mode-text">${ee}</div>
           </div>
-          ${ne ? k`<div class="chip meta"><i></i>${Y(this.hass, "active")}</div>` : M}
+          ${te ? k`<div class="chip meta"><i></i>${Y(this.hass, "active")}</div>` : M}
         </header>
 
         <div class="dial">
@@ -3897,22 +3835,22 @@ var tr = {
                     <stop offset="1" style="stop-color:var(--mode)" />
                   </linearGradient>
                 </defs>
-                <path class="track" d=${or(Q, 405)} />`}
-              ${a === void 0 ? M : A`<path class="value" d=${or(Q, Math.max(135.5, c))} />`}
+                <path class="track" d=${ir(Q, 405)} />`}
+              ${a === void 0 ? M : A`<path class="value" d=${ir(Q, Math.max(135.5, c))} />`}
               ${m ? A`<circle class="room" cx=${h} cy=${g} r="4" />` : M}
               ${a === void 0 ? M : A`<circle class="knob" cx=${d} cy=${f} r="9" />`}
             </svg>
             <div class="readout">
               <div class="target ${o ? "dim" : ""}">${a === void 0 ? "--" : a.toFixed(v)}<sup>°</sup></div>
               <div class="meta label">${Y(this.hass, o ? "off" : "target")}</div>
-              ${t.current_temperature === void 0 ? M : k`<div class="meta current">${Y(this.hass, "current")} ${ir(typeof t.current_temperature == "number" ? t.current_temperature.toFixed(v) : t.current_temperature)}</div>`}
+              ${t.current_temperature === void 0 ? M : k`<div class="meta current">${Y(this.hass, "current")} ${nr(typeof t.current_temperature == "number" ? t.current_temperature.toFixed(v) : t.current_temperature)}</div>`}
             </div>
           </div>
         </div>
 
         <div class="steppers">
           <button class="round" aria-label="-" ?disabled=${o} @click=${() => a !== void 0 && this.setTarget(a - i)}><ha-icon icon="mdi:minus" .icon=${"mdi:minus"}></ha-icon></button>
-          <span class="meta">${o ? "" : k`${Y(this.hass, "step")}: ${ir(i)}`}</span>
+          <span class="meta">${o ? "" : k`${Y(this.hass, "step")}: ${nr(i)}`}</span>
           <button class="round" aria-label="+" ?disabled=${o} @click=${() => a !== void 0 && this.setTarget(a + i)}><ha-icon icon="mdi:plus" .icon=${"mdi:plus"}></ha-icon></button>
         </div>
 
@@ -3925,7 +3863,7 @@ var tr = {
 				hvac_mode: t
 			});
 		}}>
-                <ha-icon .icon=${tr[t] ?? "mdi:thermostat"}></ha-icon>
+                <ha-icon .icon=${$n[t] ?? "mdi:thermostat"}></ha-icon>
                 <span class="meta">${Y(this.hass, t) ?? t}</span>
               </button>
             `)}
@@ -3934,7 +3872,7 @@ var tr = {
     `;
 	}
 	static {
-		this.styles = [W, b`
+		this.styles = [W, x`
       :host { height: 100%; }
       .surface {
         position: relative; overflow: hidden; box-sizing: border-box;
@@ -4042,16 +3980,16 @@ var tr = {
     `];
 	}
 };
-customElements.define("glide-climate", sr);
+customElements.define("glide-climate", ar);
 //#endregion
 //#region src/cards/media.ts
-var cr = {
+var or = {
 	PAUSE: 1,
 	VOLUME_SET: 4,
 	PREV: 16,
 	NEXT: 32,
 	PLAY: 16384
-}, lr = (e) => `${Math.floor(e / 60)}:${String(Math.floor(e % 60)).padStart(2, "0")}`, ur = class extends G {
+}, sr = (e) => `${Math.floor(e / 60)}:${String(Math.floor(e % 60)).padStart(2, "0")}`, cr = class extends G {
 	constructor(...e) {
 		super(...e), this.cardType = "media", this.tick = 0;
 	}
@@ -4136,18 +4074,18 @@ var cr = {
 
         ${!n && i !== void 0 && a ? k`
               <div class="progress"><div style="width:${i / a * 100}%"></div></div>
-              <div class="times meta"><span>${lr(i)}</span><span>${lr(a)}</span></div>
+              <div class="times meta"><span>${sr(i)}</span><span>${sr(a)}</span></div>
             ` : M}
 
         <div class="controls">
-          ${r & cr.PREV ? k`<button aria-label="previous" @click=${() => this.call("media_previous_track")}><ha-icon icon="mdi:skip-previous" .icon=${"mdi:skip-previous"}></ha-icon></button>` : M}
+          ${r & or.PREV ? k`<button aria-label="previous" @click=${() => this.call("media_previous_track")}><ha-icon icon="mdi:skip-previous" .icon=${"mdi:skip-previous"}></ha-icon></button>` : M}
           <button class="play" aria-label=${s ? "pause" : "play"} @click=${() => this.call("media_play_pause")}>
             <ha-icon .icon=${s ? "mdi:pause" : "mdi:play"}></ha-icon>
           </button>
-          ${r & cr.NEXT ? k`<button aria-label="next" @click=${() => this.call("media_next_track")}><ha-icon icon="mdi:skip-next" .icon=${"mdi:skip-next"}></ha-icon></button>` : M}
+          ${r & or.NEXT ? k`<button aria-label="next" @click=${() => this.call("media_next_track")}><ha-icon icon="mdi:skip-next" .icon=${"mdi:skip-next"}></ha-icon></button>` : M}
         </div>
 
-        ${r & cr.VOLUME_SET ? k`
+        ${r & or.VOLUME_SET ? k`
               <div class="volume">
                 <ha-icon icon="mdi:volume-low" .icon=${"mdi:volume-low"}></ha-icon>
                 <div class="track" role="slider" aria-label="volume" aria-valuenow=${o} aria-valuemin="0" aria-valuemax="100"
@@ -4161,7 +4099,7 @@ var cr = {
     `;
 	}
 	static {
-		this.styles = [W, b`
+		this.styles = [W, x`
       :host { height: 100%; }
       .surface { height: 100%; padding: 18px; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
       .art-bg {
@@ -4229,51 +4167,51 @@ var cr = {
     `];
 	}
 };
-customElements.define("glide-media", ur);
+customElements.define("glide-media", cr);
 //#endregion
 //#region src/core/conditions.ts
-var dr = (e) => (Array.isArray(e) ? e : [e]).map(String);
-function fr(e, t) {
+var lr = (e) => (Array.isArray(e) ? e : [e]).map(String);
+function ur(e, t) {
 	switch (t.condition) {
 		case "state": {
 			let n = e.states[t.entity]?.state ?? "unavailable";
-			return !(t.state !== void 0 && !dr(t.state).includes(n) || t.state_not !== void 0 && dr(t.state_not).includes(n));
+			return !(t.state !== void 0 && !lr(t.state).includes(n) || t.state_not !== void 0 && lr(t.state_not).includes(n));
 		}
 		case "numeric_state": {
 			let n = Number(e.states[t.entity]?.state);
 			return !(Number.isNaN(n) || t.above !== void 0 && !(n > t.above) || t.below !== void 0 && !(n < t.below));
 		}
-		case "and": return t.conditions.every((t) => fr(e, t));
-		case "or": return t.conditions.some((t) => fr(e, t));
+		case "and": return t.conditions.every((t) => ur(e, t));
+		case "or": return t.conditions.some((t) => ur(e, t));
 		default: return !0;
 	}
 }
-var pr = (e, t) => !t?.length || !!e && t.every((t) => fr(e, t));
-function mr(e) {
-	return (e ?? []).flatMap((e) => e.condition === "and" || e.condition === "or" ? mr(e.conditions) : [e.entity]);
+var dr = (e, t) => !t?.length || !!e && t.every((t) => ur(e, t));
+function fr(e) {
+	return (e ?? []).flatMap((e) => e.condition === "and" || e.condition === "or" ? fr(e.conditions) : [e.entity]);
 }
 //#endregion
 //#region src/core/format.ts
-var hr = (e) => e.locale?.language ?? e.language ?? "en", gr = (e) => e.attributes.device_class === "timestamp" || /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(e.state), _r = (e, t = "en") => new Intl.DateTimeFormat(t, {
+var pr = (e) => e.locale?.language ?? e.language ?? "en", mr = (e) => e.attributes.device_class === "timestamp" || /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(e.state), hr = (e, t = "en") => new Intl.DateTimeFormat(t, {
 	hour: "2-digit",
 	minute: "2-digit",
 	hourCycle: "h23"
 }).format(new Date(e));
-function vr(e, t, n) {
+function gr(e, t, n) {
 	let r = e;
 	if (n) {
 		let i = t.attributes[n];
-		return i === void 0 ? "" : typeof i == "string" && /^\d{4}-\d{2}-\d{2}T/.test(i) ? _r(i, hr(e)) : r.formatEntityAttributeValue?.(t, n) ?? String(i);
+		return i === void 0 ? "" : typeof i == "string" && /^\d{4}-\d{2}-\d{2}T/.test(i) ? hr(i, pr(e)) : r.formatEntityAttributeValue?.(t, n) ?? String(i);
 	}
 	if (I(t.entity_id) === "weather") {
-		let n = t.attributes.temperature, r = cn(e, t.entity_id);
+		let n = t.attributes.temperature, r = sn(e, t.entity_id);
 		return n === void 0 ? r : `${r} · ${n} ${t.attributes.temperature_unit ?? "°C"}`;
 	}
-	return gr(t) && !Number.isNaN(Date.parse(t.state)) ? _r(t.state, hr(e)) : cn(e, t.entity_id);
+	return mr(t) && !Number.isNaN(Date.parse(t.state)) ? hr(t.state, pr(e)) : sn(e, t.entity_id);
 }
 //#endregion
 //#region src/cards/chips.ts
-var yr = class extends G {
+var _r = class extends G {
 	constructor(...e) {
 		super(...e), this.cardType = "chips", this.detachers = [], this.shown = [], this.boundKey = "";
 	}
@@ -4282,7 +4220,7 @@ var yr = class extends G {
 		super.setConfig(e);
 	}
 	watched() {
-		return this.config.chips.flatMap((e) => [e.entity, ...mr(e.visibility)]);
+		return this.config.chips.flatMap((e) => [e.entity, ...fr(e.visibility)]);
 	}
 	getGridOptions() {
 		return {
@@ -4294,7 +4232,7 @@ var yr = class extends G {
 		return 1;
 	}
 	willUpdate(e) {
-		super.willUpdate(e), this.shown = this.config.chips.flatMap((e, t) => pr(this.hass, e.visibility) ? [t] : []);
+		super.willUpdate(e), this.shown = this.config.chips.flatMap((e, t) => dr(this.hass, e.visibility) ? [t] : []);
 	}
 	updated(e) {
 		super.updated(e), (e.has("config") || this.shown.join() !== this.boundKey) && this.bind();
@@ -4314,7 +4252,7 @@ var yr = class extends G {
 				let r = n[`${t}_action`] ?? { action: "more-info" };
 				this.hass && B(e, this.hass, r, n.entity);
 			};
-			this.detachers.push(qt(e, {
+			this.detachers.push(Kt(e, {
 				tap: (t) => {
 					this.playTapFx(e, t, { icon: e.querySelector("ha-icon") }), r("tap");
 				},
@@ -4323,7 +4261,7 @@ var yr = class extends G {
 		});
 	}
 	renderChip(e) {
-		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? vr(this.hass, t, e.attribute) : "");
+		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? gr(this.hass, t, e.attribute) : "");
 		return k`
       <div class="chip surface" role="button" tabindex="0" style="--chip:${L(e.color) ?? (t ? ht(t) : "var(--gc-accent)")}">
         <ha-icon .icon=${pt(t, e.icon)}></ha-icon>
@@ -4338,7 +4276,7 @@ var yr = class extends G {
 		return k`<div class="row ${this.config.align === "start" ? "start" : ""}">${this.shown.map((e) => this.renderChip(this.config.chips[e]))}</div>`;
 	}
 	static {
-		this.styles = [W, b`
+		this.styles = [W, x`
       .row {
         display: flex;
         gap: 10px;
@@ -4387,10 +4325,10 @@ var yr = class extends G {
     `];
 	}
 };
-customElements.define("glide-chips", yr);
+customElements.define("glide-chips", _r);
 //#endregion
 //#region src/cards/title.ts
-var br = class extends G {
+var vr = class extends G {
 	constructor(...e) {
 		super(...e), this.cardType = "title";
 	}
@@ -4417,7 +4355,7 @@ var br = class extends G {
     `;
 	}
 	static {
-		this.styles = b`
+		this.styles = x`
     :host { display: block; font-family: var(--gc-font); color: var(--gc-text); }
     .wrap { padding: 12px 4px 4px; text-align: center; }
     .wrap.start { text-align: start; }
@@ -4440,13 +4378,13 @@ var br = class extends G {
   `;
 	}
 };
-customElements.define("glide-title", br);
+customElements.define("glide-title", vr);
 //#endregion
 //#region src/cards/heading.ts
-var xr = (e) => e instanceof MouseEvent && e.detail ? {
+var yr = (e) => e instanceof MouseEvent && e.detail ? {
 	x: e.clientX,
 	y: e.clientY
-} : void 0, Sr = class extends G {
+} : void 0, br = class extends G {
 	constructor(...e) {
 		super(...e), this.cardType = "heading";
 	}
@@ -4468,10 +4406,10 @@ var xr = (e) => e instanceof MouseEvent && e.detail ? {
 	}
 	tap(e) {
 		let t = this.config.tap_action, n = e.currentTarget;
-		this.playTapFx(n, xr(e), { icon: n.querySelector(".icon") }), t && this.hass && B(e.currentTarget, this.hass, t);
+		this.playTapFx(n, yr(e), { icon: n.querySelector(".icon") }), t && this.hass && B(e.currentTarget, this.hass, t);
 	}
 	badge(e) {
-		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? vr(this.hass, t, e.attribute) : "");
+		let t = this.stateOf(e.entity), n = e.value ?? (t && this.hass ? gr(this.hass, t, e.attribute) : "");
 		return k`
       <button
         class="badge surface"
@@ -4479,7 +4417,7 @@ var xr = (e) => e instanceof MouseEvent && e.detail ? {
         @click=${(t) => {
 			t.stopPropagation();
 			let n = t.currentTarget;
-			this.playTapFx(n, xr(t), { icon: n.querySelector("ha-icon") }), this.hass && B(t.currentTarget, this.hass, e.tap_action ?? { action: "more-info" }, e.entity);
+			this.playTapFx(n, yr(t), { icon: n.querySelector("ha-icon") }), this.hass && B(t.currentTarget, this.hass, e.tap_action ?? { action: "more-info" }, e.entity);
 		}}
       >
         ${e.icon || t ? k`<ha-icon .icon=${pt(t, e.icon)}></ha-icon>` : M}
@@ -4502,7 +4440,7 @@ var xr = (e) => e instanceof MouseEvent && e.detail ? {
     `;
 	}
 	static {
-		this.styles = [W, b`
+		this.styles = [W, x`
       :host { height: 100%; }
       .row {
         height: 100%;
@@ -4607,10 +4545,10 @@ var xr = (e) => e instanceof MouseEvent && e.detail ? {
     `];
 	}
 };
-customElements.define("glide-heading", Sr);
+customElements.define("glide-heading", br);
 //#endregion
 //#region src/core/backdrops.ts
-var Cr = {
+var xr = {
 	aurora: {
 		name: "Aurora",
 		dark: "radial-gradient(80% 60% at 0% 0%,#4c1d95 0%,transparent 60%),radial-gradient(70% 50% at 100% 50%,#0f5e57 0%,transparent 60%),radial-gradient(70% 50% at 20% 100%,#831843 0%,transparent 60%),#0b0820",
@@ -4661,11 +4599,11 @@ var Cr = {
 		dark: "radial-gradient(90% 70% at 30% 0%,#2a2d33 0%,transparent 70%),#111214",
 		light: "radial-gradient(90% 70% at 30% 0%,#ffffff 0%,transparent 70%),#e7e8eb"
 	}
-}, wr = (e, t, n, r) => {
+}, Sr = (e, t, n, r) => {
 	let i = Number(e);
 	return Number.isFinite(i) ? Math.min(n, Math.max(t, i)) : r;
 };
-function Tr(e, t) {
+function Cr(e, t) {
 	let n = e.background ?? "theme", r = {
 		blur: 0,
 		dim: 0,
@@ -4675,10 +4613,10 @@ function Tr(e, t) {
 	switch (n) {
 		case "preset": return {
 			...r,
-			background: i(Cr[e.preset ?? ""] ?? Cr.aurora)
+			background: i(xr[e.preset ?? ""] ?? xr.aurora)
 		};
 		case "color": {
-			let n = e.color || (t.dark ? "#111214" : "#f2f2f4"), i = e.color2 ? `linear-gradient(${wr(e.angle, 0, 360, 135)}deg,${n},${e.color2})` : n;
+			let n = e.color || (t.dark ? "#111214" : "#f2f2f4"), i = e.color2 ? `linear-gradient(${Sr(e.angle, 0, 360, 135)}deg,${n},${e.color2})` : n;
 			return {
 				...r,
 				background: i,
@@ -4691,30 +4629,30 @@ function Tr(e, t) {
 				...r,
 				background: t.dark ? "#000" : "#fff",
 				image: n || void 0,
-				blur: wr(e.blur, 0, 40, 0),
-				dim: wr(e.dim, 0, 90, 0) / 100,
+				blur: Sr(e.blur, 0, 40, 0),
+				dim: Sr(e.dim, 0, 90, 0) / 100,
 				animate: !1
 			};
 		}
 		default: return {
 			...r,
-			background: i(t.themeBackground) || i(Cr.graphite)
+			background: i(t.themeBackground) || i(xr.graphite)
 		};
 	}
 }
-var Er = (e) => e && typeof e == "object" && e.type === "custom:glide-card" && e.card_type === "background";
-function Dr(e, t = []) {
-	if (Array.isArray(e)) e.forEach((e) => Dr(e, t));
+var wr = (e) => e && typeof e == "object" && e.type === "custom:glide-card" && e.card_type === "background";
+function Tr(e, t = []) {
+	if (Array.isArray(e)) e.forEach((e) => Tr(e, t));
 	else if (e && typeof e == "object") {
-		if (Er(e)) t.push(e);
-		else for (let n of Object.values(e)) Dr(n, t);
+		if (wr(e)) t.push(e);
+		else for (let n of Object.values(e)) Tr(n, t);
 	}
 	return t;
 }
-function Or(e, t) {
-	return e?.length ? Dr(e[t])[0] || Dr(e).find((e) => e.scope === "dashboard") : void 0;
+function Er(e, t) {
+	return e?.length ? Tr(e[t])[0] || Tr(e).find((e) => e.scope === "dashboard") : void 0;
 }
-function kr(e, t) {
+function Dr(e, t) {
 	let n = decodeURIComponent(t.split("/")[2] ?? "");
 	if (!e?.length || !n) return 0;
 	let r = e.findIndex((e) => e?.path === n);
@@ -4724,23 +4662,23 @@ function kr(e, t) {
 }
 //#endregion
 //#region src/core/backdrop.ts
-var Ar = "glide-backdrop", $, jr, Mr = "", Nr, Pr;
-function Fr(e, t, n = 0) {
+var Or = "glide-backdrop", $, kr, Ar = "", jr, Mr;
+function Nr(e, t, n = 0) {
 	let r = e.querySelector?.(t);
 	if (r) return r;
 	if (!(n > 12)) {
 		for (let r of e.querySelectorAll?.("*") ?? []) if (r.shadowRoot) {
-			let e = Fr(r.shadowRoot, t, n + 1);
+			let e = Nr(r.shadowRoot, t, n + 1);
 			if (e) return e;
 		}
 	}
 }
-var Ir = 0;
-function Lr(e = !1) {
-	if (Pr?.isConnected) return Pr;
-	if (Pr = void 0, !(!e && Date.now() - Ir < 1e4)) return Ir = Date.now(), Pr = Fr(document, "hui-root"), Pr;
+var Pr = 0;
+function Fr(e = !1) {
+	if (Mr?.isConnected) return Mr;
+	if (Mr = void 0, !(!e && Date.now() - Pr < 1e4)) return Pr = Date.now(), Mr = Nr(document, "hui-root"), Mr;
 }
-function Rr(e) {
+function Ir(e) {
 	if (!e) return { parent: document.body };
 	let t = e.shadowRoot?.querySelector("hui-view-container");
 	if (t) return {
@@ -4748,63 +4686,63 @@ function Rr(e) {
 		after: t.querySelector(":scope > hui-view-background") ?? void 0
 	};
 }
-function zr() {
-	return zt() || matchMedia("(prefers-reduced-motion: reduce)").matches;
+function Lr() {
+	return Rt() || matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
-function Br(e, t) {
-	$ || ($ = document.createElement("div"), $.className = Ar, $.setAttribute("aria-hidden", "true"), $.style.cssText = "position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;"), (t.after ? t.after.nextSibling === $ : $.parentNode === t.parent) || (t.after ? t.after.after($) : t.parent.insertBefore($, t.parent.firstChild));
+function Rr(e, t) {
+	$ || ($ = document.createElement("div"), $.className = Or, $.setAttribute("aria-hidden", "true"), $.style.cssText = "position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;"), (t.after ? t.after.nextSibling === $ : $.parentNode === t.parent) || (t.after ? t.after.after($) : t.parent.insertBefore($, t.parent.firstChild));
 	let n = e.image ? e.blur * 2 : 0, r = document.createElement("div");
 	r.style.cssText = `position:absolute;inset:${e.animate ? "-12%" : `-${n}px`};background:${e.background};` + (e.image ? `background:url("${e.image.replace(/"/g, "%22")}") center/cover no-repeat,${e.background};filter:blur(${e.blur}px);` : "");
 	let i = document.createElement("div");
-	i.style.cssText = `position:absolute;inset:0;background:${e.dark ? "#000" : "#fff"};opacity:${e.dim};`, jr?.cancel(), $.replaceChildren(r, ...e.dim ? [i] : []), jr = e.animate ? r.animate([{ transform: "translate(-4%,-3%) rotate(0deg) scale(1)" }, { transform: "translate(4%,3%) rotate(4deg) scale(1.08)" }], {
+	i.style.cssText = `position:absolute;inset:0;background:${e.dark ? "#000" : "#fff"};opacity:${e.dim};`, kr?.cancel(), $.replaceChildren(r, ...e.dim ? [i] : []), kr = e.animate ? r.animate([{ transform: "translate(-4%,-3%) rotate(0deg) scale(1)" }, { transform: "translate(4%,3%) rotate(4deg) scale(1.08)" }], {
 		duration: 45e3,
 		iterations: Infinity,
 		direction: "alternate",
 		easing: "ease-in-out"
 	}) : void 0;
 }
-function Vr() {
-	jr?.cancel(), jr = void 0, $?.remove(), Mr = "";
+function zr() {
+	kr?.cancel(), kr = void 0, $?.remove(), Ar = "";
 }
-function Hr(e, t, n) {
-	let r = n ?? Rr(Lr(!0));
+function Br(e, t, n) {
+	let r = n ?? Ir(Fr(!0));
 	if (!r) return;
-	let i = new Set(y().map((e) => e.id)), a = getComputedStyle(document.documentElement).getPropertyValue("--glide-theme").trim(), o = e.theme && i.has(e.theme) ? e.theme : i.has(a) ? a : void 0, s = Tr(e, {
-		dark: ie(e.mode, t?.themes?.darkMode),
+	let i = new Set(y().map((e) => e.id)), a = getComputedStyle(document.documentElement).getPropertyValue("--glide-theme").trim(), o = e.theme && i.has(e.theme) ? e.theme : i.has(a) ? a : void 0, s = Cr(e, {
+		dark: re(e.mode, t?.themes?.darkMode),
 		night: t?.states?.["sun.sun"]?.state === "below_horizon",
 		themeBackground: v(o).background,
-		still: zr()
+		still: Lr()
 	}), c = JSON.stringify(s);
-	c === Mr && $?.isConnected && (r.after ? r.after.nextSibling === $ : $.parentNode === r.parent) || (Mr = c, Br(s, r));
+	c === Ar && $?.isConnected && (r.after ? r.after.nextSibling === $ : $.parentNode === r.parent) || (Ar = c, Rr(s, r));
 }
-function Ur(e) {
-	Nr = e, Wr(!0);
+function Vr(e) {
+	jr = e, Hr(!0);
 }
-function Wr(e = !1) {
-	let t = Lr(e);
+function Hr(e = !1) {
+	let t = Fr(e);
 	if (!t) {
-		$?.isConnected && $.parentNode !== document.body && Vr();
+		$?.isConnected && $.parentNode !== document.body && zr();
 		return;
 	}
-	let n = t.lovelace?.config?.views, r = Nr ?? Or(n, kr(n, location.pathname));
-	r ? Hr(r, t.hass) : $?.isConnected && Vr();
+	let n = t.lovelace?.config?.views, r = jr ?? Er(n, Dr(n, location.pathname));
+	r ? Br(r, t.hass) : $?.isConnected && zr();
 }
-var Gr = !1;
-function Kr() {
-	if (Gr || typeof window > "u") return;
-	Gr = !0;
-	let e = () => setTimeout(() => Wr(!0), 50);
-	window.addEventListener("location-changed", e), window.addEventListener("popstate", e), setInterval(() => Wr(), 2e3), e();
+var Ur = !1;
+function Wr() {
+	if (Ur || typeof window > "u") return;
+	Ur = !0;
+	let e = () => setTimeout(() => Hr(!0), 50);
+	window.addEventListener("location-changed", e), window.addEventListener("popstate", e), setInterval(() => Hr(), 2e3), e();
 }
 //#endregion
 //#region src/cards/background.ts
-Kr();
-var qr = {
+Wr();
+var Gr = {
 	theme: "Glide theme",
 	preset: "Preset",
 	color: "Colour",
 	image: "Image"
-}, Jr = class extends G {
+}, Kr = class extends G {
 	constructor(...e) {
 		super(...e), this.cardType = "background", this.preview = !1;
 	}
@@ -4830,22 +4768,22 @@ var qr = {
 		return +!!this.editing;
 	}
 	updated() {
-		this.toggleAttribute("editing", this.editing), this.preview && Ur(this.config);
+		this.toggleAttribute("editing", this.editing), this.preview && Vr(this.config);
 	}
 	disconnectedCallback() {
-		super.disconnectedCallback(), this.preview && (Ur(void 0), Vr());
+		super.disconnectedCallback(), this.preview && (Vr(void 0), zr());
 	}
 	render() {
 		if (!this.editing) return M;
 		let e = this.config, t = e.background ?? "theme";
 		return k`<div class="surface">
       <ha-icon icon="mdi:image-filter-hdr"></ha-icon>
-      <span>Background: ${t === "preset" ? Cr[e.preset ?? "aurora"]?.name ?? e.preset : qr[t]}</span>
+      <span>Background: ${t === "preset" ? xr[e.preset ?? "aurora"]?.name ?? e.preset : Gr[t]}</span>
       <span class="meta">${e.scope === "dashboard" ? "whole dashboard" : "this view"}</span>
     </div>`;
 	}
 	static {
-		this.styles = b`
+		this.styles = x`
     :host { display: none; }
     :host([editing]) { display: block; font-family: var(--gc-font); color: var(--gc-text); }
     .surface {
@@ -4858,10 +4796,10 @@ var qr = {
   `;
 	}
 };
-customElements.get("glide-background") || customElements.define("glide-background", Jr);
+customElements.get("glide-background") || customElements.define("glide-background", Kr);
 //#endregion
 //#region src/editor/editor.ts
-var Yr = [
+var qr = [
 	{
 		id: "button",
 		icon: "mdi:gesture-tap-button",
@@ -4907,7 +4845,7 @@ var Yr = [
 		icon: "mdi:image-filter-hdr",
 		label: "Background"
 	}
-], Xr = [
+], Jr = [
 	"#ff9f43",
 	"#d4ff00",
 	"#006a60",
@@ -4916,7 +4854,7 @@ var Yr = [
 	"#ff5c8a",
 	"#34c759",
 	"#ffd60a"
-], Zr = {
+], Yr = {
 	type: "expandable",
 	title: "Interactions",
 	icon: "mdi:gesture-tap",
@@ -4934,22 +4872,22 @@ var Yr = [
 			selector: { ui_action: {} }
 		}
 	]
-}, Qr = /* @__PURE__ */ new Set([
+}, Xr = /* @__PURE__ */ new Set([
 	"button",
 	"chips",
 	"heading",
 	"nav",
 	"popup"
-]), $r = {
+]), Zr = {
 	name: "tap_animation",
 	selector: { select: {
 		mode: "dropdown",
-		options: Object.entries(Et).map(([e, t]) => ({
+		options: Object.entries(Tt).map(([e, t]) => ({
 			value: e,
 			label: t
 		}))
 	} }
-}, ei = {
+}, Qr = {
 	type: "expandable",
 	title: "Templates",
 	icon: "mdi:code-braces",
@@ -4964,34 +4902,34 @@ var Yr = [
 		selector: { template: {} }
 	}))
 };
-function ti(e) {
-	if (e.card_type === "background") return ri(e.background ?? "theme");
-	let t = ai[e.card_type];
+function $r(e) {
+	if (e.card_type === "background") return ti(e.background ?? "theme");
+	let t = ri[e.card_type];
 	if (e.card_type === "button") {
 		let n = e, r = (e) => !(e.name && [
 			"name",
 			"icon",
 			"color"
-		].includes(e.name) && ln(n[e.name]));
+		].includes(e.name) && cn(n[e.name]));
 		t = t.map((e) => e.type === "grid" ? {
 			...e,
 			schema: e.schema.filter(r)
 		} : e), t = [
 			...t.slice(0, -1),
-			ei,
+			Qr,
 			t[t.length - 1]
 		];
 	}
-	return Qr.has(e.card_type) ? [...t, $r] : t;
+	return Xr.has(e.card_type) ? [...t, Zr] : t;
 }
-var ni = (e, t, n) => ({ number: {
+var ei = (e, t, n) => ({ number: {
 	min: e,
 	max: t,
 	step: 1,
 	mode: "slider",
 	unit_of_measurement: n
 } });
-function ri(e) {
+function ti(e) {
 	let t = [{
 		type: "grid",
 		name: "",
@@ -5044,7 +4982,7 @@ function ri(e) {
 			}]
 		}, {
 			name: "angle",
-			selector: ni(0, 360, "°")
+			selector: ei(0, 360, "°")
 		}],
 		image: [
 			{
@@ -5060,10 +4998,10 @@ function ri(e) {
 				name: "",
 				schema: [{
 					name: "blur",
-					selector: ni(0, 40, "px")
+					selector: ei(0, 40, "px")
 				}, {
 					name: "dim",
-					selector: ni(0, 90, "%")
+					selector: ei(0, 90, "%")
 				}]
 			}
 		]
@@ -5077,7 +5015,7 @@ function ri(e) {
 		...r
 	];
 }
-var ii = { select: {
+var ni = { select: {
 	mode: "dropdown",
 	options: [{
 		value: "center",
@@ -5086,7 +5024,7 @@ var ii = { select: {
 		value: "start",
 		label: "Start"
 	}]
-} }, ai = {
+} }, ri = {
 	background: [],
 	heading: [
 		{
@@ -5160,7 +5098,7 @@ var ii = { select: {
 		} }
 	}, {
 		name: "align",
-		selector: ii
+		selector: ni
 	}],
 	title: [
 		{
@@ -5179,7 +5117,7 @@ var ii = { select: {
 				selector: { icon: {} }
 			}, {
 				name: "align",
-				selector: ii
+				selector: ni
 			}]
 		}
 	],
@@ -5349,7 +5287,7 @@ var ii = { select: {
 				}
 			]
 		},
-		Zr
+		Yr
 	],
 	popup: [
 		{
@@ -5371,19 +5309,6 @@ var ii = { select: {
 		{
 			name: "entity",
 			selector: { entity: {} }
-		},
-		{
-			name: "position",
-			selector: { select: {
-				mode: "dropdown",
-				options: [{
-					value: "auto",
-					label: "Auto (centred on wide screens)"
-				}, {
-					value: "bottom",
-					label: "Bottom sheet everywhere"
-				}]
-			} }
 		}
 	],
 	nav: [{
@@ -5441,9 +5366,8 @@ var ii = { select: {
 		name: "name",
 		selector: { text: {} }
 	}]
-}, oi = {
+}, ii = {
 	hash: "Hash (e.g. #living-room)",
-	position: "Opens as",
 	slider: "Swipe to adjust (brightness / position)",
 	layout: "Layout (empty = theme default)",
 	color: "Colour (empty = by entity type)",
@@ -5467,13 +5391,13 @@ var ii = { select: {
 	dim: "Dim",
 	animate: "Slow drift"
 };
-async function si() {
+async function ai() {
 	customElements.get("ha-form") || await (await (await window.loadCardHelpers?.())?.createCardElement({
 		type: "entities",
 		entities: []
 	}))?.constructor?.getConfigElement?.();
 }
-var ci = class extends F {
+var oi = class extends F {
 	constructor(...e) {
 		super(...e), this.ready = !1;
 	}
@@ -5491,7 +5415,7 @@ var ci = class extends F {
 		};
 	}
 	connectedCallback() {
-		super.connectedCallback(), si().finally(() => this.ready = !0);
+		super.connectedCallback(), ai().finally(() => this.ready = !0);
 	}
 	update_(e) {
 		let t = {
@@ -5529,7 +5453,7 @@ var ci = class extends F {
       <div class="section">
         <div class="label">Card type</div>
         <div class="types">
-          ${Yr.map((t) => k`<button class=${e.card_type === t.id ? "sel" : ""} @click=${() => this.setType(t.id)}>
+          ${qr.map((t) => k`<button class=${e.card_type === t.id ? "sel" : ""} @click=${() => this.setType(t.id)}>
               <ha-icon .icon=${t.icon}></ha-icon><span>${t.label}</span>
             </button>`)}
         </div>
@@ -5559,7 +5483,7 @@ var ci = class extends F {
           </div>
           <div class="accents">
             <button class="dot none ${e.accent ? "" : "sel"}" title="Theme accent" @click=${() => this.update_({ accent: void 0 })}></button>
-            ${Xr.map((t) => k`<button class="dot ${e.accent === t ? "sel" : ""}" style="background:${t}" title=${t} @click=${() => this.update_({ accent: t })}></button>`)}
+            ${Jr.map((t) => k`<button class="dot ${e.accent === t ? "sel" : ""}" style="background:${t}" title=${t} @click=${() => this.update_({ accent: t })}></button>`)}
             <label class="dot custom" title="Custom color">
               <input type="color" .value=${e.accent ?? "#ff9f43"} @input=${(e) => this.update_({ accent: e.target.value })} />
             </label>
@@ -5581,7 +5505,7 @@ var ci = class extends F {
       ${e.card_type === "background" && (e.background ?? "theme") === "preset" ? k`<div class="section">
             <div class="label">Preset</div>
             <div class="themes">
-              ${Object.entries(Cr).map(([t, n]) => k`<button class="theme ${(e.preset ?? "aurora") === t ? "sel" : ""}" @click=${() => this.update_({ preset: t })}>
+              ${Object.entries(xr).map(([t, n]) => k`<button class="theme ${(e.preset ?? "aurora") === t ? "sel" : ""}" @click=${() => this.update_({ preset: t })}>
                   <div class="swatch" style="background:${e.mode === "light" ? n.light : n.dark}"></div>
                   <span>${n.name}</span>
                 </button>`)}
@@ -5590,8 +5514,8 @@ var ci = class extends F {
       ${this.ready ? k`<ha-form
             .hass=${this.hass}
             .data=${e}
-            .schema=${ti(e)}
-            .computeLabel=${(e) => oi[e.name]}
+            .schema=${$r(e)}
+            .computeLabel=${(e) => ii[e.name]}
             @value-changed=${(e) => {
 			e.stopPropagation(), this.update_(e.detail.value);
 		}}
@@ -5609,7 +5533,7 @@ var ci = class extends F {
     `;
 	}
 	static {
-		this.styles = b`
+		this.styles = x`
     :host { display: block; }
     .section { margin-bottom: 16px; }
     .label { font-weight: 500; margin-bottom: 8px; color: var(--primary-text-color); }
@@ -5641,10 +5565,10 @@ var ci = class extends F {
   `;
 	}
 };
-customElements.define("glide-card-editor", ci);
+customElements.define("glide-card-editor", oi);
 //#endregion
 //#region src/glide-card.ts
-var li = "0.19.3", ui = [
+var si = "0.20.0", ci = [
 	"button",
 	"popup",
 	"nav",
@@ -5654,13 +5578,13 @@ var li = "0.19.3", ui = [
 	"title",
 	"heading",
 	"background"
-], di = class extends HTMLElement {
+], li = class extends HTMLElement {
 	constructor(...e) {
 		super(...e), this._editMode = !1, this._preview = !1;
 	}
 	setConfig(e) {
 		let t = e?.card_type ?? "button";
-		if (!ui.includes(t)) throw Error(`Unknown card_type "${t}". Use one of: ${ui.join(", ")}`);
+		if (!ci.includes(t)) throw Error(`Unknown card_type "${t}". Use one of: ${ci.join(", ")}`);
 		let n = `glide-${t}`;
 		if (!customElements.get(n)) throw Error(`card_type "${t}" is not available in this build`);
 		this.inner?.localName !== n && (this.inner?.remove(), this.inner = document.createElement(n), this.appendChild(this.inner)), this.inner.setConfig({
@@ -5699,11 +5623,11 @@ var li = "0.19.3", ui = [
 		return document.createElement("glide-card-editor");
 	}
 };
-d(), customElements.get("glide-card") || (customElements.define("glide-card", di), window.customCards = window.customCards ?? [], window.customCards.push({
+d(), customElements.get("glide-card") || (customElements.define("glide-card", li), window.customCards = window.customCards ?? [], window.customCards.push({
 	type: "glide-card",
 	name: "Glide Card",
 	description: "Themeable buttons, pop-up sheets, nav bar, climate and media cards",
 	preview: !0,
 	documentationURL: "https://github.com/yshaish1/glide-card"
-}), console.info(`%c GLIDE-CARD %c ${li} `, "background:#ff9f43;color:#1c1206;border-radius:4px 0 0 4px", "background:#222;color:#fff;border-radius:0 4px 4px 0"));
+}), console.info(`%c GLIDE-CARD %c ${si} `, "background:#ff9f43;color:#1c1206;border-radius:4px 0 0 4px", "background:#222;color:#fff;border-radius:0 4px 4px 0"));
 //#endregion

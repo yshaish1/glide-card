@@ -58,28 +58,15 @@ describe("popup sheet registry", () => {
   });
 });
 
-describe("popup position", () => {
-  it("reflects position on the sheet, auto by default", async () => {
+describe("popup style", () => {
+  it("has one style: an old `position` value is ignored", async () => {
     const owner = {};
-    registerPopup(config, owner);
-    await (sheet() as any).updateComplete;
-    expect(sheet()!.getAttribute("position")).toBe("auto");
-    registerPopup({ ...config, position: "bottom" }, owner);
-    await (sheet() as any).updateComplete;
-    expect(sheet()!.getAttribute("position")).toBe("bottom");
+    registerPopup({ ...config, position: "auto" } as PopupCardConfig, owner);
+    openPopup("#more");
+    await sheet()!.updateComplete;
+    expect(sheet()!.open).toBe(true);
+    expect(sheet()!.hasAttribute("position")).toBe(false);
     unregisterPopup("#more", owner);
-  });
-
-  it("is a bottom sheet on wide screens only with position: bottom", () => {
-    const wide = window.matchMedia;
-    window.matchMedia = ((q: string) => ({ matches: q.includes("min-width"), media: q })) as any;
-    const owner = {};
-    registerPopup(config, owner);
-    expect((sheet() as any).bottomSheet).toBe(false);
-    registerPopup({ ...config, position: "bottom" }, owner);
-    expect((sheet() as any).bottomSheet).toBe(true);
-    unregisterPopup("#more", owner);
-    window.matchMedia = wide;
   });
 });
 

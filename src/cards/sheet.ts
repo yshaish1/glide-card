@@ -1,5 +1,4 @@
 import { css, html, nothing, type PropertyValues } from "lit";
-import { popupOrigin } from "../core/actions";
 import { GlideBase, surface } from "../core/base-card";
 import { entityIcon } from "../core/entity";
 import { haptic } from "../core/fire";
@@ -7,7 +6,6 @@ import { formatState, t } from "../core/i18n";
 import { reducedMotion, springEasing } from "../core/spring";
 import type { HomeAssistant, PopupCardConfig } from "../core/types";
 
-const WIDE = "(min-width: 768px)";
 const DISMISS_PX = 120;
 const DISMISS_VELOCITY = 0.6; // px per ms
 // Events HA handles on its root element; the sheet lives in <body>, so we forward them.
@@ -30,7 +28,6 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
   open = false;
   private children_: HTMLElement[] = [];
   private built = false;
-  private origin?: DOMRect;
   /** Whether this sheet holds a scroll lock, so it's taken and released exactly once. */
   private locked = false;
   /**
@@ -64,16 +61,6 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
     if (this.locked === on || (on && !this.isConnected)) return; // updates still run after removal
     this.locked = on;
     lockScroll(on);
-  }
-
-  protected willUpdate(changed: PropertyValues<this>) {
-    super.willUpdate(changed);
-    if (this.config) this.setAttribute("position", this.config.position ?? "auto");
-  }
-
-  /** Slides from the bottom edge: always on phones, and on wide screens with `position: bottom`. */
-  private get bottomSheet() {
-    return this.config?.position === "bottom" || !matchMedia(WIDE).matches;
   }
 
   setHass(hass: HomeAssistant) {
@@ -117,7 +104,6 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
     if (!changed.has("open") || (changed.get("open") === undefined && !this.open)) return;
     if (this.open) {
       this.build();
-      this.origin = popupOrigin;
       this.lock(true);
       this.animateOpen();
     } else {
@@ -144,30 +130,15 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
     this.scrim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250, fill: "backwards" });
     if (reducedMotion()) return;
     const { easing, duration } = spring();
-    const o = this.origin;
-    const p = panel.getBoundingClientRect();
-    if (o && o.width && o.bottom > 0 && o.top < innerHeight && this.config.position !== "bottom") {
-      // FLIP morph: start exactly over the tile that opened us.
-      const from = `translate(${o.left - p.left}px, ${o.top - p.top}px) scale(${o.width / p.width}, ${o.height / p.height})`;
-      panel.style.transformOrigin = "0 0";
-      panel
-        .animate([{ transform: from, opacity: 0.5 }, { transform: "none", opacity: 1 }], { duration, easing, fill: "backwards" })
-        .finished.then(() => (panel.style.transformOrigin = ""), () => (panel.style.transformOrigin = ""));
-      this.renderRoot.querySelector(".content")?.animate([{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }], { duration, fill: "backwards" });
-    } else if (!this.bottomSheet) {
-      panel.animate([{ transform: "scale(.92)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration, easing, fill: "backwards" });
-    } else {
-      panel.animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration, easing, fill: "backwards" });
-    }
+    panel.animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration, easing, fill: "backwards" });
   }
 
   private animateClose() {
     const panel = this.panel;
     const current = panel.style.transform || "none";
-    const to = this.bottomSheet ? { transform: "translateY(100%)", opacity: 1 } : { transform: "scale(.94)", opacity: 0 };
     const dur = reducedMotion() ? 0 : 260;
     this.scrim.animate([{ opacity: getComputedStyle(this.scrim).opacity }, { opacity: 0 }], { duration: dur, fill: "forwards" });
-    const anim = panel.animate([{ transform: current, opacity: 1 }, to], { duration: dur, easing: "cubic-bezier(.4,0,.8,.4)", fill: "forwards" });
+    const anim = panel.animate([{ transform: current }, { transform: "translateY(100%)" }], { duration: dur, easing: "cubic-bezier(.4,0,.8,.4)", fill: "forwards" });
     anim.finished
       .then(() => {
         if (this.open) return;
@@ -181,9 +152,9 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
       .catch(() => {});
   }
 
-  /** Drag the sheet down by its header to dismiss (bottom sheets only). */
+  /** Drag the sheet down by its header to dismiss. */
   private onDragStart(e: PointerEvent) {
-    if (!this.bottomSheet || e.button !== 0) return;
+    if (e.button !== 0) return;
     if ((e.target as HTMLElement).closest("button")) return;
     const panel = this.panel;
     const handle = e.currentTarget as HTMLElement;
@@ -339,26 +310,13 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
       }
       .content > * { grid-column: span var(--cols, 12); grid-row: span var(--rows, 1); min-width: 0; }
       @media (min-width: 768px) {
+        /* Still a bottom sheet, centred at a readable width. */
         .panel {
-          inset: 50% auto auto 50%;
-          bottom: auto;
+          inset: auto auto 0 50%;
           width: min(600px, 92vw);
           max-height: 85dvh;
-          translate: -50% -50%;
-          border-radius: var(--gc-radius);
-          border-bottom: 1px solid var(--gc-border);
-        }
-        .grabber { visibility: hidden; height: 0; margin: 6px; }
-        .handle { cursor: default; }
-        /* position: bottom keeps the sheet on the bottom edge, centred at the same width. */
-        :host([position="bottom"]) .panel {
-          inset: auto auto 0 50%;
           translate: -50% 0;
-          border-radius: var(--gc-radius) var(--gc-radius) 0 0;
-          border-bottom: 0;
         }
-        :host([position="bottom"]) .grabber { visibility: inherit; height: 5px; margin: 8px auto 2px; }
-        :host([position="bottom"]) .handle { cursor: grab; }
       }
     `,
   ];

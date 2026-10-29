@@ -364,11 +364,11 @@ export class GlideNav extends GlideBase<NavCardConfig> {
   }
 
   /** Navigate, leaving the indicator's spot for the next view's nav to slide on from. */
-  private go(path: string, from: Element) {
+  private go(path: string) {
     const rect = this.indRect();
     const scroll = this.scroller()?.scrollLeft ?? 0;
     handoff = usable(rect) ? { rect, scroll, at: performance.now() } : undefined;
-    navigate(path, from);
+    navigate(path);
   }
 
   private tapFx(e: Event) {
@@ -391,7 +391,7 @@ export class GlideNav extends GlideBase<NavCardConfig> {
         @click=${(e: Event) => {
           this.tapFx(e);
           const btn = e.currentTarget as HTMLElement;
-          if (!item.items) return this.go(item.navigation_path!, btn);
+          if (!item.items) return this.go(item.navigation_path!);
           if (open) this.closeMenu();
           else this.openMenu(item, btn, e instanceof MouseEvent && !e.detail);
         }}
@@ -413,10 +413,8 @@ export class GlideNav extends GlideBase<NavCardConfig> {
         aria-current=${current ? "page" : "false"}
         @click=${(e: Event) => {
           this.tapFx(e);
-          const anchor = this.menuAnchor;
           this.closeMenu();
-          // From the menu button, so a pop-up morphs out of the bar rather than a row that's gone
-          if (!current) this.go(item.navigation_path, anchor ?? (e.currentTarget as Element));
+          if (!current) this.go(item.navigation_path);
         }}
       >
         <ha-icon .icon=${item.icon}></ha-icon>

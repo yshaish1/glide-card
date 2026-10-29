@@ -4,7 +4,7 @@
 
 <img src="../images/popup.gif" width="300" align="right" alt="Pop-up opening">
 
-A real sheet that opens when the URL hash matches, like `#kitchen`. On phones it slides up as a bottom sheet you can swipe down to close; on wide screens it's a centred modal. The tile that opened it morphs into the sheet. Set `position: bottom` to keep the bottom sheet on wide screens too: it slides up from the bottom edge, centred, and closes or swipes back down.
+A real sheet that opens when the URL hash matches, like `#kitchen`. It slides up from the bottom on every screen: full width on phones, centred and up to 600px wide on tablets and desktops. Swipe it down, tap outside it, press X or Esc to close.
 
 Any card works inside: Glide cards, HA tiles, Mushroom, and so on.
 
@@ -18,7 +18,6 @@ Any card works inside: Glide cards, HA tiles, Mushroom, and so on.
 | `title` | string | Sheet title. |
 | `icon` | icon | Icon next to the title. |
 | `entity` | entity | Optional entity whose state shows in the header. |
-| `position` | `auto` / `bottom` | `auto` (default): bottom sheet on phones, centred modal on wide screens. `bottom`: bottom sheet on every screen width. |
 | `cards` | list | The cards inside the sheet. |
 | `size` / `tap_animation` | | Passed on to the Glide cards inside. |
 

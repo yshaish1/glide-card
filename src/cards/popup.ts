@@ -64,7 +64,7 @@ export class GlidePopup extends GlideBase<PopupCardConfig> {
           <div class="name">${c.title ?? t(this.hass, "popup_placeholder")}</div>
           <div class="meta">${c.hash} · ${c.cards.length} cards</div>
         </div>
-        <button @click=${(e: Event) => openPopup(c.hash, e.currentTarget as Element)}>Preview</button>
+        <button @click=${() => openPopup(c.hash)}>Preview</button>
       </div>
     `;
   }
