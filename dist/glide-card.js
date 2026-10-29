@@ -3041,7 +3041,7 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 		return this.renderRoot.querySelector(".scrim");
 	}
 	animateOpen() {
-		this.scrimPress = !1, this.style.visibility = "visible";
+		this.scrimPress = !1, this.style.display = "", this.style.visibility = "visible";
 		let e = this.panel;
 		if (e.getAnimations().forEach((e) => e.cancel()), e.style.transform = "", e.focus({ preventScroll: !0 }), this.scrim.animate([{ opacity: 0 }, { opacity: 1 }], {
 			duration: 250,
@@ -3106,7 +3106,7 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 			easing: "cubic-bezier(.4,0,.8,.4)",
 			fill: "forwards"
 		}).finished.then(() => {
-			this.open || (this.style.visibility = "hidden", e.style.transform = "", e.getAnimations().forEach((e) => e.cancel()), this.scrim.getAnimations().forEach((e) => e.cancel()));
+			this.open || (this.style.visibility = "hidden", this.style.display = "none", e.style.transform = "", e.getAnimations().forEach((e) => e.cancel()), this.scrim.getAnimations().forEach((e) => e.cancel()));
 		}).catch(() => {});
 	}
 	onDragStart(e) {
@@ -5644,7 +5644,7 @@ var ci = class extends F {
 customElements.define("glide-card-editor", ci);
 //#endregion
 //#region src/glide-card.ts
-var li = "0.19.2", ui = [
+var li = "0.19.3", ui = [
 	"button",
 	"popup",
 	"nav",

@@ -135,6 +135,7 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
 
   private animateOpen() {
     this.scrimPress = false;
+    this.style.display = "";
     this.style.visibility = "visible";
     const panel = this.panel;
     panel.getAnimations().forEach((a) => a.cancel());
@@ -171,6 +172,8 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
       .then(() => {
         if (this.open) return;
         this.style.visibility = "hidden";
+        // Out of rendering altogether: iOS WebKit can keep painting a hidden sheet's blurred layers for a moment.
+        this.style.display = "none";
         panel.style.transform = "";
         panel.getAnimations().forEach((a) => a.cancel());
         this.scrim.getAnimations().forEach((a) => a.cancel());
