@@ -19,7 +19,7 @@ A tile or a pill for any entity. Tap toggles it, hold opens more-info, and swipi
 | `slider` | boolean | `true` | Swipe to set brightness, speed or position. |
 | `color` | color / template | per domain | An HA color name (`amber`, `light-blue`, ...) or any CSS color. |
 | `fill` | boolean | `true` | `false` keeps the soft glass gradient instead of a solid fill when on. |
-| `secondary` | string / template | brightness / position | The line under the name. |
+| `secondary` | string / template | brightness / position | The line under the name. A line break in the text starts a new line (tile look). |
 | `badge` | string / template | state | The corner pill. |
 | `size` | `full` \| `compact` \| `slim` | `full` | See [sizes](../options.md#sizes). |
 | `tap_action` / `hold_action` / `double_tap_action` | action | toggle / more-info / none | Standard HA actions. `navigate` to a `#hash` opens a [pop-up](popup.md). |

@@ -2832,6 +2832,8 @@ var cn = (e) => typeof e == "string" && /\{\{|\{%/.test(e), ln = class {
         font-weight: 600;
       }
       .on .meta { color: var(--gc-icon-on, var(--domain)); }
+      /* A line break in the secondary text starts a new line (tile look). */
+      .tile .meta { white-space: pre-line; }
       .badge {
         position: relative;
         padding: 3px 10px;
@@ -5568,7 +5570,7 @@ var oi = class extends F {
 customElements.define("glide-card-editor", oi);
 //#endregion
 //#region src/glide-card.ts
-var si = "0.20.0", ci = [
+var si = "0.20.1", ci = [
 	"button",
 	"popup",
 	"nav",

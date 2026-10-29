@@ -656,6 +656,8 @@ export class GlideButton extends GlideBase<ButtonCardConfig> {
         font-weight: 600;
       }
       .on .meta { color: var(--gc-icon-on, var(--domain)); }
+      /* A line break in the secondary text starts a new line (tile look). */
+      .tile .meta { white-space: pre-line; }
       .badge {
         position: relative;
         padding: 3px 10px;
