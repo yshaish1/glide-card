@@ -2982,7 +2982,7 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 		};
 	}
 	constructor() {
-		super(), this.cardType = "popup", this.open = !1, this.children_ = [], this.built = !1, this.locked = !1, this.forward = (e) => {
+		super(), this.cardType = "popup", this.open = !1, this.children_ = [], this.built = !1, this.locked = !1, this.scrimPress = !1, this.forward = (e) => {
 			let t = document.querySelector("home-assistant");
 			if (!t || e.__glideForwarded) return;
 			e.stopPropagation();
@@ -3041,7 +3041,7 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 		return this.renderRoot.querySelector(".scrim");
 	}
 	animateOpen() {
-		this.style.visibility = "visible";
+		this.scrimPress = !1, this.style.visibility = "visible";
 		let e = this.panel;
 		if (e.getAnimations().forEach((e) => e.cancel()), e.style.transform = "", e.focus({ preventScroll: !0 }), this.scrim.animate([{ opacity: 0 }, { opacity: 1 }], {
 			duration: 250,
@@ -3139,7 +3139,13 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 		if (!this.config) return M;
 		let e = this.config, t = this.stateOf(e.entity);
 		return k`
-      <div class="scrim" @click=${() => this.requestClose()}></div>
+      <div
+        class="scrim"
+        @pointerdown=${() => this.scrimPress = !0}
+        @click=${() => {
+			this.scrimPress && this.requestClose(), this.scrimPress = !1;
+		}}
+      ></div>
       <div class="panel surface" role="dialog" aria-modal="true" aria-label=${e.title ?? ""} tabindex="-1">
         <div class="handle" @pointerdown=${(e) => this.onDragStart(e)}>
           <div class="grabber"></div>
@@ -5638,7 +5644,7 @@ var ci = class extends F {
 customElements.define("glide-card-editor", ci);
 //#endregion
 //#region src/glide-card.ts
-var li = "0.19.1", ui = [
+var li = "0.19.2", ui = [
 	"button",
 	"popup",
 	"nav",

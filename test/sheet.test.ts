@@ -82,3 +82,20 @@ describe("popup position", () => {
     window.matchMedia = wide;
   });
 });
+
+describe("scrim", () => {
+  it("ignores the click left over from the tap that opened the sheet, closes on a real tap", async () => {
+    const owner = {};
+    registerPopup(config, owner);
+    openPopup("#more");
+    await sheet()!.updateComplete;
+    const scrim = sheet()!.shadowRoot!.querySelector(".scrim") as HTMLElement;
+    scrim.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    expect(sheet()!.open).toBe(true);
+    scrim.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    scrim.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 0));
+    expect(location.hash).toBe("");
+    unregisterPopup("#more", owner);
+  });
+});

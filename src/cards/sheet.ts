@@ -33,6 +33,12 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
   private origin?: DOMRect;
   /** Whether this sheet holds a scroll lock, so it's taken and released exactly once. */
   private locked = false;
+  /**
+   * A scrim tap closes the sheet only if the press started on the scrim. On touch screens the tap that
+   * opened the sheet is followed by a compatibility click at the same spot, which would otherwise land on
+   * the scrim and close it at once.
+   */
+  private scrimPress = false;
 
   constructor() {
     super();
@@ -128,6 +134,7 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
   }
 
   private animateOpen() {
+    this.scrimPress = false;
     this.style.visibility = "visible";
     const panel = this.panel;
     panel.getAnimations().forEach((a) => a.cancel());
@@ -211,7 +218,14 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
     const c = this.config;
     const s = this.stateOf(c.entity);
     return html`
-      <div class="scrim" @click=${() => this.requestClose()}></div>
+      <div
+        class="scrim"
+        @pointerdown=${() => (this.scrimPress = true)}
+        @click=${() => {
+          if (this.scrimPress) this.requestClose();
+          this.scrimPress = false;
+        }}
+      ></div>
       <div class="panel surface" role="dialog" aria-modal="true" aria-label=${c.title ?? ""} tabindex="-1">
         <div class="handle" @pointerdown=${(e: PointerEvent) => this.onDragStart(e)}>
           <div class="grabber"></div>
