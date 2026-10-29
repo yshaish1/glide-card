@@ -3002,6 +3002,12 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 	lock(e) {
 		this.locked === e || e && !this.isConnected || (this.locked = e, Mn(e));
 	}
+	willUpdate(e) {
+		super.willUpdate(e), this.config && this.setAttribute("position", this.config.position ?? "auto");
+	}
+	get bottomSheet() {
+		return this.config?.position === "bottom" || !matchMedia(Tn).matches;
+	}
 	setHass(e) {
 		this.hass = e;
 		for (let t of this.children_) t.hass = e;
@@ -3042,7 +3048,7 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 			fill: "backwards"
 		}), V()) return;
 		let { easing: t, duration: n } = An(), r = this.origin, i = e.getBoundingClientRect();
-		if (r && r.width && r.bottom > 0 && r.top < innerHeight) {
+		if (r && r.width && r.bottom > 0 && r.top < innerHeight && this.config.position !== "bottom") {
 			let a = `translate(${r.left - i.left}px, ${r.top - i.top}px) scale(${r.width / i.width}, ${r.height / i.height})`;
 			e.style.transformOrigin = "0 0", e.animate([{
 				transform: a,
@@ -3065,7 +3071,11 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 				duration: n,
 				fill: "backwards"
 			});
-		} else matchMedia(Tn).matches ? e.animate([{
+		} else this.bottomSheet ? e.animate([{ transform: "translateY(100%)" }, { transform: "none" }], {
+			duration: n,
+			easing: t,
+			fill: "backwards"
+		}) : e.animate([{
 			transform: "scale(.92)",
 			opacity: 0
 		}, {
@@ -3075,19 +3085,15 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 			duration: n,
 			easing: t,
 			fill: "backwards"
-		}) : e.animate([{ transform: "translateY(100%)" }, { transform: "none" }], {
-			duration: n,
-			easing: t,
-			fill: "backwards"
 		});
 	}
 	animateClose() {
-		let e = this.panel, t = e.style.transform || "none", n = matchMedia(Tn).matches ? {
-			transform: "scale(.94)",
-			opacity: 0
-		} : {
+		let e = this.panel, t = e.style.transform || "none", n = this.bottomSheet ? {
 			transform: "translateY(100%)",
 			opacity: 1
+		} : {
+			transform: "scale(.94)",
+			opacity: 0
 		}, r = V() ? 0 : 260;
 		this.scrim.animate([{ opacity: getComputedStyle(this.scrim).opacity }, { opacity: 0 }], {
 			duration: r,
@@ -3104,7 +3110,7 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
 		}).catch(() => {});
 	}
 	onDragStart(e) {
-		if (matchMedia(Tn).matches || e.button !== 0 || e.target.closest("button")) return;
+		if (!this.bottomSheet || e.button !== 0 || e.target.closest("button")) return;
 		let t = this.panel, n = e.currentTarget, r = e.clientY, i = {
 			y: r,
 			t: e.timeStamp
@@ -3253,6 +3259,15 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
         }
         .grabber { visibility: hidden; height: 0; margin: 6px; }
         .handle { cursor: default; }
+        /* position: bottom keeps the sheet on the bottom edge, centred at the same width. */
+        :host([position="bottom"]) .panel {
+          inset: auto auto 0 50%;
+          translate: -50% 0;
+          border-radius: var(--gc-radius) var(--gc-radius) 0 0;
+          border-bottom: 0;
+        }
+        :host([position="bottom"]) .grabber { visibility: visible; height: 5px; margin: 8px auto 2px; }
+        :host([position="bottom"]) .handle { cursor: grab; }
       }
     `];
 	}
@@ -5350,6 +5365,19 @@ var ii = { select: {
 		{
 			name: "entity",
 			selector: { entity: {} }
+		},
+		{
+			name: "position",
+			selector: { select: {
+				mode: "dropdown",
+				options: [{
+					value: "auto",
+					label: "Auto (centred on wide screens)"
+				}, {
+					value: "bottom",
+					label: "Bottom sheet everywhere"
+				}]
+			} }
 		}
 	],
 	nav: [{
@@ -5409,6 +5437,7 @@ var ii = { select: {
 	}]
 }, oi = {
 	hash: "Hash (e.g. #living-room)",
+	position: "Opens as",
 	slider: "Swipe to adjust (brightness / position)",
 	layout: "Layout (empty = theme default)",
 	color: "Colour (empty = by entity type)",
@@ -5609,7 +5638,7 @@ var ci = class extends F {
 customElements.define("glide-card-editor", ci);
 //#endregion
 //#region src/glide-card.ts
-var li = "0.18.0", ui = [
+var li = "0.19.0", ui = [
 	"button",
 	"popup",
 	"nav",

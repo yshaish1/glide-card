@@ -234,6 +234,10 @@ const SCHEMAS: Record<CardType, unknown[]> = {
       ],
     },
     { name: "entity", selector: { entity: {} } },
+    {
+      name: "position",
+      selector: { select: { mode: "dropdown", options: [{ value: "auto", label: "Auto (centred on wide screens)" }, { value: "bottom", label: "Bottom sheet everywhere" }] } },
+    },
   ],
   nav: [
     {
@@ -280,6 +284,7 @@ const SCHEMAS: Record<CardType, unknown[]> = {
 
 const LABELS: Record<string, string> = {
   hash: "Hash (e.g. #living-room)",
+  position: "Opens as",
   slider: "Swipe to adjust (brightness / position)",
   layout: "Layout (empty = theme default)",
   color: "Colour (empty = by entity type)",

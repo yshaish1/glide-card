@@ -16,6 +16,8 @@
 
 ## What's new
 
+- **v0.19: Bottom-sheet pop-ups everywhere.** Add `position: bottom` to a pop-up and it slides up from the bottom edge on tablets and desktops too, then closes or swipes back down, the same as on a phone. [Pop-up docs](https://github.com/yshaish1/glide-card/blob/main/docs/cards/popup.md)
+
 - **v0.18: Dashboard backgrounds and more cover views.** A new background card paints the dashboard: match your Glide theme, pick one of ten presets, use a colour or gradient, or your own photo with blur and dim. It works per view or for the whole dashboard, with an optional slow drift. Covers get seven new views: mountains, beach, forest, desert, snow, field and a pool with palms. [Background docs](https://github.com/yshaish1/glide-card/blob/main/docs/cards/background.md) · [Cover views](https://github.com/yshaish1/glide-card/blob/main/docs/cards/cover.md#views)
 
 ![One dashboard on five backgrounds](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/backgrounds.webp)

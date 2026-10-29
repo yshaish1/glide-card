@@ -57,3 +57,28 @@ describe("popup sheet registry", () => {
     expect(document.documentElement.style.overflow).toBe("");
   });
 });
+
+describe("popup position", () => {
+  it("reflects position on the sheet, auto by default", async () => {
+    const owner = {};
+    registerPopup(config, owner);
+    await (sheet() as any).updateComplete;
+    expect(sheet()!.getAttribute("position")).toBe("auto");
+    registerPopup({ ...config, position: "bottom" }, owner);
+    await (sheet() as any).updateComplete;
+    expect(sheet()!.getAttribute("position")).toBe("bottom");
+    unregisterPopup("#more", owner);
+  });
+
+  it("is a bottom sheet on wide screens only with position: bottom", () => {
+    const wide = window.matchMedia;
+    window.matchMedia = ((q: string) => ({ matches: q.includes("min-width"), media: q })) as any;
+    const owner = {};
+    registerPopup(config, owner);
+    expect((sheet() as any).bottomSheet).toBe(false);
+    registerPopup({ ...config, position: "bottom" }, owner);
+    expect((sheet() as any).bottomSheet).toBe(true);
+    unregisterPopup("#more", owner);
+    window.matchMedia = wide;
+  });
+});

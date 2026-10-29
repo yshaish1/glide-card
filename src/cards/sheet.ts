@@ -60,6 +60,16 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
     lockScroll(on);
   }
 
+  protected willUpdate(changed: PropertyValues<this>) {
+    super.willUpdate(changed);
+    if (this.config) this.setAttribute("position", this.config.position ?? "auto");
+  }
+
+  /** Slides from the bottom edge: always on phones, and on wide screens with `position: bottom`. */
+  private get bottomSheet() {
+    return this.config?.position === "bottom" || !matchMedia(WIDE).matches;
+  }
+
   setHass(hass: HomeAssistant) {
     this.hass = hass;
     for (const c of this.children_) (c as any).hass = hass;
@@ -128,7 +138,7 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
     const { easing, duration } = spring();
     const o = this.origin;
     const p = panel.getBoundingClientRect();
-    if (o && o.width && o.bottom > 0 && o.top < innerHeight) {
+    if (o && o.width && o.bottom > 0 && o.top < innerHeight && this.config.position !== "bottom") {
       // FLIP morph: start exactly over the tile that opened us.
       const from = `translate(${o.left - p.left}px, ${o.top - p.top}px) scale(${o.width / p.width}, ${o.height / p.height})`;
       panel.style.transformOrigin = "0 0";
@@ -136,7 +146,7 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
         .animate([{ transform: from, opacity: 0.5 }, { transform: "none", opacity: 1 }], { duration, easing, fill: "backwards" })
         .finished.then(() => (panel.style.transformOrigin = ""), () => (panel.style.transformOrigin = ""));
       this.renderRoot.querySelector(".content")?.animate([{ opacity: 0 }, { opacity: 0, offset: 0.35 }, { opacity: 1 }], { duration, fill: "backwards" });
-    } else if (matchMedia(WIDE).matches) {
+    } else if (!this.bottomSheet) {
       panel.animate([{ transform: "scale(.92)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration, easing, fill: "backwards" });
     } else {
       panel.animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration, easing, fill: "backwards" });
@@ -146,8 +156,7 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
   private animateClose() {
     const panel = this.panel;
     const current = panel.style.transform || "none";
-    const wide = matchMedia(WIDE).matches;
-    const to = wide ? { transform: "scale(.94)", opacity: 0 } : { transform: "translateY(100%)", opacity: 1 };
+    const to = this.bottomSheet ? { transform: "translateY(100%)", opacity: 1 } : { transform: "scale(.94)", opacity: 0 };
     const dur = reducedMotion() ? 0 : 260;
     this.scrim.animate([{ opacity: getComputedStyle(this.scrim).opacity }, { opacity: 0 }], { duration: dur, fill: "forwards" });
     const anim = panel.animate([{ transform: current, opacity: 1 }, to], { duration: dur, easing: "cubic-bezier(.4,0,.8,.4)", fill: "forwards" });
@@ -162,9 +171,9 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
       .catch(() => {});
   }
 
-  /** Drag the sheet down by its header to dismiss (phones only). */
+  /** Drag the sheet down by its header to dismiss (bottom sheets only). */
   private onDragStart(e: PointerEvent) {
-    if (matchMedia(WIDE).matches || e.button !== 0) return;
+    if (!this.bottomSheet || e.button !== 0) return;
     if ((e.target as HTMLElement).closest("button")) return;
     const panel = this.panel;
     const handle = e.currentTarget as HTMLElement;
@@ -324,6 +333,15 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
         }
         .grabber { visibility: hidden; height: 0; margin: 6px; }
         .handle { cursor: default; }
+        /* position: bottom keeps the sheet on the bottom edge, centred at the same width. */
+        :host([position="bottom"]) .panel {
+          inset: auto auto 0 50%;
+          translate: -50% 0;
+          border-radius: var(--gc-radius) var(--gc-radius) 0 0;
+          border-bottom: 0;
+        }
+        :host([position="bottom"]) .grabber { visibility: visible; height: 5px; margin: 8px auto 2px; }
+        :host([position="bottom"]) .handle { cursor: grab; }
       }
     `,
   ];
