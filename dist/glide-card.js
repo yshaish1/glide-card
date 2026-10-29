@@ -3266,7 +3266,7 @@ var Tn = "(min-width: 768px)", En = 120, Dn = .6, On = [
           border-radius: var(--gc-radius) var(--gc-radius) 0 0;
           border-bottom: 0;
         }
-        :host([position="bottom"]) .grabber { visibility: visible; height: 5px; margin: 8px auto 2px; }
+        :host([position="bottom"]) .grabber { visibility: inherit; height: 5px; margin: 8px auto 2px; }
         :host([position="bottom"]) .handle { cursor: grab; }
       }
     `];
@@ -5638,7 +5638,7 @@ var ci = class extends F {
 customElements.define("glide-card-editor", ci);
 //#endregion
 //#region src/glide-card.ts
-var li = "0.19.0", ui = [
+var li = "0.19.1", ui = [
 	"button",
 	"popup",
 	"nav",

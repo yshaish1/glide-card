@@ -340,7 +340,7 @@ export class GlideSheet extends GlideBase<PopupCardConfig> {
           border-radius: var(--gc-radius) var(--gc-radius) 0 0;
           border-bottom: 0;
         }
-        :host([position="bottom"]) .grabber { visibility: visible; height: 5px; margin: 8px auto 2px; }
+        :host([position="bottom"]) .grabber { visibility: inherit; height: 5px; margin: 8px auto 2px; }
         :host([position="bottom"]) .handle { cursor: grab; }
       }
     `,
