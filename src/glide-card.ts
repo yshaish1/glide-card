@@ -10,12 +10,13 @@ import "./cards/title";
 import "./cards/heading";
 import "./cards/background";
 import "./cards/search";
+import "./cards/clock";
 import "./editor/editor";
 import type { GlideBase } from "./core/base-card";
 import type { GlideCardConfig, HomeAssistant } from "./core/types";
 
-const VERSION = "0.21.0";
-const TYPES = ["button", "popup", "nav", "climate", "media", "chips", "title", "heading", "background", "search"] as const;
+const VERSION = "0.22.0";
+const TYPES = ["button", "popup", "nav", "climate", "media", "chips", "title", "heading", "background", "search", "clock"] as const;
 
 /**
  * `custom:glide-card` - a thin host that creates the inner card for
@@ -29,7 +30,8 @@ class GlideCard extends HTMLElement {
   setConfig(config: GlideCardConfig) {
     const type = config?.card_type ?? "button";
     if (!TYPES.includes(type)) throw new Error(`Unknown card_type "${type}". Use one of: ${TYPES.join(", ")}`);
-    const tag = `glide-${type}`;
+    // An inline search is the sheet's content placed right on the dashboard.
+    const tag = type === "search" && (config as { inline?: boolean }).inline ? "glide-search-panel" : `glide-${type}`;
     if (!customElements.get(tag)) throw new Error(`card_type "${type}" is not available in this build`);
     if (this.inner?.localName !== tag) {
       this.inner?.remove();

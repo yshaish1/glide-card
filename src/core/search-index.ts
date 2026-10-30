@@ -78,8 +78,16 @@ export const dashboardOf = (pathname: string) => pathname.split("/").filter(Bool
  * glide buttons/climate/media and tiles become cards. Nested stacks, grids, conditionals and pop-ups
  * are walked. The same entity on several pages is listed once, where it appears first.
  */
-export function collectDashboard(lovelace: Cfg | undefined, base: string, hass?: HomeAssistant): SearchEntry[] {
+export function collectDashboard(
+  lovelace: Cfg | undefined,
+  base: string,
+  hass?: HomeAssistant,
+  opts: { remote?: boolean } = {},
+): SearchEntry[] {
   const views: Cfg[] = lovelace?.views ?? [];
+  // Results shown on another dashboard: "#popup" links only exist on the source dashboard's own views.
+  const viewPath = (i: number) => `/${base}/${views[i]?.path ?? i}`;
+  const home = (c: Cfg, i: number) => (opts.remote ? rehome(c, viewPath(i)) : c);
   const out: SearchEntry[] = [];
   const byKey = new Map<string, SearchEntry>();
   let order = 0;
@@ -138,7 +146,7 @@ export function collectDashboard(lovelace: Cfg | undefined, base: string, hass?:
             key: `nav:${c.hash}`,
             name: title,
             group: shared ? "" : viewTitle,
-            config: placeButton(title, c.icon ?? "mdi:card-outline", c.hash),
+            config: placeButton(title, c.icon ?? "mdi:card-outline", opts.remote ? viewPath(viewIndex) + c.hash : c.hash),
           });
           walk(c.cards, label, viewTitle, viewIndex);
           continue;
@@ -147,12 +155,12 @@ export function collectDashboard(lovelace: Cfg | undefined, base: string, hass?:
         if (ENTITY_CARDS.has(type)) {
           const key = usageKey(c);
           const name = cardName(c, hass);
-          if (key && name) add({ kind: "card", key, name, group, config: c }, domainWords(c.entity));
+          if (key && name) add({ kind: "card", key, name, group, config: home(c, viewIndex) }, domainWords(c.entity));
         }
         continue;
       }
       if (c.type === "tile" && c.entity) {
-        add({ kind: "card", key: c.entity, name: cardName(c, hass), group, config: c }, domainWords(c.entity));
+        add({ kind: "card", key: c.entity, name: cardName(c, hass), group, config: home(c, viewIndex) }, domainWords(c.entity));
         continue;
       }
       walk(c.cards, group, viewTitle, viewIndex);
@@ -162,7 +170,7 @@ export function collectDashboard(lovelace: Cfg | undefined, base: string, hass?:
 
   views.forEach((v, i) => {
     const title: string = v.title ?? v.path ?? String(i);
-    const path = `/${base}/${v.path ?? i}`;
+    const path = viewPath(i);
     add({ kind: "place", key: `nav:${path}`, name: title, group: "", config: placeButton(title, v.icon ?? "mdi:view-dashboard", path) });
     walk(viewCards(v), title, title, i);
   });
@@ -183,6 +191,17 @@ function entitiesIn(cards: Cfg[] | undefined, out = new Set<string>()): Set<stri
     if (c.card) entitiesIn([c.card], out);
   }
   return out;
+}
+
+/** A copy of the card whose `#popup` navigation paths point at `viewPath` (`#ac` → `/home-glass/office#ac`). */
+export function rehome<T>(c: T, viewPath: string): T {
+  if (Array.isArray(c)) return c.map((v) => rehome(v, viewPath)) as T;
+  if (!c || typeof c !== "object") return c;
+  const out: Cfg = {};
+  for (const [k, v] of Object.entries(c)) {
+    out[k] = k === "navigation_path" && typeof v === "string" && v.startsWith("#") ? viewPath + v : rehome(v, viewPath);
+  }
+  return out as T;
 }
 
 /** Climate and media cards are big; results show them as buttons. */

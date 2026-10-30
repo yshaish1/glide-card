@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { collectDashboard, collectExtras, frequent, matchTier, normalize, rank, type SearchEntry } from "../src/core/search-index";
+import { collectDashboard, collectExtras, frequent, matchTier, normalize, rank, rehome, type SearchEntry } from "../src/core/search-index";
 import { recordTap, resetUsage, usageKey, usageOf } from "../src/core/usage";
 import type { HassEntity, HomeAssistant } from "../src/core/types";
 
@@ -199,5 +199,50 @@ describe("usage", () => {
     expect(usageOf("light.a", 14 * day)).toBeCloseTo(1);
     resetUsage();
     expect(usageOf("light.a", 0)).toBe(2); // persisted
+  });
+});
+
+describe("searching another dashboard", () => {
+  const source = {
+    views: [
+      {
+        title: "משרד",
+        path: "office",
+        sections: [
+          {
+            type: "grid",
+            cards: [
+              { type: G, card_type: "button", entity: "switch.boiler", name: "דוד", tap_action: { action: "navigate", navigation_path: "#boiler" } },
+              { type: G, card_type: "button", name: "חוץ", icon: "mdi:pool", tap_action: { action: "navigate", navigation_path: "/home-glass/outdoor" } },
+              { type: G, card_type: "popup", hash: "#ac", title: "מזגנים", cards: [btn("climate.a", "מזגן א"), btn("climate.b", "מזגן ב")] },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+
+  it("points places and #popup links at the source dashboard's view", () => {
+    const entries = collectDashboard(source, "home-glass", undefined, { remote: true });
+    const place = entries.find((e) => e.key === "nav:#ac")!;
+    expect(place.config.tap_action.navigation_path).toBe("/home-glass/office#ac");
+    const boiler = entries.find((e) => e.config.entity === "switch.boiler")!;
+    expect(boiler.config.tap_action.navigation_path).toBe("/home-glass/office#boiler");
+    expect(entries.find((e) => e.key === "nav:/home-glass/office")).toBeTruthy();
+  });
+
+  it("leaves #popup links alone on the dashboard itself", () => {
+    const entries = collectDashboard(source, "home-glass");
+    expect(entries.find((e) => e.key === "nav:#ac")!.config.tap_action.navigation_path).toBe("#ac");
+    expect(entries.find((e) => e.config.entity === "switch.boiler")!.config.tap_action.navigation_path).toBe("#boiler");
+  });
+
+  it("rehome copies, rewriting only # navigation paths", () => {
+    const c = { tap_action: { action: "navigate", navigation_path: "#x" }, hold_action: { action: "navigate", navigation_path: "/a/b" }, name: "#x" };
+    const r = rehome(c, "/d/v");
+    expect(r.tap_action.navigation_path).toBe("/d/v#x");
+    expect(r.hold_action.navigation_path).toBe("/a/b");
+    expect(r.name).toBe("#x");
+    expect(c.tap_action.navigation_path).toBe("#x");
   });
 });

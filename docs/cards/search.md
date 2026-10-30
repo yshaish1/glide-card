@@ -27,7 +27,9 @@ Control buttons act in place and the sheet stays open. Places close it and navig
 | `extra_domains` | list | Domains searched beyond the dashboard. Default: light, switch, input_boolean, cover, climate, fan, script, scene, media_player, vacuum, lock, button, input_button, humidifier, water_heater, valve, siren. |
 | `include_sensors` | boolean | Also list sensors and binary sensors (read-only, last). Default `true`. |
 | `exclude` | list | Entity ids to leave out. `*` matches anything, e.g. `sensor.*_battery`. |
-| `frequent` | number | Most-used buttons shown before typing. Default `8`, and `0` hides them. |
+| `frequent` | number | Most-used buttons shown before typing. Default `8` (`0` when inline), and `0` hides them. |
+| `inline` | boolean | Show the field and the results right on the dashboard instead of in a sheet. Before you type nothing is shown under the field, unless `frequent` is set. On a desktop the field is focused when the page opens. |
+| `source` | string | Search another dashboard, by its url (e.g. `home-glass`). Its pages and pop-ups open there, and buttons that open a pop-up go to the page that holds it. The config is fetched again every 5 minutes. |
 | `size` / `tap_animation` / `theme` | | Passed on to the result cards. |
 
 ## Example
@@ -47,4 +49,16 @@ items:
     icon: mdi:magnify
     navigation_path: "#search"
     pinned: true
+```
+
+### A search page
+
+A dashboard that is just a big search over your main dashboard, with a [clock](clock.md) above it:
+
+```yaml
+type: custom:glide-card
+card_type: search
+inline: true
+source: home-glass
+placeholder: What are you looking for?
 ```

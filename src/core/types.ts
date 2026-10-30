@@ -42,7 +42,7 @@ export interface ActionConfig {
   [key: string]: unknown;
 }
 
-export type CardType = "button" | "popup" | "nav" | "climate" | "media" | "chips" | "title" | "heading" | "background" | "search";
+export type CardType = "button" | "popup" | "nav" | "climate" | "media" | "chips" | "title" | "heading" | "background" | "search" | "clock";
 export type ThemeMode = "auto" | "dark" | "light";
 /** How much room a card takes: today's look, tighter, or the minimum (some layouts change). */
 export type CardSize = "full" | "compact" | "slim";
@@ -120,8 +120,21 @@ export interface SearchCardConfig extends BaseCardConfig {
   include_sensors?: boolean;
   /** Entity ids to leave out; `*` matches anything (`sensor.*_battery`). */
   exclude?: string[];
-  /** How many most-used buttons show before you type. Default 8; 0 hides them. */
+  /** How many most-used buttons show before you type. Default 8 (0 when inline); 0 hides them. */
   frequent?: number;
+  /** Show the field and results right on the dashboard instead of in a pop-up sheet. */
+  inline?: boolean;
+  /** Search another dashboard (its url_path, e.g. "home-glass"); places and pop-ups open there. */
+  source?: string;
+}
+
+/** A large clock with the date, and an optional second line from an entity (a Hebrew date, say). */
+export interface ClockCardConfig extends BaseCardConfig {
+  card_type: "clock";
+  /** Entity whose state is shown under the date. */
+  secondary_entity?: string;
+  /** Show seconds. Default false. */
+  seconds?: boolean;
 }
 
 export interface NavMenuItem {
@@ -223,6 +236,7 @@ export interface BackgroundCardConfig extends BaseCardConfig {
 }
 
 export type GlideCardConfig =
+  | ClockCardConfig
   | ButtonCardConfig
   | PopupCardConfig
   | NavCardConfig

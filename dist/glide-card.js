@@ -4916,76 +4916,76 @@ function di(e, t) {
 	return (n ? t?.states[n]?.attributes.friendly_name : void 0) ?? n ?? "";
 }
 var fi = (e) => e.split("/").filter(Boolean)[0] ?? "lovelace";
-function pi(e, t, n) {
-	let r = e?.views ?? [], i = [], a = /* @__PURE__ */ new Map(), o = 0, s = /* @__PURE__ */ new Map(), c = (e, t) => {
-		for (let n of e ?? []) n && typeof n == "object" && (t(n), c(n.cards, t), n.card && c([n.card], t));
-	}, l = (e) => [...e.cards ?? [], ...e.sections ?? []];
-	r.forEach((e, t) => c(l(e), (e) => {
-		e.type === $ && e.card_type === "popup" && e.hash && (s.has(e.hash) || s.set(e.hash, /* @__PURE__ */ new Set()), s.get(e.hash).add(t));
+function pi(e, t, n, r = {}) {
+	let i = e?.views ?? [], a = (e) => `/${t}/${i[e]?.path ?? e}`, o = (e, t) => r.remote ? gi(e, a(t)) : e, s = [], c = /* @__PURE__ */ new Map(), l = 0, u = /* @__PURE__ */ new Map(), d = (e, t) => {
+		for (let n of e ?? []) n && typeof n == "object" && (t(n), d(n.cards, t), n.card && d([n.card], t));
+	}, f = (e) => [...e.cards ?? [], ...e.sections ?? []];
+	i.forEach((e, t) => d(f(e), (e) => {
+		e.type === $ && e.card_type === "popup" && e.hash && (u.has(e.hash) || u.set(e.hash, /* @__PURE__ */ new Set()), u.get(e.hash).add(t));
 	}));
-	let u = /* @__PURE__ */ new Map(), d = (e, t = []) => {
-		let n = mi(e.config), r = a.get(e.key);
+	let p = /* @__PURE__ */ new Map(), m = (e, t = []) => {
+		let n = mi(e.config), r = c.get(e.key);
 		if (r) {
-			let t = n > u.get(e.key), i = t ? r.group : e.group;
+			let t = n > p.get(e.key), i = t ? r.group : e.group;
 			t && (Object.assign(r, {
 				name: e.name,
 				group: e.group,
-				config: gi(e.config)
-			}), u.set(e.key, n)), i && i !== r.group && !r.alt.includes(i) && r.alt.push(i);
+				config: _i(e.config)
+			}), p.set(e.key, n)), i && i !== r.group && !r.alt.includes(i) && r.alt.push(i);
 			return;
 		}
-		let s = {
+		let i = {
 			...e,
-			config: gi(e.config),
+			config: _i(e.config),
 			alt: [...t],
-			order: o++
+			order: l++
 		};
-		a.set(e.key, s), u.set(e.key, n), i.push(s);
-	}, f = (e, t, r, i) => {
-		for (let a of e ?? []) if (a && typeof a == "object") {
-			if (a.type === $) {
-				let e = a.card_type ?? "button";
-				if (e === "popup" && a.hash) {
-					let e = a.title ?? a.hash.slice(1), t = (s.get(a.hash)?.size ?? 0) > 1, n = t || !r ? e : `${r} › ${e}`;
-					hi(a.cards).size !== 1 && d({
+		c.set(e.key, i), p.set(e.key, n), s.push(i);
+	}, h = (e, t, i, s) => {
+		for (let c of e ?? []) if (c && typeof c == "object") {
+			if (c.type === $) {
+				let e = c.card_type ?? "button";
+				if (e === "popup" && c.hash) {
+					let e = c.title ?? c.hash.slice(1), t = (u.get(c.hash)?.size ?? 0) > 1, n = t || !i ? e : `${i} › ${e}`;
+					hi(c.cards).size !== 1 && m({
 						kind: "place",
-						key: `nav:${a.hash}`,
+						key: `nav:${c.hash}`,
 						name: e,
-						group: t ? "" : r,
-						config: _i(e, a.icon ?? "mdi:card-outline", a.hash)
-					}), f(a.cards, n, r, i);
+						group: t ? "" : i,
+						config: vi(e, c.icon ?? "mdi:card-outline", r.remote ? a(s) + c.hash : c.hash)
+					}), h(c.cards, n, i, s);
 					continue;
 				}
 				if (oi.has(e)) continue;
 				if (ai.has(e)) {
-					let e = Ot(a), r = di(a, n);
-					e && r && d({
+					let e = Ot(c), r = di(c, n);
+					e && r && m({
 						kind: "card",
 						key: e,
 						name: r,
 						group: t,
-						config: a
-					}, ui(a.entity));
+						config: o(c, s)
+					}, ui(c.entity));
 				}
-			} else a.type === "tile" && a.entity ? d({
+			} else c.type === "tile" && c.entity ? m({
 				kind: "card",
-				key: a.entity,
-				name: di(a, n),
+				key: c.entity,
+				name: di(c, n),
 				group: t,
-				config: a
-			}, ui(a.entity)) : (f(a.cards, t, r, i), a.card && f([a.card], t, r, i));
+				config: o(c, s)
+			}, ui(c.entity)) : (h(c.cards, t, i, s), c.card && h([c.card], t, i, s));
 		}
 	};
-	return r.forEach((e, n) => {
-		let r = e.title ?? e.path ?? String(n), i = `/${t}/${e.path ?? n}`;
-		d({
+	return i.forEach((e, t) => {
+		let n = e.title ?? e.path ?? String(t), r = a(t);
+		m({
 			kind: "place",
-			key: `nav:${i}`,
-			name: r,
+			key: `nav:${r}`,
+			name: n,
 			group: "",
-			config: _i(r, e.icon ?? "mdi:view-dashboard", i)
-		}), f(l(e), r, r, n);
-	}), i;
+			config: vi(n, e.icon ?? "mdi:view-dashboard", r)
+		}), h(f(e), n, n, t);
+	}), s;
 }
 function mi(e) {
 	return e.type === $ ? (e.card_type ?? "button") === "button" ? typeof e.name == "string" && e.name && !ci(e.name) ? 3 : 2 : 1 : 0;
@@ -4994,13 +4994,20 @@ function hi(e, t = /* @__PURE__ */ new Set()) {
 	for (let n of e ?? []) n && typeof n == "object" && (typeof n.entity == "string" && t.add(n.entity), hi(n.cards, t), n.card && hi([n.card], t));
 	return t;
 }
-var gi = (e) => e.type === $ && (e.card_type === "climate" || e.card_type === "media") ? {
+function gi(e, t) {
+	if (Array.isArray(e)) return e.map((e) => gi(e, t));
+	if (!e || typeof e != "object") return e;
+	let n = {};
+	for (let [r, i] of Object.entries(e)) n[r] = r === "navigation_path" && typeof i == "string" && i.startsWith("#") ? t + i : gi(i, t);
+	return n;
+}
+var _i = (e) => e.type === $ && (e.card_type === "climate" || e.card_type === "media") ? {
 	type: $,
 	card_type: "button",
 	entity: e.entity,
 	...e.name ? { name: e.name } : {},
 	...e.theme ? { theme: e.theme } : {}
-} : e, _i = (e, t, n) => ({
+} : e, vi = (e, t, n) => ({
 	type: $,
 	card_type: "button",
 	layout: "pill",
@@ -5011,8 +5018,8 @@ var gi = (e) => e.type === $ && (e.card_type === "climate" || e.card_type === "m
 		navigation_path: n
 	}
 });
-function vi(e, t, n) {
-	let r = new Set(n.domains ?? ri), i = new Set(n.sensors === !1 ? [] : ii), a = (n.exclude ?? []).map(yi), o = e.entities ?? {}, s = [], c = 1e5;
+function yi(e, t, n) {
+	let r = new Set(n.domains ?? ri), i = new Set(n.sensors === !1 ? [] : ii), a = (n.exclude ?? []).map(bi), o = e.entities ?? {}, s = [], c = 1e5;
 	for (let l of Object.keys(e.states).sort()) {
 		if (t.has(l) || a.some((e) => e.test(l))) continue;
 		let u = l.split(".")[0], d = i.has(u);
@@ -5037,8 +5044,8 @@ function vi(e, t, n) {
 	}
 	return s;
 }
-var yi = (e) => RegExp(`^${e.split("*").map((e) => e.replace(/[.+?^${}()|[\]\\]/g, "\\$&")).join(".*")}$`);
-function bi(e, t) {
+var bi = (e) => RegExp(`^${e.split("*").map((e) => e.replace(/[.+?^${}()|[\]\\]/g, "\\$&")).join(".*")}$`);
+function xi(e, t) {
 	let n = si(t);
 	if (!n) return;
 	let r = si(e.name);
@@ -5051,16 +5058,16 @@ function bi(e, t) {
 	let o = `${a} ${e.alt.map(si).join(" ")}`;
 	if (i.every((e) => o.includes(e))) return 5;
 }
-var xi = {
+var Si = {
 	place: 0,
 	card: 1,
 	extra: 2,
 	sensor: 3
 };
-function Si(e, t, n, r, i = 60) {
+function Ci(e, t, n, r, i = 60) {
 	let a = e.map((e) => ({
 		e,
-		tier: bi(e, t),
+		tier: xi(e, t),
 		use: n(e.key)
 	})).filter((e) => e.tier !== void 0).sort((e, t) => e.tier - t.tier || t.use - e.use || e.e.order - t.e.order), o = a.slice(0, i), s = /* @__PURE__ */ new Map();
 	return o.forEach((e, t) => {
@@ -5072,11 +5079,11 @@ function Si(e, t, n, r, i = 60) {
 			best: t
 		}), s.get(i).entries.push(e.e);
 	}), {
-		groups: [...s.values()].sort((e, t) => xi[e.kind] - xi[t.kind] || e.best - t.best).map(({ best: e, ...t }) => t),
+		groups: [...s.values()].sort((e, t) => Si[e.kind] - Si[t.kind] || e.best - t.best).map(({ best: e, ...t }) => t),
 		more: a.length - o.length
 	};
 }
-function Ci(e, t, n) {
+function wi(e, t, n) {
 	return e.filter((e) => e.kind === "card" || e.kind === "extra").map((e) => ({
 		e,
 		use: t(e.key)
@@ -5084,8 +5091,8 @@ function Ci(e, t, n) {
 }
 //#endregion
 //#region src/cards/search.ts
-var wi = "#search", Ti = 80, Ei = /* @__PURE__ */ new Set();
-function Di(e) {
+var Ti = "#search", Ei = 80, Di = 3e5, Oi = /* @__PURE__ */ new Set();
+function ki(e) {
 	let t = e;
 	for (; t;) {
 		let e = t.lovelace?.config;
@@ -5093,16 +5100,16 @@ function Di(e) {
 		t = t.parentNode ?? t.host;
 	}
 }
-function Oi() {
-	for (let e of Ei) {
-		let t = e.isConnected ? Di(e) : void 0;
+function Ai() {
+	for (let e of Oi) {
+		let t = e.isConnected ? ki(e) : void 0;
 		if (t) return t;
 	}
 }
-var ki = (e, t) => ({
+var ji = (e, t) => ({
 	type: e.type,
 	card_type: "popup",
-	hash: e.hash ?? wi,
+	hash: e.hash ?? Ti,
 	title: e.title ?? J(t, "search"),
 	icon: "mdi:magnify",
 	theme: e.theme,
@@ -5114,25 +5121,25 @@ var ki = (e, t) => ({
 		...e,
 		type: "custom:glide-search-panel"
 	}]
-}), Ai = class extends Yn {
+}), Mi = class extends Yn {
 	setConfig(e) {
-		this.raw = e, this.titleLang = this.hass?.language, super.setConfig(ki(this.raw, this.hass));
+		this.raw = e, this.titleLang = this.hass?.language, super.setConfig(ji(this.raw, this.hass));
 	}
 	willUpdate(e) {
 		this.raw && this.hass && this.hass.language !== this.titleLang && this.setConfig(this.raw), super.willUpdate(e);
 	}
 	connectedCallback() {
-		super.connectedCallback(), Ei.add(this);
+		super.connectedCallback(), Oi.add(this);
 	}
 	disconnectedCallback() {
-		super.disconnectedCallback(), setTimeout(() => !this.isConnected && Ei.delete(this), 1e3);
+		super.disconnectedCallback(), setTimeout(() => !this.isConnected && Oi.delete(this), 1e3);
 	}
 };
-customElements.define("glide-search", Ai);
-var ji = class extends G {
+customElements.define("glide-search", Mi);
+var Ni = class extends G {
 	constructor(...e) {
-		super(...e), this.cardType = "popup", this.query = "", this.shown = "", this.els = /* @__PURE__ */ new Map(), this.index = { entries: [] }, this.onRoute = () => {
-			decodeURIComponent(location.hash) === this.hash && (this.index.lovelace = void 0, this.requestUpdate(), setTimeout(() => {
+		super(...e), this.cardType = "popup", this.query = "", this.shown = "", this.els = /* @__PURE__ */ new Map(), this.index = { entries: [] }, this.fetchedAt = 0, this.onRoute = () => {
+			this.config?.inline || decodeURIComponent(location.hash) !== this.hash || (this.index.lovelace = void 0, this.requestUpdate(), setTimeout(() => {
 				let e = this.renderRoot.querySelector("input");
 				e?.focus({ preventScroll: !0 }), e?.select();
 			}, 60));
@@ -5145,7 +5152,7 @@ var ji = class extends G {
 		};
 	}
 	setConfig(e) {
-		super.setConfig(e), this.index = { entries: [] };
+		e.source !== this.config?.source && (this.fetched = void 0, this.fetchedAt = 0), super.setConfig(e), this.index = { entries: [] }, this.toggleAttribute("inline", !!e.inline);
 	}
 	connectedCallback() {
 		super.connectedCallback();
@@ -5155,7 +5162,7 @@ var ji = class extends G {
 			"glide-hash",
 			"location-changed"
 		]) window.addEventListener(e, this.onRoute);
-		this.onRoute();
+		this.onRoute(), this.config?.inline && matchMedia("(hover: hover) and (pointer: fine)").matches && setTimeout(() => this.renderRoot.querySelector("input")?.focus({ preventScroll: !0 }), 300);
 	}
 	disconnectedCallback() {
 		super.disconnectedCallback();
@@ -5167,7 +5174,7 @@ var ji = class extends G {
 		]) window.removeEventListener(e, this.onRoute);
 	}
 	get hash() {
-		return this.config?.hash ?? wi;
+		return this.config?.hash ?? Ti;
 	}
 	get labels() {
 		return {
@@ -5179,26 +5186,26 @@ var ji = class extends G {
 	entries() {
 		let e = this.hass;
 		if (!e) return [];
-		let t = Oi() ?? this.fetched;
-		if (!t && !this.fetched && e.callWS) {
-			let t = fi(location.pathname);
-			e.callWS({
+		let t = fi(location.pathname), n = this.config.source, r = !!n && n !== t, i = r ? this.fetched : (this.config.inline ? ki(this) : void 0) ?? Ai() ?? this.fetched;
+		if ((r ? Date.now() - this.fetchedAt > Di : !i && !this.fetched) && e.callWS) {
+			let r = n ?? t;
+			this.fetchedAt = Date.now(), e.callWS({
 				type: "lovelace/config",
-				url_path: t === "lovelace" ? null : t
-			}).then((e) => (this.fetched = e, this.requestUpdate())).catch(() => {});
+				url_path: r === "lovelace" ? null : r
+			}).then((e) => (this.fetched = e, this.requestUpdate())).catch(() => this.fetchedAt = 0);
 		}
-		let n = Object.keys(e.states).length;
-		if (this.index.lovelace === t && this.index.states === n && this.index.entries.length) return this.index.entries;
-		let r = pi(t, fi(location.pathname), e), i = vi(e, new Set(r.map((e) => e.config.entity).filter(Boolean)), {
+		let a = Object.keys(e.states).length;
+		if (this.index.lovelace === i && this.index.states === a && this.index.entries.length) return this.index.entries;
+		let o = pi(i, n ?? t, e, { remote: r }), s = yi(e, new Set(o.map((e) => e.config.entity).filter(Boolean)), {
 			domains: this.config.extra_domains,
 			sensors: this.config.include_sensors,
 			exclude: this.config.exclude,
 			labels: this.labels
 		});
 		return this.index = {
-			lovelace: t,
-			states: n,
-			entries: [...r, ...i]
+			lovelace: i,
+			states: a,
+			entries: [...o, ...s]
 		}, this.index.entries;
 	}
 	shouldUpdate(e) {
@@ -5210,7 +5217,7 @@ var ji = class extends G {
 		return super.shouldUpdate(e);
 	}
 	onInput(e) {
-		this.query = e.target.value, clearTimeout(this.timer), this.timer = setTimeout(() => (this.shown = this.query, this.requestUpdate()), Ti);
+		this.query = e.target.value, clearTimeout(this.timer), this.timer = setTimeout(() => (this.shown = this.query, this.requestUpdate()), Ei);
 	}
 	clear() {
 		this.query = this.shown = "";
@@ -5245,15 +5252,15 @@ var ji = class extends G {
 		this.helpers || window.loadCardHelpers?.().then((e) => (this.helpers = e, this.requestUpdate()));
 		let e = this.entries(), t = this.shown.trim(), n;
 		if (t) {
-			let { groups: r, more: i } = Si(e, t, (e) => At(e), this.labels);
+			let { groups: r, more: i } = Ci(e, t, (e) => At(e), this.labels);
 			n = r.length ? O`${r.map((e) => this.group(e))}${i ? O`<div class="note">+${i} ${J(this.hass, "search_more")}</div>` : j}` : O`<div class="note">${J(this.hass, "search_none")} “${t}”</div>`;
 		} else {
-			let t = this.config.frequent === 0 ? [] : Ci(e, (e) => At(e), this.config.frequent ?? 8);
-			n = t.length ? this.group({
+			let t = !!this.config.inline, r = this.config.frequent ?? (t ? 0 : 8), i = r === 0 ? [] : wi(e, (e) => At(e), r);
+			n = i.length ? this.group({
 				title: J(this.hass, "search_frequent"),
 				kind: "card",
-				entries: t
-			}) : O`<div class="note">${J(this.hass, "search_hint")}</div>`;
+				entries: i
+			}) : t ? j : O`<div class="note">${J(this.hass, "search_hint")}</div>`;
 		}
 		return O`
       <div class="bar surface">
@@ -5316,6 +5323,18 @@ var ji = class extends G {
         color: var(--gc-text-dim);
       }
       .results { padding-top: 6px; }
+      :host([inline]) .bar {
+        position: static;
+        max-width: 640px;
+        margin: 0 auto;
+        height: 60px;
+        padding: 0 20px;
+        border-radius: 999px;
+      }
+      :host([inline]) .bar ha-icon { --mdc-icon-size: 26px; }
+      :host([inline]) input { font-size: 20px; }
+      :host([inline]) .results { padding-top: 14px; }
+      :host([inline]) .results:empty { display: none; }
       section { margin-top: 10px; }
       .gtitle {
         font-size: 13px;
@@ -5339,10 +5358,75 @@ var ji = class extends G {
     `];
 	}
 };
-customElements.define("glide-search-panel", ji);
+customElements.define("glide-search-panel", Ni);
+//#endregion
+//#region src/cards/clock.ts
+var Pi = class extends G {
+	constructor(...e) {
+		super(...e), this.cardType = "clock", this.tick = () => {
+			this.requestUpdate();
+			let e = this.config?.seconds ? 1e3 - Date.now() % 1e3 : 6e4 - Date.now() % 6e4;
+			this.timer = setTimeout(this.tick, e + 20);
+		};
+	}
+	watched() {
+		return [this.config?.secondary_entity];
+	}
+	connectedCallback() {
+		super.connectedCallback(), this.tick();
+	}
+	disconnectedCallback() {
+		super.disconnectedCallback(), clearTimeout(this.timer);
+	}
+	getGridOptions() {
+		return { columns: 12 };
+	}
+	getCardSize() {
+		return 3;
+	}
+	render() {
+		let e = this.config;
+		if (!e) return j;
+		let t = this.hass?.language ?? navigator.language, n = /* @__PURE__ */ new Date(), r = n.toLocaleTimeString(t, {
+			hour: "2-digit",
+			minute: "2-digit",
+			second: e.seconds ? "2-digit" : void 0,
+			hourCycle: "h23"
+		}), i = n.toLocaleDateString(t, {
+			weekday: "long",
+			day: "numeric",
+			month: "long"
+		}), a = e.secondary_entity ? this.hass?.states[e.secondary_entity]?.state : void 0, o = a && a !== "unknown" && a !== "unavailable" ? a : "";
+		return O`
+      <div class="wrap">
+        <div class="time">${r}</div>
+        <div class="date">${i}${o ? O`<span class="dot">·</span><span>${o}</span>` : j}</div>
+      </div>
+    `;
+	}
+	static {
+		this.styles = x`
+    :host { display: block; font-family: var(--gc-font); color: var(--gc-text); }
+    .wrap { padding: 16px 4px 4px; text-align: center; }
+    .time {
+      font-size: clamp(56px, 14vw, 104px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      direction: ltr;
+    }
+    .date { margin-top: 10px; font-size: clamp(15px, 3.6vw, 19px); color: var(--gc-text-dim); }
+    .dot { margin: 0 8px; }
+    :host([size="compact"]) .time { font-size: clamp(44px, 11vw, 80px); }
+    :host([size="slim"]) .time { font-size: clamp(34px, 8vw, 56px); }
+  `;
+	}
+};
+customElements.define("glide-clock", Pi);
 //#endregion
 //#region src/editor/editor.ts
-var Mi = [
+var Fi = [
 	{
 		id: "button",
 		icon: "mdi:gesture-tap-button",
@@ -5392,8 +5476,13 @@ var Mi = [
 		id: "search",
 		icon: "mdi:magnify",
 		label: "Search"
+	},
+	{
+		id: "clock",
+		icon: "mdi:clock-outline",
+		label: "Clock"
 	}
-], Ni = [
+], Ii = [
 	"#ff9f43",
 	"#d4ff00",
 	"#006a60",
@@ -5402,7 +5491,7 @@ var Mi = [
 	"#ff5c8a",
 	"#34c759",
 	"#ffd60a"
-], Pi = {
+], Li = {
 	type: "expandable",
 	title: "Interactions",
 	icon: "mdi:gesture-tap",
@@ -5420,13 +5509,13 @@ var Mi = [
 			selector: { ui_action: {} }
 		}
 	]
-}, Fi = /* @__PURE__ */ new Set([
+}, Ri = /* @__PURE__ */ new Set([
 	"button",
 	"chips",
 	"heading",
 	"nav",
 	"popup"
-]), Ii = {
+]), zi = {
 	name: "tap_animation",
 	selector: { select: {
 		mode: "dropdown",
@@ -5435,7 +5524,7 @@ var Mi = [
 			label: t
 		}))
 	} }
-}, Li = {
+}, Bi = {
 	type: "expandable",
 	title: "Templates",
 	icon: "mdi:code-braces",
@@ -5450,9 +5539,9 @@ var Mi = [
 		selector: { template: {} }
 	}))
 };
-function Ri(e) {
-	if (e.card_type === "background") return Bi(e.background ?? "theme");
-	let t = Hi[e.card_type];
+function Vi(e) {
+	if (e.card_type === "background") return Ui(e.background ?? "theme");
+	let t = Gi[e.card_type];
 	if (e.card_type === "button") {
 		let n = e, r = (e) => !(e.name && [
 			"name",
@@ -5464,20 +5553,20 @@ function Ri(e) {
 			schema: e.schema.filter(r)
 		} : e), t = [
 			...t.slice(0, -1),
-			Li,
+			Bi,
 			t[t.length - 1]
 		];
 	}
-	return Fi.has(e.card_type) ? [...t, Ii] : t;
+	return Ri.has(e.card_type) ? [...t, zi] : t;
 }
-var zi = (e, t, n) => ({ number: {
+var Hi = (e, t, n) => ({ number: {
 	min: e,
 	max: t,
 	step: 1,
 	mode: "slider",
 	unit_of_measurement: n
 } });
-function Bi(e) {
+function Ui(e) {
 	let t = [{
 		type: "grid",
 		name: "",
@@ -5530,7 +5619,7 @@ function Bi(e) {
 			}]
 		}, {
 			name: "angle",
-			selector: zi(0, 360, "°")
+			selector: Hi(0, 360, "°")
 		}],
 		image: [
 			{
@@ -5546,10 +5635,10 @@ function Bi(e) {
 				name: "",
 				schema: [{
 					name: "blur",
-					selector: zi(0, 40, "px")
+					selector: Hi(0, 40, "px")
 				}, {
 					name: "dim",
-					selector: zi(0, 90, "%")
+					selector: Hi(0, 90, "%")
 				}]
 			}
 		]
@@ -5563,7 +5652,7 @@ function Bi(e) {
 		...r
 	];
 }
-var Vi = { select: {
+var Wi = { select: {
 	mode: "dropdown",
 	options: [{
 		value: "center",
@@ -5572,7 +5661,7 @@ var Vi = { select: {
 		value: "start",
 		label: "Start"
 	}]
-} }, Hi = {
+} }, Gi = {
 	background: [],
 	heading: [
 		{
@@ -5646,7 +5735,7 @@ var Vi = { select: {
 		} }
 	}, {
 		name: "align",
-		selector: Vi
+		selector: Wi
 	}],
 	title: [
 		{
@@ -5665,7 +5754,7 @@ var Vi = { select: {
 				selector: { icon: {} }
 			}, {
 				name: "align",
-				selector: Vi
+				selector: Wi
 			}]
 		}
 	],
@@ -5835,7 +5924,7 @@ var Vi = { select: {
 				}
 			]
 		},
-		Pi
+		Li
 	],
 	popup: [
 		{
@@ -5931,6 +6020,14 @@ var Vi = { select: {
 			selector: { text: {} }
 		},
 		{
+			name: "inline",
+			selector: { boolean: {} }
+		},
+		{
+			name: "source",
+			selector: { text: {} }
+		},
+		{
 			name: "include_sensors",
 			selector: { boolean: {} }
 		},
@@ -5942,8 +6039,15 @@ var Vi = { select: {
 				mode: "box"
 			} }
 		}
-	]
-}, Ui = {
+	],
+	clock: [{
+		name: "secondary_entity",
+		selector: { entity: {} }
+	}, {
+		name: "seconds",
+		selector: { boolean: {} }
+	}]
+}, Ki = {
 	hash: "Hash (e.g. #living-room)",
 	slider: "Swipe to adjust (brightness / position)",
 	layout: "Layout (empty = theme default)",
@@ -5969,15 +6073,19 @@ var Vi = { select: {
 	animate: "Slow drift",
 	placeholder: "Search field hint",
 	include_sensors: "Also search sensors (default on)",
-	frequent: "Most-used buttons shown before typing (default 8)"
+	frequent: "Most-used buttons shown before typing (default 8, inline 0)",
+	inline: "Inline: the field sits on the dashboard (no pop-up)",
+	source: "Search another dashboard (its url, e.g. home-glass)",
+	secondary_entity: "Second line (e.g. the Hebrew date sensor)",
+	seconds: "Show seconds"
 };
-async function Wi() {
+async function qi() {
 	customElements.get("ha-form") || await (await (await window.loadCardHelpers?.())?.createCardElement({
 		type: "entities",
 		entities: []
 	}))?.constructor?.getConfigElement?.();
 }
-var Gi = class extends P {
+var Ji = class extends P {
 	constructor(...e) {
 		super(...e), this.ready = !1;
 	}
@@ -5995,7 +6103,7 @@ var Gi = class extends P {
 		};
 	}
 	connectedCallback() {
-		super.connectedCallback(), Wi().finally(() => this.ready = !0);
+		super.connectedCallback(), qi().finally(() => this.ready = !0);
 	}
 	update_(e) {
 		let t = {
@@ -6033,7 +6141,7 @@ var Gi = class extends P {
       <div class="section">
         <div class="label">Card type</div>
         <div class="types">
-          ${Mi.map((t) => O`<button class=${e.card_type === t.id ? "sel" : ""} @click=${() => this.setType(t.id)}>
+          ${Fi.map((t) => O`<button class=${e.card_type === t.id ? "sel" : ""} @click=${() => this.setType(t.id)}>
               <ha-icon .icon=${t.icon}></ha-icon><span>${t.label}</span>
             </button>`)}
         </div>
@@ -6063,7 +6171,7 @@ var Gi = class extends P {
           </div>
           <div class="accents">
             <button class="dot none ${e.accent ? "" : "sel"}" title="Theme accent" @click=${() => this.update_({ accent: void 0 })}></button>
-            ${Ni.map((t) => O`<button class="dot ${e.accent === t ? "sel" : ""}" style="background:${t}" title=${t} @click=${() => this.update_({ accent: t })}></button>`)}
+            ${Ii.map((t) => O`<button class="dot ${e.accent === t ? "sel" : ""}" style="background:${t}" title=${t} @click=${() => this.update_({ accent: t })}></button>`)}
             <label class="dot custom" title="Custom color">
               <input type="color" .value=${e.accent ?? "#ff9f43"} @input=${(e) => this.update_({ accent: e.target.value })} />
             </label>
@@ -6094,8 +6202,8 @@ var Gi = class extends P {
       ${this.ready ? O`<ha-form
             .hass=${this.hass}
             .data=${e}
-            .schema=${Ri(e)}
-            .computeLabel=${(e) => Ui[e.name]}
+            .schema=${Vi(e)}
+            .computeLabel=${(e) => Ki[e.name]}
             @value-changed=${(e) => {
 			e.stopPropagation(), this.update_(e.detail.value);
 		}}
@@ -6145,10 +6253,10 @@ var Gi = class extends P {
   `;
 	}
 };
-customElements.define("glide-card-editor", Gi);
+customElements.define("glide-card-editor", Ji);
 //#endregion
 //#region src/glide-card.ts
-var Ki = "0.21.0", qi = [
+var Yi = "0.22.0", Xi = [
 	"button",
 	"popup",
 	"nav",
@@ -6158,15 +6266,16 @@ var Ki = "0.21.0", qi = [
 	"title",
 	"heading",
 	"background",
-	"search"
-], Ji = class extends HTMLElement {
+	"search",
+	"clock"
+], Zi = class extends HTMLElement {
 	constructor(...e) {
 		super(...e), this._editMode = !1, this._preview = !1;
 	}
 	setConfig(e) {
 		let t = e?.card_type ?? "button";
-		if (!qi.includes(t)) throw Error(`Unknown card_type "${t}". Use one of: ${qi.join(", ")}`);
-		let n = `glide-${t}`;
+		if (!Xi.includes(t)) throw Error(`Unknown card_type "${t}". Use one of: ${Xi.join(", ")}`);
+		let n = t === "search" && e.inline ? "glide-search-panel" : `glide-${t}`;
 		if (!customElements.get(n)) throw Error(`card_type "${t}" is not available in this build`);
 		this.inner?.localName !== n && (this.inner?.remove(), this.inner = document.createElement(n), this.appendChild(this.inner)), this.inner.setConfig({
 			...e,
@@ -6204,11 +6313,11 @@ var Ki = "0.21.0", qi = [
 		return document.createElement("glide-card-editor");
 	}
 };
-d(), customElements.get("glide-card") || (customElements.define("glide-card", Ji), window.customCards = window.customCards ?? [], window.customCards.push({
+d(), customElements.get("glide-card") || (customElements.define("glide-card", Zi), window.customCards = window.customCards ?? [], window.customCards.push({
 	type: "glide-card",
 	name: "Glide Card",
 	description: "Themeable buttons, pop-up sheets, nav bar, search, climate and media cards",
 	preview: !0,
 	documentationURL: "https://github.com/yshaish1/glide-card"
-}), console.info(`%c GLIDE-CARD %c ${Ki} `, "background:#ff9f43;color:#1c1206;border-radius:4px 0 0 4px", "background:#222;color:#fff;border-radius:0 4px 4px 0"));
+}), console.info(`%c GLIDE-CARD %c ${Yi} `, "background:#ff9f43;color:#1c1206;border-radius:4px 0 0 4px", "background:#222;color:#fff;border-radius:0 4px 4px 0"));
 //#endregion

@@ -12,6 +12,7 @@ import { GlidePopup } from "./popup";
 type Cfg = Record<string, any>;
 const DEFAULT_HASH = "#search";
 const DEBOUNCE_MS = 80;
+const REFETCH_MS = 5 * 60_000;
 
 /** Search cards on the page; the open sheet reads the dashboard config through whichever is attached. */
 const placeholders = new Set<HTMLElement>();
@@ -94,16 +95,23 @@ export class GlideSearchPanel extends GlideBase<SearchCardConfig> {
   private index: { lovelace?: Cfg; states?: number; entries: SearchEntry[] } = { entries: [] };
   /** Fetched over the websocket when no dashboard element is around (the card playground, for one). */
   private fetched?: Cfg;
+  private fetchedAt = 0;
 
   setConfig(config: SearchCardConfig) {
+    if (config.source !== this.config?.source) (this.fetched = undefined), (this.fetchedAt = 0);
     super.setConfig(config);
     this.index = { entries: [] };
+    this.toggleAttribute("inline", !!config.inline);
   }
 
   connectedCallback() {
     super.connectedCallback();
     for (const ev of ["popstate", "hashchange", "glide-hash", "location-changed"]) window.addEventListener(ev, this.onRoute);
     this.onRoute();
+    // Inline: ready to type on a desktop; phones and tablets wait for a tap so the keyboard stays down.
+    if (this.config?.inline && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      setTimeout(() => this.renderRoot.querySelector("input")?.focus({ preventScroll: true }), 300);
+    }
   }
 
   disconnectedCallback() {
@@ -116,7 +124,7 @@ export class GlideSearchPanel extends GlideBase<SearchCardConfig> {
   }
 
   private onRoute = () => {
-    if (decodeURIComponent(location.hash) !== this.hash) return;
+    if (this.config?.inline || decodeURIComponent(location.hash) !== this.hash) return;
     this.index.lovelace = undefined; // pick up dashboard edits
     this.requestUpdate();
     // After the sheet starts sliding in; typing replaces the last search.
@@ -134,17 +142,23 @@ export class GlideSearchPanel extends GlideBase<SearchCardConfig> {
   private entries(): SearchEntry[] {
     const hass = this.hass;
     if (!hass) return [];
-    const lovelace = liveLovelace() ?? this.fetched;
-    if (!lovelace && !this.fetched && hass.callWS) {
-      const url_path = dashboardOf(location.pathname);
+    const here = dashboardOf(location.pathname);
+    const source = this.config.source;
+    const remote = !!source && source !== here;
+    const lovelace = remote ? this.fetched : (this.config.inline ? lovelaceOf(this) : undefined) ?? liveLovelace() ?? this.fetched;
+    // Another dashboard's config is fetched, and fetched again when it's older than REFETCH_MS (edits there).
+    const stale = remote ? Date.now() - this.fetchedAt > REFETCH_MS : !lovelace && !this.fetched;
+    if (stale && hass.callWS) {
+      const url_path = source ?? here;
+      this.fetchedAt = Date.now();
       hass
         .callWS<Cfg>({ type: "lovelace/config", url_path: url_path === "lovelace" ? null : url_path })
         .then((cfg) => ((this.fetched = cfg), this.requestUpdate()))
-        .catch(() => {});
+        .catch(() => (this.fetchedAt = 0));
     }
     const count = Object.keys(hass.states).length;
     if (this.index.lovelace === lovelace && this.index.states === count && this.index.entries.length) return this.index.entries;
-    const cards = collectDashboard(lovelace, dashboardOf(location.pathname), hass);
+    const cards = collectDashboard(lovelace, source ?? here, hass, { remote });
     const known = new Set(cards.map((e) => e.config.entity).filter(Boolean));
     const extras = collectExtras(hass, known, {
       domains: this.config.extra_domains,
@@ -218,10 +232,12 @@ export class GlideSearchPanel extends GlideBase<SearchCardConfig> {
     const q = this.shown.trim();
     let body;
     if (!q) {
-      const top = this.config.frequent === 0 ? [] : frequent(entries, (k) => usageOf(k), this.config.frequent ?? 8);
+      const inline = !!this.config.inline;
+      const count = this.config.frequent ?? (inline ? 0 : 8);
+      const top = count === 0 ? [] : frequent(entries, (k) => usageOf(k), count);
       body = top.length
         ? this.group({ title: t(this.hass, "search_frequent"), kind: "card", entries: top })
-        : html`<div class="note">${t(this.hass, "search_hint")}</div>`;
+        : inline ? nothing : html`<div class="note">${t(this.hass, "search_hint")}</div>`;
     } else {
       const { groups, more } = rank(entries, q, (k) => usageOf(k), this.labels);
       body = groups.length
@@ -294,6 +310,18 @@ export class GlideSearchPanel extends GlideBase<SearchCardConfig> {
         color: var(--gc-text-dim);
       }
       .results { padding-top: 6px; }
+      :host([inline]) .bar {
+        position: static;
+        max-width: 640px;
+        margin: 0 auto;
+        height: 60px;
+        padding: 0 20px;
+        border-radius: 999px;
+      }
+      :host([inline]) .bar ha-icon { --mdc-icon-size: 26px; }
+      :host([inline]) input { font-size: 20px; }
+      :host([inline]) .results { padding-top: 14px; }
+      :host([inline]) .results:empty { display: none; }
       section { margin-top: 10px; }
       .gtitle {
         font-size: 13px;
