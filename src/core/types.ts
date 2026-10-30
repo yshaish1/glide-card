@@ -20,6 +20,11 @@ export interface HomeAssistant {
     subscribeMessage<T>(callback: (msg: T) => void, message: Record<string, unknown>): Promise<() => unknown>;
   };
   callService(domain: string, service: string, data?: Record<string, unknown>): Promise<unknown>;
+  callWS?<T>(message: Record<string, unknown>): Promise<T>;
+  /** Entity, device and area registries (search groups entities by area and skips hidden ones). */
+  entities?: Record<string, { area_id?: string | null; device_id?: string | null; hidden?: boolean; entity_category?: string | null }>;
+  devices?: Record<string, { area_id?: string | null }>;
+  areas?: Record<string, { name: string }>;
 }
 
 export type ActionType =
@@ -37,7 +42,7 @@ export interface ActionConfig {
   [key: string]: unknown;
 }
 
-export type CardType = "button" | "popup" | "nav" | "climate" | "media" | "chips" | "title" | "heading" | "background";
+export type CardType = "button" | "popup" | "nav" | "climate" | "media" | "chips" | "title" | "heading" | "background" | "search";
 export type ThemeMode = "auto" | "dark" | "light";
 /** How much room a card takes: today's look, tighter, or the minimum (some layouts change). */
 export type CardSize = "full" | "compact" | "slim";
@@ -100,6 +105,23 @@ export interface PopupCardConfig extends BaseCardConfig {
   icon?: string;
   entity?: string; // optional header entity
   cards: Record<string, unknown>[];
+}
+
+/** A search sheet over the dashboard's own cards (plus other entities), opened by its hash. */
+export interface SearchCardConfig extends BaseCardConfig {
+  card_type: "search";
+  /** Default "#search". */
+  hash?: string;
+  title?: string;
+  placeholder?: string;
+  /** Domains searched beyond the dashboard; default: everything that does something when tapped. */
+  extra_domains?: string[];
+  /** Also list sensors (read-only, last). Default true. */
+  include_sensors?: boolean;
+  /** Entity ids to leave out; `*` matches anything (`sensor.*_battery`). */
+  exclude?: string[];
+  /** How many most-used buttons show before you type. Default 8; 0 hides them. */
+  frequent?: number;
 }
 
 export interface NavMenuItem {
@@ -209,4 +231,5 @@ export type GlideCardConfig =
   | ChipsCardConfig
   | TitleCardConfig
   | HeadingCardConfig
-  | BackgroundCardConfig;
+  | BackgroundCardConfig
+  | SearchCardConfig;

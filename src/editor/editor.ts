@@ -16,6 +16,7 @@ const TYPES: { id: CardType; icon: string; label: string }[] = [
   { id: "title", icon: "mdi:format-title", label: "Title" },
   { id: "heading", icon: "mdi:format-header-pound", label: "Heading" },
   { id: "background", icon: "mdi:image-filter-hdr", label: "Background" },
+  { id: "search", icon: "mdi:magnify", label: "Search" },
 ];
 const ACCENTS = ["#ff9f43", "#d4ff00", "#006a60", "#4aa8ff", "#a78bfa", "#ff5c8a", "#34c759", "#ffd60a"];
 
@@ -276,6 +277,19 @@ const SCHEMAS: Record<CardType, unknown[]> = {
     { name: "entity", required: true, selector: { entity: { filter: { domain: "media_player" } } } },
     { name: "name", selector: { text: {} } },
   ],
+  search: [
+    {
+      type: "grid",
+      name: "",
+      schema: [
+        { name: "title", selector: { text: {} } },
+        { name: "hash", selector: { text: {} } },
+      ],
+    },
+    { name: "placeholder", selector: { text: {} } },
+    { name: "include_sensors", selector: { boolean: {} } },
+    { name: "frequent", selector: { number: { min: 0, max: 24, mode: "box" } } },
+  ],
 };
 
 const LABELS: Record<string, string> = {
@@ -302,6 +316,9 @@ const LABELS: Record<string, string> = {
   blur: "Blur",
   dim: "Dim",
   animate: "Slow drift",
+  placeholder: "Search field hint",
+  include_sensors: "Also search sensors (default on)",
+  frequent: "Most-used buttons shown before typing (default 8)",
 };
 
 /** Loads HA's lazy form components (ha-form etc.) by asking a built-in card for its editor. */
@@ -344,6 +361,7 @@ export class GlideCardEditor extends LitElement {
     if (type === "title") Object.assign(base, { title: "Home" });
     if (type === "heading") Object.assign(base, { title: "Section" });
     if (type === "background") Object.assign(base, { background: "theme" });
+    if (type === "search") Object.assign(base, { hash: "#search" });
     if (type === "nav") Object.assign(base, { items: [{ name: "Home", icon: "mdi:home", navigation_path: "#home" }] });
     this.config = {} as GlideCardConfig;
     this.update_(base);

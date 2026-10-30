@@ -9,12 +9,13 @@ import "./cards/chips";
 import "./cards/title";
 import "./cards/heading";
 import "./cards/background";
+import "./cards/search";
 import "./editor/editor";
 import type { GlideBase } from "./core/base-card";
 import type { GlideCardConfig, HomeAssistant } from "./core/types";
 
-const VERSION = "0.20.1";
-const TYPES = ["button", "popup", "nav", "climate", "media", "chips", "title", "heading", "background"] as const;
+const VERSION = "0.21.0";
+const TYPES = ["button", "popup", "nav", "climate", "media", "chips", "title", "heading", "background", "search"] as const;
 
 /**
  * `custom:glide-card` - a thin host that creates the inner card for
@@ -88,7 +89,7 @@ if (!customElements.get("glide-card")) {
   (window as any).customCards.push({
     type: "glide-card",
     name: "Glide Card",
-    description: "Themeable buttons, pop-up sheets, nav bar, climate and media cards",
+    description: "Themeable buttons, pop-up sheets, nav bar, search, climate and media cards",
     preview: true,
     documentationURL: "https://github.com/yshaish1/glide-card",
   });

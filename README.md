@@ -16,6 +16,10 @@
 
 ## What's new
 
+- **v0.21: Search.** A new `search` card opens a sheet over your own dashboard. Type a word and the matching buttons appear, grouped by room and ready to tap. It also finds pages and pop-ups, device kinds ("ac" finds every AC), and entities that aren't on the dashboard. Results are ordered by what this device taps most. [Search docs](https://github.com/yshaish1/glide-card/blob/main/docs/cards/search.md)
+
+![Search sheet](https://raw.githubusercontent.com/yshaish1/glide-card/main/docs/images/search.webp)
+
 - **v0.20: Pop-ups are bottom sheets everywhere.** On tablets and desktops too, a pop-up slides up from the bottom edge, centred, and closes or swipes back down, the same as on a phone. The centred dialog that grew out of the tapped tile is gone, and so is the short-lived `position` option. [Pop-up docs](https://github.com/yshaish1/glide-card/blob/main/docs/cards/popup.md)
 
 - **v0.18: Dashboard backgrounds and more cover views.** A new background card paints the dashboard: match your Glide theme, pick one of ten presets, use a colour or gradient, or your own photo with blur and dim. It works per view or for the whole dashboard, with an optional slow drift. Covers get seven new views: mountains, beach, forest, desert, snow, field and a pool with palms. [Background docs](https://github.com/yshaish1/glide-card/blob/main/docs/cards/background.md) · [Cover views](https://github.com/yshaish1/glide-card/blob/main/docs/cards/cover.md#views)
@@ -94,6 +98,7 @@ theme: glass      # glass | bubble | material | clay | terminal | brutal | auror
 | **[Button](https://github.com/yshaish1/glide-card/blob/main/docs/cards/button.md)** | Tile or pill. Tap to toggle, hold for more-info, swipe to set brightness, speed or position. Templates and soft colors. |
 | **[Cover](https://github.com/yshaish1/glide-card/blob/main/docs/cards/cover.md)** | A window over one of eleven outdoor views (garden, sky, city, sea, mountains, beach, forest, desert, snow, field, pool) or your own photo, with night following the sun. 8 styles that match how your cover opens (blind, bottom-up shade, Roman, Venetian, roller shutter, curtains from the middle or to one side, vertical blinds). Optional open, stop and close buttons. |
 | **[Pop-up](https://github.com/yshaish1/glide-card/blob/main/docs/cards/popup.md)** | A sheet opened by a `#hash`, holding any cards. |
+| **[Search](https://github.com/yshaish1/glide-card/blob/main/docs/cards/search.md)** | A sheet that searches your dashboard's own buttons, pages and other entities as you type, ordered by what you use most. |
 | **[Nav bar](https://github.com/yshaish1/glide-card/blob/main/docs/cards/nav.md)** | A floating bar with a sliding indicator, scrolling items, pinned items and a "More" menu. |
 | **[Climate](https://github.com/yshaish1/glide-card/blob/main/docs/cards/climate.md)** | A drag dial with −/+, and mode buttons. |
 | **[Media](https://github.com/yshaish1/glide-card/blob/main/docs/cards/media.md)** | Artwork, progress, transport and volume. |
